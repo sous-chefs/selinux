@@ -1,5 +1,5 @@
 # setting SELinux via an attribute of
-# 'enabled', 'permissive', 'disabled'
-# IIRC Default is permissive
+# 'enforcing', 'permissive', 'disabled'
+# IIRC Default is enforcing
 
-default['selinux']['state'] = 'permissive'
+default['selinux']['state'] = 'enforcing'
