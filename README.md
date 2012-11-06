@@ -15,18 +15,16 @@ Tested on RHEL 5.6, 6.0 and 6.1.
 Usage
 =====
 
-SELinux is enforcing by default on RHEL family distributions, however the use of SELinux has complicated considerations when using configuration management. Often, users are recommended to set SELinux to permissive mode, or disabled completely. To ensure that SELinux is permissive or disabled, choose the appropriate recipe (`selinux::permissive`, `selinux::disabled`) and apply it to the node early in the run list. For example in a `base` role used by all RHEL systems:
-
-    name "base"
-    description "Base role applied to all nodes."
-    run_list(
-      "recipe[selinux::permissive]",
-    )
+SELinux is enforcing by default on RHEL family distributions, however the use of SELinux has complicated considerations when using configuration management. Often, users are recommended to set SELinux to permissive mode, or disabled completely. To ensure that SELinux is permissive or disabled, set ['selinux']['state'] attribute in either the node or role definition as such.
+{
+  "selinux": {
+    "state": "permissive"
+  },
+}
+    
 
 Roadmap
 =======
-
-Use a node attribute to determine which recipe to load automatically from selinux::default.
 
 Add LWRP/Libraries for manipulating security contexts for files and services managed by Chef.
 
