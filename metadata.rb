@@ -1,3 +1,4 @@
+name             "selinux"
 maintainer       "Opscode, Inc."
 maintainer_email "someara@opscode.com"
 license          "Apache"
