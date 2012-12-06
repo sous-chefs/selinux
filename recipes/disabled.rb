@@ -19,9 +19,10 @@
 #
 
 execute "disable selinux enforcement" do
-  only_if "selinuxenabled"
+  only_if "which selinuxenabled && selinuxenabled"
   command "setenforce 0"
   action :run
+  notifies :create, "template[/etc/selinux/config]"
 end
 
 template "/etc/selinux/config" do
@@ -30,4 +31,5 @@ template "/etc/selinux/config" do
     :selinux => "disabled",
     :selinuxtype => "targeted"
   )
+  action :nothing
 end
