@@ -1,3 +1,7 @@
+## v0.5.4:
+
+* [COOK-1277] - disabled recipe fails on systems w/o selinux installed
+
 ## v0.5.2:
 
 * [COOK-789] - fix dangling commas causing syntax error on some rubies
