@@ -19,7 +19,7 @@
 #
 
 execute "enable selinux enforcement" do
-  not_if "getenforce | grep -qx 'Enforcing'"
+  not_if "getenforce | egrep -qx 'Enforcing|Disabled'"
   command "setenforce 1"
   action :run
 end
