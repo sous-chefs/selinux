@@ -1,10 +1,7 @@
 #
-# Author:: Sean OMeara (<someara@opscode.com>)
-#          Kevin Keane (<kkeane@4nettech.com>)
 # Cookbook Name:: selinux
-# Recipe:: enforcing
+# Attributes:: default
 #
-# Copyright 2011, Opscode, Inc.
 # Copyright 2013, North County Tech Center, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +15,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-node.set["selinux"]["mode"] = "enforcing"
-
-include_recipe "selinux"
+# possible values are enforcing, permissive and disabled
+node.default['selinux']['mode'] = "enforcing"
+# possible values are targeted and strict. Currently, strict is not
+# supported and may or may not work
+node.default['selinux']['type'] = "targeted"
 

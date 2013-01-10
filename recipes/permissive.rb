@@ -1,9 +1,11 @@
 #
 # Author:: Sean OMeara (<someara@opscode.com>)
+#          Kevin Keane (<kkeane@4nettech.com>)
 # Cookbook Name:: selinux
 # Recipe:: permissive
 #
 # Copyright 2011, Opscode, Inc.
+# Copyright 2013, North County Tech Center, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,18 +20,7 @@
 # limitations under the License.
 #
 
-execute "enable selinux as permissive" do
-  not_if "getenforce | egrep -qx 'Permissive|Disabled'"
-  command "setenforce 0"
-  ignore_failure true
-  action :run
-end
+node.set["selinux"]["mode"] = "permissive"
 
-template "/etc/selinux/config" do
-  source "sysconfig/selinux.erb"
-  not_if "getenforce | grep -qx 'Disabled'"
-  variables(
-    :selinux => "permissive",
-    :selinuxtype => "targeted"
-  )
-end
+include_recipe "selinux"
+

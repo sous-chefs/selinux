@@ -1,9 +1,11 @@
 #
 # Author:: Sean OMeara (<someara@opscode.com>)
+#          Kevin Keane (<kkeane@4nettech.com>)
 # Cookbook Name:: selinux
 # Recipe:: disabled
 #
 # Copyright 2011, Opscode, Inc.
+# Copyright 2013, North County Tech Center, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,18 +20,6 @@
 # limitations under the License.
 #
 
-execute "disable selinux enforcement" do
-  only_if "which selinuxenabled && selinuxenabled"
-  command "setenforce 0"
-  action :run
-  notifies :create, "template[/etc/selinux/config]"
-end
+node.set["selinux"]["mode"] = "disabled"
 
-template "/etc/selinux/config" do
-  source "sysconfig/selinux.erb"
-  variables(
-    :selinux => "disabled",
-    :selinuxtype => "targeted"
-  )
-  action :nothing
-end
+include_recipe "selinux"
