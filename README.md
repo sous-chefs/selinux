@@ -12,6 +12,21 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 Tested on RHEL 5.8, 6.3
 
+WARNING
+=======
+
+If you disable or enable SELinux using this cookbook, you must reboot
+the system for the change to take effect.
+
+If you go from enforcing mode to disabled, booting may fail with a
+kernel panic. To recover, add the following to the kernel command line
+in grub:
+
+selinux=0
+
+Enabling SELinux after it has been disabled requires relabeling the file
+system. This cookbook will automatically take care of that.
+
 Node Attributes
 ===============
 

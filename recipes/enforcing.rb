@@ -20,4 +20,5 @@
 
 selinux_state "SELinux Enforcing" do
   action :enforcing
+  type   node['selinux']['type'].downcase
 end

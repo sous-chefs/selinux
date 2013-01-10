@@ -20,4 +20,5 @@
 
 selinux_state "SELinux Disabled" do
   action :disabled
+  type   node['selinux']['type'].downcase
 end

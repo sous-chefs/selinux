@@ -20,4 +20,5 @@
 
 selinux_state "SELinux Permissive" do
   action :permissive
+  type   node['selinux']['type'].downcase
 end
