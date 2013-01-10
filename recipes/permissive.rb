@@ -1,11 +1,9 @@
 #
 # Author:: Sean OMeara (<someara@opscode.com>)
-#          Kevin Keane (<kkeane@4nettech.com>)
 # Cookbook Name:: selinux
 # Recipe:: permissive
 #
 # Copyright 2011, Opscode, Inc.
-# Copyright 2013, North County Tech Center, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +18,6 @@
 # limitations under the License.
 #
 
-node.set["selinux"]["mode"] = "permissive"
-
-include_recipe "selinux"
-
+selinux_state "SELinux Permissive" do
+  action :permissive
+end

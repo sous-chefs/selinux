@@ -1,7 +1,6 @@
 #
-# Author:: Sean OMeara (<someara@opscode.com>)
 # Cookbook Name:: selinux
-# Recipe:: disabled
+# Resource:: default
 #
 # Copyright 2011, Opscode, Inc.
 #
@@ -16,8 +15,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-selinux_state "SELinux Disabled" do
-  action :disabled
-end
+default_action :nothing
+actions :enforcing, :disabled, :permissive
+
+attribute :state, :default => nil
+attribute :type, :default => "targeted"

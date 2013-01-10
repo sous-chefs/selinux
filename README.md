@@ -1,7 +1,7 @@
 Description
 ===========
 
-Provides recipes for manipulating selinux policy enforcement
+Provides recipes for manipulating SELinux policy enforcement state.
 
 Requirements
 ============
@@ -10,27 +10,118 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 ## Platform:
 
-Tested on RHEL 5.6, 6.0 and 6.1.
+Tested on RHEL 5.8, 6.3
+
+Node Attributes
+===============
+
+* `node['selinux']['state']` - The SELinux policy enforcement state.
+  The state to set  by default, to match the default SELinux state on
+  RHEL. Can be "enforcing", "permissive", "disabled"
+
+Resources/Providers
+===================
+
+## selinux\_state
+
+The `selinux_state` LWRP is used to manage the SELinux state on the
+system. It does this by using the `setenforce` command and rendering
+the `/etc/selinux/config` file from a template.
+
+### Actions
+
+* `:nothing` - default action, does nothing
+* `:enforcing` - Sets SELinux to enforcing.
+* `:disabled` - Sets SELinux to disabled.
+* `:permissive` - Sets SELinux to permissive.
+
+### Attributes
+
+The LWRP has no user-settable resource attributes.
+
+### Examples
+
+Simply set SELinux to enforcing or permissive:
+
+    selinux_state "SELinux Enforcing" do
+      action :enforcing
+    end
+
+    selinux_state "SELinux Permissive" do
+      action :permissive
+    end
+
+The action here is based on the value of the
+`node['selinux']['state']` attribute, which we convert to lower-case
+and make a symbol to pass to the action.
+
+    selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
+      action node['selinux']['state'].downcase.to_sym
+    end
+
+Recipes
+=======
+
+All the recipes now leverage the LWRP described above.
+
+## default
+
+The default recipe will use the attribute `node['selinux']['state']`
+in the `selinux_state` LWRP's action. By default, this will be `:enforcing`.
+
+## enforcing
+
+This recipe will use `:enforcing` as the `selinux_state` action.
+
+## permissive
+
+This recipe will use `:permissive` as the `selinux_state` action.
+
+## disabled
+
+This recipe will use `:disabled` as the `selinux_state` action.
 
 Usage
 =====
 
-SELinux is enforcing by default on RHEL family distributions, however the use of SELinux has complicated considerations when using configuration management. Although not recommended from a security perspective, often, users want to set SELinux to permissive mode, or disable completely.
+By default, this cookbook will have SELinux enforcing by default, as
+the default recipe uses the `node['selinux']['state']` attribute,
+which is "enforcing." This is in line with the policy of enforcing by
+default on RHEL family distributions.
 
-To ensure that SELinux is in the appropriate mode:
-- Set the attribute node['selinux']['mode'] to the appropriate mode. Allowed are enforcing, permissive and disabled. The default is enforcing.
-- Set the attribute node['selinux']['type'] to the approriate type. Allowed are targeted and strict. Recommended is targeted, as the cookbook is not tested for strict type.
+This has complicated considerations when changing the default
+configuration of their systems, whether it is with automated
+configuration management or manually. Often, third party help forums
+and support sites recommend setting SELinux to "permissive." This
+cookbook can help with that, in two ways.
 
-Note: SELinux does not allow disabling or enabling a running system; changing mode to or from disabled will take effect on the next reboot. Changing between permissive and enforcing will take effect immediately.
+You can simply set the attribute in a role applied to the node:
 
-If the current mode is "disabled" the file system will be completely relabeled upon reboot.
+    name "base"
+    description "Base role applied to all nodes."
+    default_attributes(
+      "selinux" => {
+        "state" => "permissive"
+      }
+    )
 
-For example in a `base` role used by all RHEL systems:
+Or, you can apply the recipe to the run list (e.g., in a role):
 
     name "base"
     description "Base role applied to all nodes."
     run_list(
       "recipe[selinux::enforcing]",
+    )
+
+You can similarly set the SELinux type using an attribute
+
+    name "base"
+    description "Base role applied to all nodes."
+    default_attributes(
+      "selinux" => {
+        "state" => "permissive",
+        "type" => "targeted"
+      }
     )
 
 To install and configure the setroubleshoot package:
@@ -56,17 +147,16 @@ For instance, add the following user using the user cookbook:
 Roadmap
 =======
 
-Add LWRP/Libraries for manipulating security contexts for files and services managed by Chef.
+Add LWRP/Libraries for manipulating security contexts for files and
+services managed by Chef.
 
 License and Author
 ==================
 
-Author:: Sean OMeara (<someara@opscode.com>)
-Author:: Joshua Timberman (<joshua@opscode.com>)
-Author:: Kevin Keane (<kkeane@4nettech.com>)
+- Author:: Sean OMeara (<someara@opscode.com>)
+- Author:: Joshua Timberman (<joshua@opscode.com>)
 
-Copyright:: 2011, Opscode, Inc
-Copyright:: 2013, North County Tech Center, LLC
+Copyright:: 2011-2012, Opscode, Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
