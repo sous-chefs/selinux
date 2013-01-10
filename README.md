@@ -18,14 +18,24 @@ WARNING
 If you disable or enable SELinux using this cookbook, you must reboot
 the system for the change to take effect.
 
-If you go from enforcing mode to disabled, booting may fail with a
-kernel panic. To recover, add the following to the kernel command line
-in grub:
+If you go from disabled mode to enforcing, booting may fail with a
+kernel panic. This is due to missing SELinux context information on
+some files.
+
+- To recover, add the following to the kernel command line in grub:
 
 selinux=0
 
+- Boot into Linux as normal.
+
+- Make sure the policycoreutils package is installed.
+
+- Touch the file /.autorelabel
+
+- Reboot
+
 Enabling SELinux after it has been disabled requires relabeling the file
-system. This cookbook will automatically take care of that.
+system. This cookbook will normally automatically take care of that.
 
 Node Attributes
 ===============
