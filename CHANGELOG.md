@@ -1,3 +1,7 @@
+## v0.5.6:
+
+* [COOK-2124] - enforcing recipe fails if selinux is disabled
+
 ## v0.5.4:
 
 * [COOK-1277] - disabled recipe fails on systems w/o selinux installed
