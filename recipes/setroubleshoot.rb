@@ -15,7 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[ "policycoreutils-python", "setroubleshoot-server", "setroubleshoot-plugins", "setools-console" ].each do |pkg|
+# [ "policycoreutils-python", "setroubleshoot-server", "setroubleshoot-plugins", "setools-console" ].each do |pkg|
+[ "setroubleshoot-server", "setroubleshoot-plugins" ].each do |pkg|
    package pkg
 end
 

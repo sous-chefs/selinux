@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: selinux
-# Resource:: default
+# Resource:: boolean
 #
-# Copyright 2011, Opscode, Inc.
+# Copyright 2013, North County Tech Center, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default_action :nothing
-actions :enforcing, :disabled, :permissive
+actions :set
+default_action :set
 
-attribute :state, :default => nil
-attribute :type, :default => "targeted"
+# The bool_name attribute is the name of the SELinux boolean, as returned by
+# getsebool. There will also be a file in /selinux/booleans by the same name
+attribute :bool_name, :kind_of => String, :name_attribute => true, :required => true
+attribute :value, :kind_of => [TrueClass, FalseClass], :required => true
+
+def initialize(*args)
+  super
+  @action = :set
+end
 
