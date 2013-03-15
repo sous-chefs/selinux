@@ -10,7 +10,7 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 ## Platform:
 
-Tested on RHEL 5.8, 6.3
+Tested on RHEL 5.8, 6.3, CentOS 6.4
 
 WARNING
 =======
@@ -83,6 +83,110 @@ and make a symbol to pass to the action.
     selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
       action node['selinux']['state'].downcase.to_sym
     end
+
+## selinux\_boolean
+
+Sets the value for an SELinux boolean
+
+### Actions
+
+* `:nothing` - does nothing
+* `:set` - Sets the value of the SELinux boolean
+
+### Attributes
+
+* `value` - the new value of the boolean. Either true or false
+
+### Examples
+
+Turn off the httpd_enable_homedirs boolean:
+
+     selinux_boolean "httpd_enable_homedirs" do
+       value false
+     end
+
+## selinux\_fcontext
+
+Adds or removes an SELinux fcontext. The equivalent of the
+semanage fcontext command.
+
+Note: this context does not call restorecon, since there is no
+good way to automatically figure out which files should
+or should not be restored, and whether or not it should be
+applied recursively.
+
+To include restorecon, create an execute resource and notify
+
+### Actions
+
+* `:nothing` - does nothing
+* `:add`     - Adds or modifies the fcontext
+* `:delete`  - deletes an existing fcontext
+
+### Attributes
+
+* `path` - the path as it should be set in semanage.
+           This is an semanage-style regular expression,
+           rather than a Linux path name.
+* `ftype` - the file type that this context should apply to.
+            Valid are -dcbslp . These correspond to the
+            letters from the mode field in the ls -l format.
+            nil means, apply to all file types.
+* `selinux_range` - the MLS/MCS security range. Only use this
+                    on MLS/MCS systems. Corresponds to
+                    the semanage fcontext -r argument
+* `selinux_user` - The selinux user. Corresponds to
+                   the semanage fcontext -s argument.
+* `selinux_type` - The selinux type. Corresponds to
+                   the semanage fcontext -t argument.
+
+### Examples
+
+Create or modify 
+
+Creates an fcontext for all files under the /var/run/xdmctl directory.
+Note: this example re-creates an fcontext that already is included in
+the standard RedHat distribution.
+
+      selinux_fcontext "/var/run/xdmctl(/.*)?" do
+        action :add
+        selinux_range 's0'
+        selinux_user  'system_u'
+        selinux_type  'xdm_var_run_t'
+      end
+
+Create a new fcontext that does not exist yet
+
+      selinux_fcontext "/invalid_test_directory" do
+        action :add
+        selinux_type  'xdm_var_run_t'
+      end
+
+Change the type of the same context
+
+      selinux_fcontext "/invalid_test_directory" do
+        action :add
+        selinux_type  'tmp_t'
+      end
+
+Delete the same context
+
+      selinux_fcontext "/invalid_test_directory" do
+        action :delete
+      end
+
+Create/modify an fcontext, and restorecon if needed
+
+      execute "restorecon_sample" do
+        action :nothing
+        command "/sbin/restorecon -r /sample_directory"
+      end
+
+      selinux_fcontext "/sample_directory/(.*)?" do
+        action :add
+        selinux_type  'tmp_t'
+      end
+
 
 Recipes
 =======

@@ -40,20 +40,6 @@ attribute :selinux_range, :kind_of => String
 attribute :selinux_user, :kind_of => String
 # The SELinux type. Required when the action is :add
 attribute :selinux_type, :kind_of => String
-# Should the new context be applied to existing files?
-# Note: this only applies if the SELinux context has been changed.
-# If the path is a pattern, then only the beginning of the pattern
-# will be used, and the relabel will be done recursively. This may
-# in rare cases relabel some additional files not included in the
-# pattern.
-attribute :relabel, :kind_of => [TrueClass, FalseClass], :default => true
-# Should the new context be applied to existing files?
-# Note: this will be done non-idempotently even if the context in the
-# database has not changed. Use this attribute only with action :nothing
-# and notifications.
-# Use case: use this if you installed a new file and aren't sure if it has
-# the correct SELinux context.
-attribute :forcerelabel, :kind_of => [TrueClass, FalseClass], :default => false
 
 def initialize(*args)
   super

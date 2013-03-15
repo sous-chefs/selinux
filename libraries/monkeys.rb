@@ -146,41 +146,6 @@ module Chef::Util::Selinux
     ControlFile.new("enforce").exists?
   end
 
-  # access to the context for one file or directory
-  class SelinuxFileContext
-    include Chef::Util::Selinux
-    def initialize(path)
-      @path = path
-    end
-
-    def type
-      %x[/usr/bin/stat -c '%C' #{@path} | /usr/bin/secon -t]
-    end
-
-    def role
-      %x[/usr/bin/stat -c '%C' #{@path} | /usr/bin/secon -r]
-    end
-
-    def user
-      %x[/usr/bin/stat -c '%C' #{@path} | /usr/bin/secon -u]
-    end
-
-    # returns the user, role and type of the security context for the file
-    # def contexts
-      # return [nil,nil,nil] unless selinux_support?
-
-      # value = %x[/usr/bin/stat -c '%C' #{@path}]
-      # # the value will be either a string with two : separating the parts, or something
-      # # that indicates an error. In that case, we return three empty strings
-      # if value.count ":" == 2 then
-        # value.split(":")
-      # else
-        # [nil,nil,nil]
-      # end
-    # end
-
-  end
-
 end # module Chef::Util::Selinux
 
 # resources
@@ -196,103 +161,46 @@ class Chef
   end
 end
 
-class Chef
-  class Resource
-    class File < Chef::Resource
-      def selinux_user(arg=nil)
-        set_or_return( :selinux_user, arg, :kind_of => String)
-      end
-      def selinux_user=(arg=nil)
-        set_or_return( :selinux_user, arg, :kind_of => String)
-      end
-      def selinux_role(arg=nil)
-        set_or_return( :selinux_role, arg, :kind_of => String)
-      end
-      def selinux_role=(arg=nil)
-        set_or_return( :selinux_role, arg, :kind_of => String)
-      end
-      def selinux_type(arg=nil)
-        set_or_return( :selinux_type, arg, :kind_of => String)
-      end
-      def selinux_type=(arg=nil)
-        set_or_return( :selinux_type, arg, :kind_of => String)
+def monkey_into(theClass,theMethod,recursive)
+  Chef::Log.debug("#{theClass.name}.#{theMethod.to_s}: monkey-patching")
+  theClass.class_eval do
+    
+    Chef::Log.debug("#{theClass.name}.#{theMethod.to_s}: inside monkey")
+    original_method = instance_method(theMethod)
+    Chef::Log.debug("#{theClass.name}.#{theMethod.to_s}: saved method")
+
+    define_method(theMethod) do
+      # do all the things the original action should be doing
+      original_method.bind(self).call
+
+      # has anything changed? The updated_by_last_action flag may not yet have been set,
+      # so we may need to instead rely on whether or not there were any converge actions
+      was_changed = ((@new_resource.updated_by_last_action?) or (not converge_actions.empty?))
+
+      # if any changes were made, make sure that the SELinux context
+      # is set correctly.
+      if was_changed and selinux_support? then
+        command = "/sbin/restorecon #{recursive ? "-r" : "" } #{@new_resource.path}"
+        `#{command}`
       end
     end
   end
 end
 
-# patch into the file access control class, since SELinux is
-# really just another way of access control
-class Chef
-  class FileAccessControl
-    module Unix
-      include Chef::Util::Selinux
+# We need to monkey patch into a number of different resources that all have the
+# potential to corrupt the SELinux context
+monkey_into(Chef::Provider::File,:action_create,false)
+# The current implementation of action_create_if_missing simply calls
+# action_create, which causes the monkey-patched version to be called twice.
+# This does no harm, and is preferable to the monkey-patch breaking if the
+# underlying implementation is changed later.
+monkey_into(Chef::Provider::File,:action_create_if_missing,false)
 
-      def set_selinux!
-        # TODO: implement
-      end
-
-      def set_selinux
-        # TODO: implement
-      end
-
-      def set_all!
-        set_owner!
-        set_group!
-        set_mode!
-        set_selinux!
-      end
-
-      def set_all
-        set_owner
-        set_group
-        set_mode
-        set_selinux
-      end
-
-      def requires_changes?
-        should_update_mode? || should_update_owner? || should_update_group? || should_update_selinux?
-      end
-
-      def describe_changes
-        changes = []
-        changes << "change mode from '#{mode_to_s(current_mode)}' to '#{mode_to_s(target_mode)}'" if should_update_mode?
-        changes << "change owner from '#{current_resource.owner}' to '#{resource.owner}'" if should_update_owner?
-        changes << "change group from '#{current_resource.group}' to '#{resource.group}'" if should_update_group?
-        changes << "change selinux from '#{current_resource.selinux_contexts}' to '#{resource.selinux_context}'" if should_update_selinux?
-        changes
-      end
-
-      def should_update_selinux?
-        # TODO: implement
-        false
-      end
-
-    end
-  end
-end
-
-class Chef
-  class ScanAccessControl
-    include Chef::Util::Selinux
-
-    def set_selinuxcontext
-      context = SelinuxFileContext.new(@new_resource.path)
-      # @current_resource.selinux_user(context.user)
-      # @current_resource.selinux_role(context.role)
-      # @current_resource.selinux_type(context.type)
-    end
-
-    def set_all!
-      if ::File.exist?(new_resource.path)
-        set_owner
-        set_group
-        set_mode
-        set_selinuxcontext if selinux_support?
-      else
-        # leave the values as nil.
-      end
-    end
-  end
-end
+monkey_into(Chef::Provider::Template,:action_create,false)
+monkey_into(Chef::Provider::RemoteFile,:action_create,false)
+monkey_into(Chef::Provider::CookbookFile,:action_create,false)
+monkey_into(Chef::Provider::Link,:action_create,false)
+monkey_into(Chef::Provider::Directory,:action_create,true)
+monkey_into(Chef::Provider::RemoteDirectory,:action_create,true)
+monkey_into(Chef::Provider::RemoteDirectory,:action_create_if_missing,true)
 
