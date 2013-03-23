@@ -101,8 +101,12 @@ def load_current_resource
 
   if selinux_support? then
     # first, we need to make sure we need to make sure that the policycoreutils-python
-    # package is installed - but we don't want that to happen if SELinux doesn't exist.
-    package "policycoreutils-python"
+    # package is installed. It contains the semanage utility
+    # but we don't want that to happen if SELinux doesn't exist or if semanage already
+    # exists.
+    package "policycoreutils-python" do
+      not_if{ ::File.exists?("/usr/sbin/semanage") }
+    end
 
     # because the path itself can be a regular expression, we need to use
     # the non-regex version of grep
