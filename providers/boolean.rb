@@ -34,16 +34,19 @@ action :set do
   # will not touch it (and not add persistence). This is a problem
   # only after the system reboots - and will be automatically fixed
   # with the next chef run.
-  #
-  # Also note that booleans can't be persisted one at a time; all
-  # booleans will be committed together.
 
   if @current_resource.value != @new_resource.value then
     Chef::Log.info("Setting SELinux boolean #{@new_resource.name} to #{@new_resource.value ? "true" : "false"}")
 
     if selinux_support? then
-      ControlFile.new("booleans/#{@new_resource.bool_name}").value = (@new_resource.value ? "1" : "0")
-      ControlFile.new("commit_pending_bools").value = "1"
+      # first, we need to make sure we need to make sure that the policycoreutils-python
+      # package is installed. It contains the semanage utility
+      # but we don't want that to happen if SELinux doesn't exist or if semanage already
+      # exists.
+      package "policycoreutils" do
+        not_if{ ::File.exists?("/usr/sbin/setsebool") }
+      end
+      `/usr/sbin/setsebool -P #{@new_resource.bool_name} #{@new_resource.value ? "1" : "0"}`
       @new_resource.updated_by_last_action(true)
     end
   end
