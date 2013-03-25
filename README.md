@@ -117,17 +117,26 @@ applied recursively.
 
 To include restorecon, create an execute resource and notify
 
+Note: this resource is very slow due to operating system limitations
+If you need to set many contexts, consider using the :import action
+
 ### Actions
 
 * `:nothing` - does nothing
 * `:add`     - Adds or modifies the fcontext
 * `:delete`  - deletes an existing fcontext
+* `:import`  - imports an semanage file (equivalent of semanage -i)
+               Warning: this is not idempotent!
+               :import needs only the path attribute
 
 ### Attributes
 
 * `path` - the path as it should be set in semanage.
            This is an semanage-style regular expression,
            rather than a Linux path name.
+           When using the :import action, the meaning of this
+           attribute changes; in this case it is the name of the
+           file to be imported.
 * `ftype` - the file type that this context should apply to.
             Valid are -dcbslp . These correspond to the
             letters from the mode field in the ls -l format.
@@ -185,6 +194,17 @@ Create/modify an fcontext, and restorecon if needed
       selinux_fcontext "/sample_directory/(.*)?" do
         action :add
         selinux_type  'tmp_t'
+      end
+
+Import a file
+
+      cookbook_file "#{Chef::Config[:file_cache_path]}/myimportfile.selinux" do
+        source "myimportfile.selinux"
+        notifies :import, "selinux_fcontext[#{Chef::Config[:file_cache_path]}/myimportfile.selinux]" do
+      end
+
+      selinux_fcontext "#{Chef::Config[:file_cache_path]}/myimportfile.selinux" do
+        action :nothing
       end
 
 

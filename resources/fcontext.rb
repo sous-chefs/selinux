@@ -16,13 +16,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-actions :add, :delete
+actions :add, :delete, :import
 default_action :add
 
 # sets a file context in selinux' database, i.e., this is the equivalent
 # of the semanage -fcontext command.
 
 # The path that the SELinux context should be applied to
+# For the :import action, the location of the import file in the local file system
 attribute :path, :kind_of => String, :name_attribute => true, :required => true
 # The file type that the context will apply to -
 # (d) directories,

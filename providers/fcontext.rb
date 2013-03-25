@@ -91,6 +91,12 @@ action :delete do
   end
 end
 
+action :import do
+  if selinux_support? then
+    `/usr/sbin/semanage -i #{@new_resource.path}`
+  end
+end
+
 def load_current_resource
   @current_resource = Chef::Resource::SelinuxFcontext.new(@new_resource.name)
   @current_resource.path(nil) # nil indicates that the context doesn't exist yet
