@@ -18,18 +18,7 @@
 # limitations under the License.
 #
 
-execute "disable selinux enforcement" do
-  only_if "which selinuxenabled && selinuxenabled"
-  command "setenforce 0"
-  action :run
-  notifies :create, "template[/etc/selinux/config]"
-end
-
-template "/etc/selinux/config" do
-  source "sysconfig/selinux.erb"
-  variables(
-    :selinux => "disabled",
-    :selinuxtype => "targeted"
-  )
-  action :nothing
+selinux_state "SELinux Disabled" do
+  action :disabled
+  type   node['selinux']['type'].downcase
 end

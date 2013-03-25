@@ -1,7 +1,6 @@
 #
-# Author:: Sean OMeara (<someara@opscode.com>)
 # Cookbook Name:: selinux
-# Recipe:: enforcing
+# Resource:: default
 #
 # Copyright 2011, Opscode, Inc.
 #
@@ -16,9 +15,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-selinux_state "SELinux Enforcing" do
-  action :enforcing
-  type   node['selinux']['type'].downcase
-end
+default_action :nothing
+actions :enforcing, :disabled, :permissive
+
+attribute :state, :default => nil
+attribute :type, :default => "targeted"
+
