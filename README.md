@@ -23,6 +23,51 @@ SELinux is enforcing by default on RHEL family distributions, however the use of
       "recipe[selinux::permissive]",
     )
 
+
+LWRPs
+=====
+
+`selinux_bool`
+--------------
+ Switch SELinux booleans on and off. Usage:
+
+    selinux_bool 'httpd_can_network_connect_db' do
+        value :on
+    done
+
+    selinux_bool 'httpd_can_network_connect_db' do
+        value :off
+    done
+
+`selinux_policy`
+----------------
+
+Build and install an SELinux policy from a .te file. You first need to create a policy file using audit2allow:
+
+    $ cat /var/log/audit/audit.log | audit2allow -m fail2ban_local > fail2ban_local.te
+
+Review the generated policy and edit as necessary. Then copy it into the files directory of your cookbook and add the following to your recipe:
+
+    selinux_policy 'fail2ban_local' do
+        action :install
+    done
+
+    selinux_policy 'fail2ban_local' do
+        action :remove
+    done
+
+`selinux_restorecon`
+--------------------
+
+Restores SELinux file contexts on files or whole directories. Usage:
+
+    selinux_restorecon '/etc/postfix'             # defaults to recursive restore
+
+    selinux_restorecon '/etc/postfix' do
+        recursive :false
+    done
+
+
 Roadmap
 =======
 

@@ -1,8 +1,9 @@
 #
+# Author:: Matt Kynaston <matt@kynx.org>
 # Cookbook Name:: selinux
-# Recipe:: default
+# Provider:: selinux_policy
 #
-# Copyright 2011, Opscode, Inc.
+# Copyright:: 2012, Matt Kynaston <matt@kynx.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,18 +16,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-# provides getsebool and setsebool
-pkgs = value_for_platform(
-    [ "centos", "redhat" ] => {
-        "default" => %w{ policycoreutils selinux-policy}
-    },
-    [ "debian", "ubuntu"] => {
-        "default" => %w{ policycoreutils selinux-utils }
-    }
-)
-pkgs.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
+actions :install, :remove
+attribute :name, :regex => /[a-zA-Z0-9_]+/, :name_attribute => true
+
