@@ -1,0 +1,1 @@
+default['selinux']['state'] = 'enforcing'

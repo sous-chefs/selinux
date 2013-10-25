@@ -16,3 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
+  action node['selinux']['state'].downcase.to_sym
+end
+
