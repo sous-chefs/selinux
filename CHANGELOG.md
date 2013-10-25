@@ -1,6 +1,11 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+v0.6.0
+------
+- [COOK-760] - selinux enforce/permit/disable based on attribute
+
+
 v0.5.6
 ------
 - [COOK-2124] - enforcing recipe fails if selinux is disabled
