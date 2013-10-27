@@ -54,7 +54,7 @@ action :permissive do
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::Selinux.new(new_resource.name)
+  @current_resource = Chef::Resource::SelinuxState.new(new_resource.name)
   s = shell_out("getenforce")
   @current_resource.state(s.stdout.downcase)
 end
