@@ -1,6 +1,12 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+v0.6.2
+------
+- Fixing bug introduced in 0.6.0 
+- adding basic test-kitchen coverage
+
+
 v0.6.0
 ------
 - [COOK-760] - selinux enforce/permit/disable based on attribute
