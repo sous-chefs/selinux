@@ -20,3 +20,18 @@ selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
   action node['selinux']['state'].downcase.to_sym
 end
 
+node['selinux']['booleans'].each do |boolean, value|
+  if ['on', 'true', '1'].include? value
+    value = 'on'
+  elsif ['off', 'false', '0'].include? value
+    value = 'off'
+  else
+    Chef::Log.warn "Not a valid boolean value: #{value}"
+    next
+  end
+  script "boolean_#{boolean}" do
+    interpreter "bash"
+    code "setsebool -P #{boolean} #{value}"
+    not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
+  end
+end
