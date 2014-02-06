@@ -19,6 +19,10 @@ Node Attributes
   The state to set  by default, to match the default SELinux state on
   RHEL. Can be "enforcing", "permissive", "disabled"
 
+* `node['selinux']['booleans']` - A hash of SELinux boolean names and the
+  values they should be set to. Values can be off, false, or 0 to disable;
+  or on, true, or 1 to enable.
+
 Resources/Providers
 ===================
 

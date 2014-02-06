@@ -20,3 +20,14 @@ selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
   action node['selinux']['state'].downcase.to_sym
 end
 
+node['selinux']['booleans'].each do |boolean, value|
+  value = SELinuxServiceHelpers.selinux_bool(value)
+  if value.nil?
+    next
+  end
+  script "boolean_#{boolean}" do
+    interpreter "bash"
+    code "setsebool -P #{boolean} #{value}"
+    not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
+  end
+end
