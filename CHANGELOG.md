@@ -1,6 +1,11 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+v0.7.0 (2014-02-27)
+-------------------
+[COOK-4218] Support setting SELinux boolean values
+
+
 v0.6.2
 ------
 - Fixing bug introduced in 0.6.0 
