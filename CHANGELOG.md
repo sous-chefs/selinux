@@ -1,6 +1,11 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+v0.7.2 (2014-03-24)
+-------------------
+handling minimal installs
+
+
 v0.7.0 (2014-02-27)
 -------------------
 [COOK-4218] Support setting SELinux boolean values
