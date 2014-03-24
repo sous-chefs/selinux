@@ -4,7 +4,7 @@ maintainer_email "cookbooks@opscode.com"
 license          "Apache"
 description      "Manages SELinux policy state via LWRP or recipes."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.7.1"
+version          "0.7.2"
 
 %w{redhat centos scientific oracle amazon}.each do |os|
   supports os
