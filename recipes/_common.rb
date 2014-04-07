@@ -2,6 +2,6 @@ package 'libselinux-utils'
 
 directory '/etc/selinux' do
   owner 'root'
-  mode '0644'
+  mode '0755'
   action :create
 end
