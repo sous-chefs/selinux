@@ -1,6 +1,12 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+v0.8.0 (2014-04-23)
+-------------------
+- [COOK-4528] - Fix selinux directory permissions
+- [COOK-4562] - Basic support for Ubuntu/Debian
+
+
 v0.7.2 (2014-03-24)
 -------------------
 handling minimal installs
