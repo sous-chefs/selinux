@@ -5,7 +5,7 @@ when %r(debian|ubuntu)
 when 'rhel'
   package 'libselinux-utils'
 else
-    # type code here
+    # implement support for your platform here!
     raise "#{node[:platform_family]} not supported!"
 end
 
