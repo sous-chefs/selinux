@@ -1,6 +1,6 @@
 name             "selinux"
-maintainer       "Opscode, Inc."
-maintainer_email "cookbooks@opscode.com"
+maintainer       "Sam Kottler"
+maintainer_email "shk@linux.com"
 license          "Apache"
 description      "Manages SELinux policy state via LWRP or recipes."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
