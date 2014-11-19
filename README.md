@@ -241,18 +241,7 @@ Or, you can apply the recipe to the run list (e.g., in a role):
     name "base"
     description "Base role applied to all nodes."
     run_list(
-      "recipe[selinux::enforcing]",
-    )
-
-You can similarly set the SELinux type using an attribute
-
-    name "base"
-    description "Base role applied to all nodes."
-    default_attributes(
-      "selinux" => {
-        "state" => "permissive",
-        "type" => "targeted"
-      }
+      "recipe[selinux::permissive]",
     )
 
 To install and configure the setroubleshoot package:
