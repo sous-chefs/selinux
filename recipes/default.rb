@@ -18,6 +18,9 @@
 
 include_recipe 'selinux::_common'
 
+# semanage is not installed by default; we need to manually add it.
+package "policycoreutils-python"
+
 selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
   action node['selinux']['state'].downcase.to_sym
 end
