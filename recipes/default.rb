@@ -76,9 +76,6 @@ end
 if fcontexts.length > 0 then
   importdata = fcontexts.join("\n")
 
-  puts "Update fcontexts"
-  puts importdata
-
   script "Add fcontexts" do
     interpreter "bash"
     code "echo \"#{importdata}\" | semanage -i -"
