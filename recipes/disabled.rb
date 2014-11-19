@@ -18,7 +18,8 @@
 # limitations under the License.
 #
 
+include_recipe 'selinux::_common'
+
 selinux_state "SELinux Disabled" do
   action :disabled
-  type   node['selinux']['type'].downcase
 end

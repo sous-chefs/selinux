@@ -24,61 +24,52 @@ def whyrun_supported?
 end
 
 action :enforcing do
-  unless @current_resource.state == "enforcing" || @current_resource.state == "disabled"
+  unless @current_resource.state == "enforcing"
     execute "selinux-enforcing" do
+      not_if "getenforce | grep -qx 'Enforcing'"
       command "setenforce 1"
     end
+    se_template = render_selinux_template("enforcing")
   end
-  if @current_resource.state == "disabled" then
-    # turning on SELinux requires a reboot, and also relabeling the file system
-    Log "The system needs to be rebooted"
-    file "/.autorelabel"
-  end
-  se_template = render_selinux_template("enforcing",new_resource.type)
 end
 
 action :disabled do
   unless @current_resource.state == "disabled"
     execute "selinux-disabled" do
+      only_if "selinuxenabled"
       command "setenforce 0"
     end
-    Log "The system needs to be rebooted"
+    se_template = render_selinux_template("disabled")
   end
-  se_template = render_selinux_template("disabled",new_resource.type)
 end
 
 action :permissive do
   unless @current_resource.state == "permissive" || @current_resource.state == "disabled"
     execute "selinux-permissive" do
+      not_if "getenforce | egrep -qx 'Permissive|Disabled'"
       command "setenforce 0"
     end
+    se_template = render_selinux_template("permissive")
   end
-
-  if @current_resource.state == "disabled" then
-    # turning on SELinux requires a reboot, and also relabeling the file system
-    Log "The system needs to be rebooted"
-    file "/.autorelabel"
-  end
-  se_template = render_selinux_template("permissive",new_resource.type)
 end
 
 def load_current_resource
-  package "libselinux-utils"
-
   @current_resource = Chef::Resource::SelinuxState.new(new_resource.name)
-  s = shell_out("/usr/sbin/getenforce")
-  @current_resource.state(s.stdout.strip.downcase)
+  s = shell_out("getenforce")
+  @current_resource.state(s.stdout.chomp.downcase)
 end
 
-def render_selinux_template(state,type)
+def render_selinux_template(state)
   template "#{state} selinux config" do
     path "/etc/selinux/config"
     source "sysconfig/selinux.erb"
     cookbook "selinux"
+    if state == 'permissive'
+      not_if "getenforce | grep -qx 'Disabled'"
+    end
     variables(
       :selinux => state,
-      :selinuxtype => type
+      :selinuxtype => "targeted"
     )
   end
 end
-

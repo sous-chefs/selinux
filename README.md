@@ -10,7 +10,7 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 ## Platform:
 
-Tested on RHEL 5.8, 6.3, CentOS 6.4
+Tested on RHEL 5.8, 6.3, CentOS 6.7
 
 WARNING
 =======
@@ -35,7 +35,7 @@ selinux=0
 - Reboot
 
 Enabling SELinux after it has been disabled requires relabeling the file
-system. This cookbook will normally automatically take care of that.
+system.
 
 Node Attributes
 ===============
@@ -43,6 +43,10 @@ Node Attributes
 * `node['selinux']['state']` - The SELinux policy enforcement state.
   The state to set  by default, to match the default SELinux state on
   RHEL. Can be "enforcing", "permissive", "disabled"
+
+* `node['selinux']['booleans']` - A hash of SELinux boolean names and the
+  values they should be set to. Values can be off, false, or 0 to disable;
+  or on, true, or 1 to enable.
 
 Resources/Providers
 ===================
@@ -83,27 +87,6 @@ and make a symbol to pass to the action.
     selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
       action node['selinux']['state'].downcase.to_sym
     end
-
-## selinux\_boolean
-
-Sets the value for an SELinux boolean
-
-### Actions
-
-* `:nothing` - does nothing
-* `:set` - Sets the value of the SELinux boolean
-
-### Attributes
-
-* `value` - the new value of the boolean. Either true or false
-
-### Examples
-
-Turn off the httpd_enable_homedirs boolean:
-
-     selinux_boolean "httpd_enable_homedirs" do
-       value false
-     end
 
 ## selinux\_fcontext
 
@@ -206,7 +189,6 @@ Import a file
       selinux_fcontext "#{Chef::Config[:file_cache_path]}/myimportfile.selinux" do
         action :nothing
       end
-
 
 Recipes
 =======

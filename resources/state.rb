@@ -20,5 +20,3 @@ default_action :nothing
 actions :enforcing, :disabled, :permissive
 
 attribute :state, :default => nil
-attribute :type, :default => "targeted"
-

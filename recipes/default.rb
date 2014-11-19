@@ -16,8 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-selinux_state "SELinux #{node['selinux']['state'].capitalize} #{node['selinux']['type']}" do
+include_recipe 'selinux::_common'
+
+selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
   action node['selinux']['state'].downcase.to_sym
-  type   node['selinux']['type'].downcase
 end
 
+node['selinux']['booleans'].each do |boolean, value|
+  value = SELinuxServiceHelpers.selinux_bool(value)
+  unless value.nil?
+    script "boolean_#{boolean}" do
+      interpreter "bash"
+      code "setsebool -P #{boolean} #{value}"
+      not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
+    end
+  end
+end
