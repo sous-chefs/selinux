@@ -68,7 +68,14 @@ current_fcontexts = Hash[cmdout.map{ |line|
 ]
 
 fcontexts = node['selinux']['fcontexts'].select { |fc,type| current_fcontexts[fc] != type }.map do |fc,type|
-  "fcontext -a -f 'all files' -t #{type} '#{fc}'"
+  # special case handling: if the fc is /usr/lib(64)?/nagios/plugins/negate we need to use
+  # 'regular file' instead of 'all files' because that context already exists with the wrong
+  # value.
+  if fc == "/usr/lib(64)?/nagios/plugins/negate" then
+    "fcontext -a -f 'regular file' -t #{type} '#{fc}'"
+  else
+    "fcontext -a -f 'all files' -t #{type} '#{fc}'"
+  end
 end
 
 if fcontexts.length > 0 then
