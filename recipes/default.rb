@@ -45,7 +45,7 @@ end
 # all at once.
 
 # Get the current fcontexts. Throw out header lines and the like
-cmd = Mixlib::ShellOut.new("/usr/sbin/semanage fcontext -l | egrep '.+:.+:.+:.+'")
+cmd = Mixlib::ShellOut.new("/usr/sbin/semanage fcontext -ln | egrep '.+:.+:.+:.+'")
 cmd.run_command
 cmdout = cmd.stdout.lines
 
@@ -67,10 +67,8 @@ current_fcontexts = Hash[cmdout.map{ |line|
 }
 ]
 
-fcontexts = node['selinux']['fcontexts'].map do |fc,type|
-  if current_fcontexts[fc] != type then
-    "fcontext -a -f 'all files' -t #{type} '#{fc}'"
-  end
+fcontexts = node['selinux']['fcontexts'].select { |fc,type| current_fcontexts[fc] != type }.map do |fc,type|
+  "fcontext -a -f 'all files' -t #{type} '#{fc}'"
 end
 
 if fcontexts.length > 0 then
