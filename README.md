@@ -63,6 +63,18 @@ and make a symbol to pass to the action.
       action node['selinux']['state'].downcase.to_sym
     end
 
+## selinux\_fcontext
+
+The `selinux_fcontext` LWRP is used to change the SELinux context of files.
+
+### Examples
+
+To make SELinux context changes that survive a file system relabel:
+
+    smart_selinux_fcontext "/logs" do
+      fcontext "var_log_t"
+    end
+
 Recipes
 =======
 
