@@ -71,7 +71,7 @@ The `selinux_fcontext` LWRP is used to change the SELinux context of files.
 
 To make SELinux context changes that survive a file system relabel:
 
-    smart_selinux_fcontext "/logs" do
+    selinux_fcontext "/logs" do
       fcontext "var_log_t"
     end
 
