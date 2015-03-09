@@ -72,16 +72,59 @@ fcontexts = node['selinux']['fcontexts'].select { |fc,type| current_fcontexts[fc
   # 'regular file' instead of 'all files' because that context already exists with the wrong
   # value.
   if fc == "/usr/lib(64)?/nagios/plugins/negate" then
-    "fcontext -a -f 'regular file' -t #{type} '#{fc}'"
+    # The syntax for the import command has changed in RH 7
+    if node.platform_version.to_f >= 7.0 then
+      "fcontext -a -f f -t #{type} '#{fc}'"
+    else
+      "fcontext -a -f 'regular file' -t #{type} '#{fc}'"
+    end
   else
-    "fcontext -a -f 'all files' -t #{type} '#{fc}'"
+    # "fcontext -a -f 'all files' -t #{type} '#{fc}'"
+    "fcontext -a -t #{type} '#{fc}'"
   end
+end
+
+############################################
+# Process all ports, similar to the fcontexts
+#
+# SEManage returns ports as context - protocol - port list
+# The port list is a comma/space-separate list that contains
+# either individual ports, or ranges of ports.
+# For instance:
+# zebra_port_t                   udp      2600-2604, 2606
+
+# TODO: properly process port ranges
+cmd = Mixlib::ShellOut.new("/usr/sbin/semanage port -ln")
+cmd.run_command
+cmdout = cmd.stdout.lines
+
+current_ports = Hash.new
+
+cmdout.each{ |line|
+  context,proto,portslist = line.split(' ',3)
+  ports = portslist.split(',').map{ |p| p.strip() }
+  current_ports[proto] = Hash.new if current_ports[proto].nil?
+  ports.each do |port|
+    current_ports[proto][port] = context
+  end
+}
+
+# For each port that needs an selinux context configured,
+# check if it is already included in currports - if not,
+# add a line to be imported by semanage.
+node['selinux']['ports'].each do |proto,protoports|
+  ports = protoports.select{ |port,context|
+      current_ports[proto][port.to_s] != context rescue true
+    }.map{ |port,context|
+      "port -a -t #{context} -p #{proto} #{port}"
+    }
+  fcontexts = fcontexts | ports
 end
 
 if fcontexts.length > 0 then
   importdata = fcontexts.join("\n")
 
-  script "Add fcontexts" do
+  script "Import selinux configs" do
     interpreter "bash"
     code "echo \"#{importdata}\" | semanage -i -"
   end

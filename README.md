@@ -51,6 +51,12 @@ Node Attributes
 * `node['selinux']['fcontexts']` - A hash of SELinux fcontext paths and the
   types they should be set to.
 
+* `node['selinux']['ports']['tcp']` - A hash of TCP ports and the types they
+   should be set to.
+
+* `node['selinux']['ports']['udp']` - A hash of UDP ports and the types they
+   should be set to.
+
 Resources/Providers
 ===================
 
@@ -95,12 +101,17 @@ and make a symbol to pass to the action.
 
 Set up the fcontext as an attribute:
 
-node['selinux']['fcontexts']['/var/run/xdmctl(/.*)?'] = 'xdm_var_run_t'
+override['selinux']['fcontexts']['/var/run/xdmctl(/.*)?'] = 'xdm_var_run_t'
 
 Note: this context does not call restorecon, since there is no
 good way to automatically figure out which files should
 or should not be restored, and whether or not it should be
 applied recursively.
+
+## To allow non-standard TCP and UDP ports for a DNS server:
+
+override['selinux']['ports']['tcp']['2053'] = 'dns_port_t'
+override['selinux']['ports']['udp']['2053'] = 'dns_port_t'
 
 Recipes
 =======
