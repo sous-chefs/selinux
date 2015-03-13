@@ -10,7 +10,32 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 ## Platform:
 
-Tested on RHEL 5.8, 6.3
+Tested on RHEL 5.8, 6.3, CentOS 6.7
+
+WARNING
+=======
+
+If you disable or enable SELinux using this cookbook, you must reboot
+the system for the change to take effect.
+
+If you go from disabled mode to enforcing, booting may fail with a
+kernel panic. This is due to missing SELinux context information on
+some files.
+
+- To recover, add the following to the kernel command line in grub:
+
+selinux=0
+
+- Boot into Linux as normal.
+
+- Make sure the policycoreutils package is installed.
+
+- Touch the file /.autorelabel
+
+- Reboot
+
+Enabling SELinux after it has been disabled requires relabeling the file
+system.
 
 Node Attributes
 ===============
@@ -22,6 +47,15 @@ Node Attributes
 * `node['selinux']['booleans']` - A hash of SELinux boolean names and the
   values they should be set to. Values can be off, false, or 0 to disable;
   or on, true, or 1 to enable.
+
+* `node['selinux']['fcontexts']` - A hash of SELinux fcontext paths and the
+  types they should be set to.
+
+* `node['selinux']['ports']['tcp']` - A hash of TCP ports and the types they
+   should be set to.
+
+* `node['selinux']['ports']['udp']` - A hash of UDP ports and the types they
+   should be set to.
 
 Resources/Providers
 ===================
@@ -62,6 +96,22 @@ and make a symbol to pass to the action.
     selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
       action node['selinux']['state'].downcase.to_sym
     end
+
+## To add an fcontext to SELinux
+
+Set up the fcontext as an attribute:
+
+override['selinux']['fcontexts']['/var/run/xdmctl(/.*)?'] = 'xdm_var_run_t'
+
+Note: this context does not call restorecon, since there is no
+good way to automatically figure out which files should
+or should not be restored, and whether or not it should be
+applied recursively.
+
+## To allow non-standard TCP and UDP ports for a DNS server:
+
+override['selinux']['ports']['tcp']['2053'] = 'dns_port_t'
+override['selinux']['ports']['udp']['2053'] = 'dns_port_t'
 
 Recipes
 =======
@@ -116,6 +166,26 @@ Or, you can apply the recipe to the run list (e.g., in a role):
     run_list(
       "recipe[selinux::permissive]",
     )
+
+To install and configure the setroubleshoot package:
+
+SEtroubleshoot will parse the SELinux log file for access denials, and send an email to a specified user.
+
+To install and configure SEtroubleshoot:
+
+- Create a user. and add it to the group "selinuxmonitor". Make sure the user has an email address.
+- Use the recipe "selinux::setroubleshoot". All users who are member of the selinuxmonitor group will receive emails upon SELinux violations.
+
+For instance, add the following user using the user cookbook:
+{
+  "id"        : "sample",
+  "comment"   : "Sample User",
+  "groups"    : [ "selinuxmonitor" ],
+  "email"     : "sample user@example.com"
+}
+
+
+
 
 Roadmap
 =======
