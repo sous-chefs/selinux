@@ -10,4 +10,3 @@ module SELinuxServiceHelpers
     end
   end
 end
-    
