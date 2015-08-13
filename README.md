@@ -63,6 +63,37 @@ and make a symbol to pass to the action.
       action node['selinux']['state'].downcase.to_sym
     end
 
+## selinux\_boolean
+
+The `selinux_boolean` LWRP is used to manage the value of SELinux 
+boolean on the system. 
+
+### Actions
+
+* `:set` - Sets a boolean to true.
+* `:unset` - Sets a boolean to false.
+
+### Attributes
+
+* `:name` - The name of the boolean to be modified.
+
+### Examples
+
+Set a boolean to true:
+```ruby
+selinux_boolean 'httpd_can_network_connect' do
+  action :set
+end
+```
+
+Set a boolean to false:
+```ruby
+# Set a boolean to false
+selinux_boolean 'httpd_can_network_connect' do
+  action :unset
+end
+```
+
 Recipes
 =======
 
