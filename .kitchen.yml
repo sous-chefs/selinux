@@ -3,15 +3,20 @@ driver:
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: latest
 
+# https://lists.debian.org/debian-user/2015/05/msg00420.html
+# no debian support 8 at this time
 platforms:
-- name: centos-6.5
-- name: centos-5.10
-- name: fedora-19
-- name: fedora-20
+- name: centos-5.11
+- name: centos-6.7
+- name: centos-7.2
+- name: debian-7.9
+  attributes: { "selinux": { "state": "disabled" } }
+- name: fedora-22
+- name: fedora-23
 
 suites:
 - name: default
-  run_list: ["recipe[selinux]"]
-  attributes: {}
+  run_list:
+    - recipe[selinux]
+    - recipe[export-node]

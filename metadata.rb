@@ -22,3 +22,6 @@ attribute "selinux/state",
   :recipes => ["selinux::default"],
   :type => "string",
   :default => "enforcing"
+
+depends 'apt'
+depends 'yum', '~> 3.9.0'

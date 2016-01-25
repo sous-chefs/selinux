@@ -1,6 +1,14 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+feature/add-serverspec
+-------------------
+- Add `node['selinux']['needs_reboot']` attribute to accommodate SELinux actions that require a reboot. Disabling SELinux on a permissive or enforcing host *or* enabling SELinux on a disabled host require a reboot.
+- Add serverspec tests
+- Add Centos 7 support
+- Update supported Fedora versions
+
+
 v0.9.0 (2015-02-22)
 -------------------
 - Initial Debian / Ubuntu support
@@ -24,7 +32,7 @@ v0.7.0 (2014-02-27)
 
 v0.6.2
 ------
-- Fixing bug introduced in 0.6.0 
+- Fixing bug introduced in 0.6.0
 - adding basic test-kitchen coverage
 
 
