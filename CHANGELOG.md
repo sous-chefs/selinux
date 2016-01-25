@@ -6,7 +6,8 @@ feature/add-serverspec
 - Add `node['selinux']['needs_reboot']` attribute to accommodate SELinux actions that require a reboot. Disabling SELinux on a permissive or enforcing host *or* enabling SELinux on a disabled host require a reboot.
 - Add serverspec tests
 - Add Centos 7 support
-- Update supported Fedora versions
+- Update supported Fedora/CentOS versions
+- Drop Ubuntu support
 
 
 v0.9.0 (2015-02-22)
