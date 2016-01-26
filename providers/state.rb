@@ -43,7 +43,7 @@ end
 action :disabled do
   unless @current_resource.state == "disabled"
     execute "selinux-disabled" do
-      not_if "selinuxenabled"
+      only_if "selinuxenabled"
       command "setenforce 0"
     end
     node.default['selinux']['needs_reboot'] = true
