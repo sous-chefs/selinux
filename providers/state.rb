@@ -65,7 +65,7 @@ end
 
 def load_current_resource
   @current_resource = Chef::Resource::SelinuxState.new(new_resource.name)
-  @current_resource.state(`getenforce`.strip.downcase)
+  @current_resource.state(Mixlib::ShellOut.new('getenforce').run_command.stdout.strip.downcase)
 end
 
 def render_selinux_template(state)

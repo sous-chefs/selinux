@@ -22,13 +22,12 @@ attribute "selinux/needs_reboot",
   :display_name => "Needs Reboot",
   :description => "SELinux state change requires node reboot.",
   :calculated => true,
-  :type => "boolean",
-  :default => "nil"
+  :type => "boolean"
 attribute "selinux/packages",
   :display_name => "Packages",
   :description => "Packages required by SELinux.",
   :calculated => true,
-  :type => "array",
+  :type => "array"
 attribute "selinux/state",
   :display_name => "SELinux State",
   :description => "The SELinux policy enforcement state.",

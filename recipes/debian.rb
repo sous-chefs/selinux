@@ -9,8 +9,11 @@ unless node['selinux']['state'] == 'disabled'
   ruby_block 'selinux-activate' do
     block do
       unless ::File.exist?(activate_persist)
-        `selinux-activate 2>&1 | tee #{activate_persist}`
-        node.force_default['selinux']['needs_reboot'] = true
+        activate_cmd = Mixlib::ShellOut.
+          new("selinux-activate 2>&1 | tee #{activate_persist}")
+        activate_cmd.run_command
+        activate_cmd.error!
+        node.default['selinux']['needs_reboot'] = true
       end
     end
     Chef::Log.warn "#{node['hostname']} must reboot to fully enable SELinux!"
