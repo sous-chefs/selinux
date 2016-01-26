@@ -1,5 +1,5 @@
 # https://lists.debian.org/debian-user/2015/05/msg00420.html
-# no debian support 8 at this time
+# no debian 8 support at this time
 platforms:
 - name: centos-5.11
 - name: centos-6.7
