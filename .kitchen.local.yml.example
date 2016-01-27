@@ -1,0 +1,20 @@
+# https://lists.debian.org/debian-user/2015/05/msg00420.html
+# no debian 8 support at this time
+platforms:
+- name: centos-5.11
+- name: centos-6.7
+- name: centos-7.2
+- name: debian-7.9
+- name: fedora-22
+- name: fedora-23
+
+suites:
+- name: disabled
+  attributes: { "selinux": { "state": "disabled" } }
+  run_list: [ 'recipe[selinux]', 'recipe[export-node]' ]
+- name: permissive
+  attributes: { "selinux": { "state": "permissive" } }
+  run_list: [ 'recipe[selinux]', 'recipe[export-node]' ]
+- name: enforcing
+  attributes: { "selinux": { "state": "enforcing" } }
+  run_list: [ 'recipe[selinux]', 'recipe[export-node]' ]

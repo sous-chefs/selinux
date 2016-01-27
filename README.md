@@ -23,6 +23,11 @@ Node Attributes
   values they should be set to. Values can be off, false, or 0 to disable;
   or on, true, or 1 to enable.
 
+* `node['selinux']['needs_reboot']` - Either disabling a SELinux
+  enforcing/permissive host or enabling a SELinux disabled host requires a
+  reboot to take full effect. This attribute allows for a `knife search` to
+  query for any such hosts.
+
 Resources/Providers
 ===================
 
@@ -116,6 +121,50 @@ Or, you can apply the recipe to the run list (e.g., in a role):
     run_list(
       "recipe[selinux::permissive]",
     )
+
+Testing
+=======
+
+### Unit testing
+
+Invoke ChefSpec unit tests with `rspec`.
+
+### Integration testing
+
+The [example .kitchen.local.yml](.kitchen.local.yml.example) shows how to make use of the available test suites. Changing SELinux status requires a reboot in some cases. An example testing workflow:
+
+```bash
+# make a local kitchen config
+cp .kitchen.local.yml.example .kitchen.local.yml
+
+# set a filter if working on a subset of tests
+filter=disabled
+
+# run first pass verification
+kitchen test $filter -c 4 -d never
+
+# psuedo-knife search for nodes that need rebooted
+kitchen exec $filter -c "grep -o 'needs_reboot\":[[:alpha:]]\+' /tmp/kitchen/chef_node.json || true"
+
+# reboot them
+reboot_me=$(kitchen exec $filter -c "grep -o 'needs_reboot\":[[:alpha:]]\+' /tmp/kitchen/chef_node.json || true" | grep true -B1 | paste - - | cut -f 5 -d ' ' | tr -d '.')
+
+for i in $reboot_me; do kitchen exec $i -c 'sudo reboot || true' 2>/dev/null; done
+
+# grab a coffee while nodes reboot
+
+# reconverge rebooted nodes
+kitchen converge $filter -c 4
+
+# run second pass verification
+kitchen verify $filter -c 4
+
+# show no nodes need rebooted
+kitchen exec $filter -c "grep -o 'needs_reboot\":[[:alpha:]]\+' /tmp/kitchen/chef_node.json || true"
+
+# clean up
+kitchen destroy $filter -c 4
+```
 
 Roadmap
 =======

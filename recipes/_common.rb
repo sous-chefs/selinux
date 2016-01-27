@@ -1,17 +1,12 @@
-
-case node[:platform_family]
-when %r(debian|ubuntu)
-  package 'selinux-utils'
-when 'rhel', 'fedora'
-  package 'libselinux-utils'
-else
-    # implement support for your platform here!
-    raise "#{node[:platform_family]} not supported!"
+case node['platform_family']
+when 'debian'
+  include_recipe 'apt'
+when %r(fedora|rhel)
+  include_recipe 'yum::dnf_yum_compat'
 end
 
-directory '/etc/selinux' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
-end
+node['selinux']['packages'].each { |pkg|
+  package pkg
+}
+
+include_recipe 'selinux::debian' if platform_family?('debian')

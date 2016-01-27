@@ -3,7 +3,9 @@ require 'spec_helper'
 describe 'selinux_state_test::default' do
 
   cached(:chef_run) do
-    ChefSpec::SoloRunner.new.converge(described_recipe)
+    ChefSpec::SoloRunner.
+      new(platform: 'centos', version: 7.0).
+      converge(described_recipe)
   end
 
   it 'enforcing selinux' do
