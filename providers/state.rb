@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: selinux
-# Provider:: default
+#      Provider:: state
 #
 # Copyright 2011, Chef Software, Inc.
 #
@@ -15,6 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
 require 'chef/mixin/shell_out'
 include Chef::Mixin::ShellOut
@@ -23,7 +24,9 @@ def whyrun_supported?
   true
 end
 
-action :enforcing do
+use_inline_resources
+
+action :enforcing do # ~FC017
   unless @current_resource.state == "enforcing"
     execute "selinux-enforcing" do
       not_if "getenforce | grep -qx 'Enforcing'"
@@ -33,7 +36,7 @@ action :enforcing do
   end
 end
 
-action :disabled do
+action :disabled do # ~FC017
   unless @current_resource.state == "disabled"
     execute "selinux-disabled" do
       only_if "selinuxenabled"
@@ -43,7 +46,7 @@ action :disabled do
   end
 end
 
-action :permissive do
+action :permissive do # ~FC017
   unless @current_resource.state == "permissive" || @current_resource.state == "disabled"
     execute "selinux-permissive" do
       not_if "getenforce | egrep -qx 'Permissive|Disabled'"
