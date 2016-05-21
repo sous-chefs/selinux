@@ -102,8 +102,18 @@ action :create do
 end
 
 action :remove do
-  # TODO
-  #  * Implement action :remove, uninstall a semodule;
+  log "Removing SELinux module '#{new_resource.name}'"
+
+  semodule = SELinux::Module.new(new_resource.name)
+
+  if semodule.installed?
+    execute "Removing SELinux mdule: '#{new_resource.name}'" do
+      command "semodule --remove='#{new_resource.name}'"
+      action :run
+    end
+
+    new_resource.updated_by_last_action(true)
+  end
 end
 
 # Returns the actual path of the informed 'file' attribute

@@ -4,9 +4,7 @@
 #
 #
 
-selinux_module 'remove' do
-  source 'test.te'
-  force true
+selinux_module 'test' do
   action :remove
 end
 

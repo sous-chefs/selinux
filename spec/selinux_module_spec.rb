@@ -44,7 +44,7 @@ EOS
       receive(:exist?).with(/test.pp/).and_return(true))
   end
 
-  it 'install the dependency packages' do # ~FC005
+  it 'installs the dependency packages' do # ~FC005
     expect(chef_run).to(install_package('make'))
     expect(chef_run).to(install_package('policycoreutils'))
   end
@@ -54,7 +54,7 @@ EOS
     expect(chef_run).to(write_log(/Target checksum/))
   end
 
-  it 'create (install) `test` selinux module' do
+  it 'installs `test` selinux module' do
     expect(chef_run).to(
       ChefSpec::Matchers::ResourceMatcher.new(
         :selinux_module, :create, 'create'))
@@ -70,6 +70,28 @@ EOS
       render_file(selinux_file).with_content(selinux_contents))
   end
 
+end
+
+describe 'selinux_module_test::remove' do
+  let(:chef_run) do
+    ChefSpec::SoloRunner.new(step_into: ['selinux_module']).
+      converge(described_recipe)
+  end
+
+  before do
+    runner = double('shellout_double')
+    expect(Mixlib::ShellOut).to(receive(:new).and_return(runner))
+    expect(runner).to(receive(:run_command))
+    expect(runner).to(receive(:stderr).and_return(''))
+    expect(runner).to(receive(:stdout).and_return(''))
+  end
+
+  it 'removes the `test` selinux module' do
+    expect(chef_run).to(write_log(/Removing SELinux/))
+    expect(chef_run).to(
+      ChefSpec::Matchers::ResourceMatcher.new(
+        :selinux_module, :remove, 'test'))
+  end
 end
 
 # EOF
