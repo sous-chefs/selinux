@@ -1,7 +1,6 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-require_relative '../libraries/selinux_helper'
 require_relative '../libraries/selinux_file_helper'
 require_relative '../libraries/selinux_module_helper'
 

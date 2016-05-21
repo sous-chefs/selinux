@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: selinux
-#      Resource:: default
+#      Resource:: module
 #
 # Copyright 2016, Chef Software, Inc.
 #

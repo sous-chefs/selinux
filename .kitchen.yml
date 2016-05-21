@@ -15,5 +15,5 @@ suites:
 - name: default
   run_list:
     - recipe[selinux_state_test]
-    - recipe[selinux_default_test]
+    - recipe[selinux_module_test]
   attributes: {}

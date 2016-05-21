@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: selinux
-#      Provider:: default
+#      Provider:: module
 #
 # Copyright 2016, Chef Software, Inc.
 #
@@ -18,7 +18,6 @@
 #
 
 include Chef::Mixin::Checksum
-include SELinux::Helpers
 
 def whyrun_supported?
   true
@@ -107,8 +106,6 @@ action :remove do
   #  * Implement action :remove, uninstall a semodule;
 end
 
-private
-
 # Returns the actual path of the informed 'file' attribute
 def find_source_file_path
   # determining from which cookbook to get the files from
@@ -122,7 +119,6 @@ def find_source_file_path
     source_location
   )
 end
-
 
 # Wrapper new_resource.source to find files under 'selinux' directory, if it's
 # not started with this directory first, this method will return 'selinux' as a
@@ -165,7 +161,7 @@ def compile_selinux_modules(sefile_pp_target_path)
       raise "Compilation must have failed, no 'pp' " \
         "file found at: '#{sefile_pp_target_path}'"
     end
-    not_if { file_exists?(sefile_pp_target_path) }
+    not_if { ::File.exists?(sefile_pp_target_path) }
     action :nothing
   end
 end

@@ -7,7 +7,6 @@ describe 'selinux_state_test::default' do
   end
 
   before do
-    # using double to tamper with standard error and output
     runner = double('shellout_double')
     allow(runner).to receive(:run_command)
     allow(runner).to receive(:stdout).and_return('Permissive')
