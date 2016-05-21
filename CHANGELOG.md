@@ -1,6 +1,14 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+v0.10.0 (2016-05-21)
+--------------------
+- Support for SELinux Modules, via provider `selinux_module`, able to complile
+  `.te` files, install and remove modules;
+- Foodcritic fixes;
+- Improving test coverage for all providers;
+- Updating Kitchen platforms;
+
 v0.9.0 (2015-02-22)
 -------------------
 - Initial Debian / Ubuntu support
