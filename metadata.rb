@@ -2,9 +2,9 @@ name             "selinux"
 maintainer       "Sam Kottler"
 maintainer_email "shk@linux.com"
 license          "Apache"
-description      "Manages SELinux policy state via LWRP or recipes."
+description      "Manages SELinux policy state and rules via LWRP or recipes."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.9.0"
+version          "0.10.0"
 
 %w{redhat centos scientific oracle amazon ubuntu debian}.each do |os|
   supports os

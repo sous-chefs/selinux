@@ -1,7 +1,8 @@
 Description
 ===========
 
-Provides recipes for manipulating SELinux policy enforcement state.
+Provides recipes for manipulating SELinux policy enforcement state, and provider
+to manage `.te` files into running SELinux Modules.
 
 Requirements
 ============
@@ -10,21 +11,43 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 ## Platform:
 
-Tested on RHEL 5.8, 6.3
+Tested on Centos 6.7 and 7.2, Fedora 22 and 23.
 
 Node Attributes
 ===============
 
-* `node['selinux']['state']` - The SELinux policy enforcement state.
-  The state to set  by default, to match the default SELinux state on
-  RHEL. Can be "enforcing", "permissive", "disabled"
+* `node['selinux']['state']` - The SELinux policy enforcement state. The state to
+  set  by default, to match the default SELinux state on RHEL. Can be "enforcing",
+  "permissive", "disabled"
 
-* `node['selinux']['booleans']` - A hash of SELinux boolean names and the
-  values they should be set to. Values can be off, false, or 0 to disable;
-  or on, true, or 1 to enable.
+* `node['selinux']['booleans']` - A hash of SELinux boolean names and the values
+  they should be set to. Values can be off, false, or 0 to disable; or on, true,
+  or 1 to enable.
 
 Resources/Providers
 ===================
+
+## selinux
+
+This provider is intended to be part of the SELinux analysis workflow using tools
+like `audit2allow`.
+
+``` ruby
+selinux 'WebSVN Service' do
+  source 'websvn.te'
+  action :create
+end
+```
+
+Provider attributes:
+- Actions: `create` or `remove`;
+- `source`: SELinux `.te` file, to be parsed, compiled and deployed as module. If
+  simple basename informed, the provider will first look into
+  `files/default/selinux` directory;
+- `base_dir`: Base directory to create and manage SELinux files, by default is
+  `/etc/selinux/local`;
+- `force`: Boolean. Inidicates if provider should re-install the same version of
+  SELinux module already installed, in case the source `.te` file changes;
 
 ## selinux\_state
 
@@ -45,6 +68,7 @@ The LWRP has no user-settable resource attributes.
 
 ### Examples
 
+#### Managing State
 Simply set SELinux to enforcing or permissive:
 
     selinux_state "SELinux Enforcing" do
@@ -62,6 +86,29 @@ and make a symbol to pass to the action.
     selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
       action node['selinux']['state'].downcase.to_sym
     end
+
+#### Managine `.te` Files
+
+1. Add `selinux` to your `metadata.rb`, as for instance: `depends 'selinux', '>= 0.10.0'`;
+2. Run your SELinux workflow, and add `.te` files on your cookbook files,
+   preferably under `files/default/selinux` folder;
+3. Write recipes using `selinux` provider;
+
+##### SELinux `audit2allow` Workflow
+
+This provider was written with the intention of matching the worflow of `audit2allow` (provided by package `policycoreutils-python`), which basically will be:
+
+1. Install the software you intent to use, add configuration users and such infra-structure;
+2. Test application and inspect `/var/log/audit/audit.log` log-file with a command like this basic example: `grep AVC /var/log/audit/audit.log |audit2allow -M my_application`;
+3. Save `my_application.te` SELinux module source, copy into your cookbook under `files/default/selinux/my_application.te`;
+4. Make use of `selinux` provider on a recipe, after adding it as a dependency;
+
+``` ruby
+selinux 'MyApplication SELinux Module' do
+  source 'my_application.te'
+  action :create
+end
+```
 
 Recipes
 =======
