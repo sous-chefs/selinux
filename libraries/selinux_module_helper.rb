@@ -1,8 +1,6 @@
 module SELinux
-  #
   # Represents a given SELinux module where you can execute tasks like reading
   # if it's installed, up-to-date and such.
-  #
   class Module
     attr_accessor :installed_modules
 
@@ -16,7 +14,7 @@ module SELinux
     # Boolean return. When version informed will check for specific version
     # otherwise only if module name is installed.
     #   +version+  module version string;
-    def installed?(version=nil)
+    def installed?(version = nil)
       unless @installed_modules.has_key?(@module_name)
         return false
       end
@@ -25,7 +23,6 @@ module SELinux
       end
       return true
     end
-
 
     # Invokes command to list installed modules and using regexp converts this
     # to a Hash as return.

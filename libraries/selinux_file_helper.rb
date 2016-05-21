@@ -1,9 +1,7 @@
 module SELinux
-  #
   # Represents a SELinux type of file, `.te` type. This class is able to parse
   # and obtain module name and version on the given file.
-  #
-  class File 
+  class File
     attr_accessor :version, :module_name, :content
 
     # Class constructor. Saves the file conents on a instance variable.

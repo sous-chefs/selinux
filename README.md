@@ -11,7 +11,7 @@ RHEL family distribution or other Linux system that uses SELinux.
 
 ## Platform:
 
-Tested on Centos 6.7 and 7.2, Fedora 22 and 23.
+Tested on CentOS 6.7 and 7.2, Fedora 22 and 23.
 
 Node Attributes
 ===============
@@ -27,35 +27,29 @@ Node Attributes
 Resources/Providers
 ===================
 
-## `selinux_module`
+## selinux\_module
 
 This provider is intended to be part of the SELinux analysis workflow using tools
 like `audit2allow`.
 
-``` ruby
-selinux_module 'WebSVN Service' do
-  source 'websvn.te'
-  action :create
-end
-```
+### Actions
 
-Provider attributes:
-- Actions: `create` or `remove`;
-- `source`: SELinux `.te` file, to be parsed, compiled and deployed as module. If
+* `:create`: install the module;
+* `:remove`: remove the module;
+
+### Options
+
+* `source`: SELinux `.te` file, to be parsed, compiled and deployed as module. If
   simple basename informed, the provider will first look into
   `files/default/selinux` directory;
-- `base_dir`: Base directory to create and manage SELinux files, by default is
+* `base_dir`: Base directory to create and manage SELinux files, by default is
   `/etc/selinux/local`;
-- `force`: Boolean. Inidicates if provider should re-install the same version of
+* `force`: Boolean. Indicates if provider should re-install the same version of
   SELinux module already installed, in case the source `.te` file changes;
 
-And then to remove a given module, use:
+### Attributes
 
-``` ruby
-selinux_module 'websvn' do
-  action :remove
-end
-```
+LWRP interface, recipe attributes are not applicable here.
 
 ## selinux\_state
 
@@ -74,9 +68,9 @@ does this by using the `setenforce` command and rendering the
 
 The LWRP has no user-settable resource attributes.
 
-### Examples
+## Examples
 
-#### Managing State
+#### Managing SELinux State (`selinux_state`)
 
 Simply set SELinux to enforcing or permissive:
 
@@ -99,29 +93,42 @@ selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
 end
 ```
 
-#### Managing `.te` Files
+#### Managing SELinux Modules (`selinux_module`)
+
+Consider the following steps to obtain a `.te` file, the rule description format
+employed on SELinux
 
 1. Add `selinux` to your `metadata.rb`, as for instance: `depends 'selinux', '>= 0.10.0'`;
 2. Run your SELinux workflow, and add `.te` files on your cookbook files,
    preferably under `files/default/selinux` directory;
-3. Write recipes using `selinux` provider;
+3. Write recipes using `selinux_module` provider;
 
 ##### SELinux `audit2allow` Workflow
 
-This provider was written with the intention of matching the worflow of
+This provider was written with the intention of matching the workflow of
 `audit2allow` (provided by package `policycoreutils`), which basically will be:
 
-1. Install the software you intent to use, add configuration users and such infra-structure;
-2. Test application and inspect `/var/log/audit/audit.log` log-file with a command
+1. Test application and inspect `/var/log/audit/audit.log` log-file with a command
    like this basic example: `grep AVC /var/log/audit/audit.log |audit2allow -M my_application`;
-3. Save `my_application.te` SELinux module source, copy into your cookbook under
+2. Save `my_application.te` SELinux module source, copy into your cookbook under
    `files/default/selinux/my_application.te`;
-4. Make use of `selinux` provider on a recipe, after adding it as a dependency;
+3. Make use of `selinux` provider on a recipe, after adding it as a dependency;
+
+For example, add the following on the recipe level:
 
 ``` ruby
 selinux_module 'MyApplication SELinux Module' do
   source 'my_application.te'
   action :create
+end
+```
+
+Module name is defined on `my_application.te` file contents, please note this
+input, is used during `:remove` action. For instance:
+
+``` ruby
+selinux_module 'my_application' do
+  action :remove
 end
 ```
 
