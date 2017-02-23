@@ -20,6 +20,6 @@
 
 include_recipe 'selinux::_common'
 
-selinux_state "SELinux Enforcing" do
+selinux_state 'SELinux Enforcing' do
   action :enforcing
 end

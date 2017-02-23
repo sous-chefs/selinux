@@ -2,7 +2,7 @@
 # Cookbook Name:: selinux
 # Resource:: default
 #
-# Copyright 2011, Chef Software, Inc.
+# Copyright 2016, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default_action :nothing
-actions :enforcing, :disabled, :permissive
+action_class do
+  def getenforce
+    @getenforce = shell_out('getenforce')
+    @getenforce.stdout.chomp.downcase
+  end
 
-attribute :state, :default => nil
+  def render_selinux_template(status)
+    template "#{status} selinux config" do
+      path '/etc/selinux/config'
+      source 'sysconfig/selinux.erb'
+      cookbook 'selinux'
+      variables(
+        selinux: status,
+        selinuxtype: 'targeted'
+      )
+    end
+    log 'Enabling selinux requires a reboot and relabeling the file system. ' if getenforce == 'disabled' && status == 'enforcing'
+    log 'Disabling selinux requires a reboot.' if getenforce == 'enabled' && status =='disabled'
+    # should log message if current status is disabled and new status is enabled
+  end
+end
+
+action :enforcing do
+  if node[:platform_family] == 'rhel'
+    execute 'selinux-enforcing' do
+      not_if "getenforce | grep -qx 'Enforcing'"
+      command 'setenforce 1'
+    end
+    render_selinux_template('enforcing')
+  end
+end
+
+action :disabled do
+  render_selinux_template('disabled')
+end
+
+action :permissive do
+  if node[:platform_family] == 'rhel'
+    execute 'selinux-permissive' do
+      not_if "getenforce | egrep -qx 'Permissive|Disabled'"
+      command 'setenforce 0'
+    end
+    render_selinux_template('permissive')
+  end
+end

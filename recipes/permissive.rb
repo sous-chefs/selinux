@@ -20,6 +20,6 @@
 
 include_recipe 'selinux::_common'
 
-selinux_state "SELinux Permissive" do
+selinux_state 'SELinux Permissive' do
   action :permissive
 end

@@ -18,17 +18,16 @@
 
 include_recipe 'selinux::_common'
 
-selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
-  action node['selinux']['state'].downcase.to_sym
+selinux_state "SELinux #{node['selinux']['status'].capitalize}" do
+  action node['selinux']['status'].downcase.to_sym
 end
 
 node['selinux']['booleans'].each do |boolean, value|
   value = SELinuxServiceHelpers.selinux_bool(value)
-  unless value.nil?
-    script "boolean_#{boolean}" do
-      interpreter "bash"
-      code "setsebool -P #{boolean} #{value}"
-      not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
-    end
+  next unless value.nil?
+  script "boolean_#{boolean}" do
+    interpreter 'bash'
+    code "setsebool -P #{boolean} #{value}"
+    not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
   end
 end

@@ -20,6 +20,6 @@
 
 include_recipe 'selinux::_common'
 
-selinux_state "SELinux Disabled" do
+selinux_state 'SELinux Disabled' do
   action :disabled
 end

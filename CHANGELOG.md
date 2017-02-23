@@ -1,6 +1,14 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+## 1.0.0 (2017-02-X)
+
+- Update to current cookbook engineering standards
+- Removed property `state` of resource `selinux_state` as `state` overwrites an existing method. Chef 13 exception fix.
+- Rewrite LWRP to 12.5 resources
+- Resolved cookstyle errors
+- Update package information for debian based on https://debian-handbook.info/browse/stable/sect.selinux.html
+
 v0.9.0 (2015-02-22)
 -------------------
 - Initial Debian / Ubuntu support
