@@ -39,13 +39,7 @@ action_class do
 end
 
 action :enforcing do
-  if node[:platform_family] == 'rhel'
-    execute 'selinux-enforcing' do
-      not_if "getenforce | grep -qx 'Enforcing'"
-      command 'setenforce 1'
-    end
-    render_selinux_template('enforcing')
-  end
+  render_selinux_template('enforcing')
 end
 
 action :disabled do
@@ -53,11 +47,5 @@ action :disabled do
 end
 
 action :permissive do
-  if node[:platform_family] == 'rhel'
-    execute 'selinux-permissive' do
-      not_if "getenforce | egrep -qx 'Permissive|Disabled'"
-      command 'setenforce 0'
-    end
-    render_selinux_template('permissive')
-  end
+  render_selinux_template('permissive')
 end
