@@ -8,6 +8,7 @@ selinux Cookbook CHANGELOG
 - Rewrite LWRP to 12.5 resources
 - Resolved cookstyle errors
 - Update package information for debian based on https://debian-handbook.info/browse/stable/sect.selinux.html
+ - selinux-activate looks like it's required to ACTUALLY activate selinux on non-RHEL systems. This seems like it could be destructive if unexpected.
 
 v0.9.0 (2015-02-22)
 -------------------
