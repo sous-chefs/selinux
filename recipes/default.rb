@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'selinux::_common'
+selinux_install 'selinux os prep'
 
 selinux_state "SELinux #{node['selinux']['status'].capitalize}" do
   action node['selinux']['status'].downcase.to_sym

@@ -5,7 +5,7 @@ license          'Apache'
 description      'Manages SELinux policy state'
 version          '1.0.0'
 
-%w(redhat centos scientific oracle amazon).each do |os|
+%w(redhat centos scientific oracle amazon fedora).each do |os|
   supports os
 end
 

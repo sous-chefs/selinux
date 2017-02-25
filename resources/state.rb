@@ -16,36 +16,51 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+property :temporary, [true, false], default: false
+property :policy, [String], default: 'targeted'
+
 action_class do
   def getenforce
     @getenforce = shell_out('getenforce')
     @getenforce.stdout.chomp.downcase
   end
 
-  def render_selinux_template(status)
+  def render_selinux_template(status, policy = 'targeted')
     template "#{status} selinux config" do
       path '/etc/selinux/config'
       source 'sysconfig/selinux.erb'
       cookbook 'selinux'
       variables(
         selinux: status,
-        selinuxtype: 'targeted'
+        selinuxtype: policy
       )
     end
-    log 'Enabling selinux requires a reboot and relabeling the file system. ' if getenforce == 'disabled' && status == 'enforcing'
-    log 'Disabling selinux requires a reboot.' if getenforce == 'enabled' && status =='disabled'
-    # should log message if current status is disabled and new status is enabled
+    Chef::Log.warn('It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'enforcing'
+    Chef::Log.info('Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'permissive'
+    Chef::Log.info('Disabling selinux requires a reboot.') if getenforce != 'disabled' && status == 'disabled'
   end
 end
 
 action :enforcing do
-  render_selinux_template('enforcing')
+  # check for temporary attribute. if temporary, and disabled log error
+  execute 'selinux-enforcing' do
+    not_if "getenforce | egrep -qx 'Disabled'"
+    command 'setenforce 1'
+  end if new_resource.temporary
+
+  render_selinux_template('enforcing', new_resource.policy) unless new_resource.temporary
 end
 
 action :disabled do
-  render_selinux_template('disabled')
+  log 'Temporary changes to the running SELinux status is not possible when SELinux is disabled.' if new_resource.temporary
+  render_selinux_template('disabled', new_resource.policy) unless new_resource.temporary
 end
 
 action :permissive do
-  render_selinux_template('permissive')
+  execute 'selinux-permissive' do
+    only_if "getenforce | egrep -qx 'Disabled'"
+    command 'setenforce 0'
+  end if new_resource.temporary
+
+  render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
 end

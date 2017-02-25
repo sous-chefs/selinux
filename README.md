@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/chef-cookbooks/selinux.svg?branch=master)](https://travis-ci.org/chef-cookbooks/selinux) [![Cookbook Version](https://img.shields.io/cookbook/v/selinux.svg)](https://supermarket.chef.io/cookbooks/selinux)
 
-The SELinux cookbook provides recipes for manipulating SELinux policy enforcement state.
+The SELinux (Security Enhanced Linux) cookbook provides recipes for manipulating SELinux policy enforcement state.
 
 SELinux can have one of 3 settings
 
@@ -48,7 +48,7 @@ On debian and ubuntu systems if you want to enable SELinux you will need to do a
 
 ### selinux\_state
 
-The `selinux_state` LWRP is used to manage the SELinux state on the
+The `selinux_state` resource is used to manage the SELinux state on the
 system. It does this by using the `setenforce` command and rendering
 the `/etc/selinux/config` file from a template.
 
@@ -59,7 +59,10 @@ the `/etc/selinux/config` file from a template.
 * `:disabled` - Sets SELinux to disabled.
 * `:permissive` - Sets SELinux to permissive.
 
+#### Attributes
 
+* `temporary` - true, false, default false. Allows the temporary change between permisive and enabled states which don't require a reboot. 
+* `selinuxtype` - targeted, mls, default targeted. Determines the policy that will be configured in the `/etc/selinux/config` file. The default value is `targeted` which enables selinux in a mode where only selected processes are protected. `mls` is multilevel security which enables selinux in a mode where all processes are protected.
 #### Examples
 
 Simply set SELinux to enforcing or permissive:
@@ -79,6 +82,10 @@ and make a symbol to pass to the action.
     selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
       action node['selinux']['state'].downcase.to_sym
     end
+
+### selinux\_install
+
+The `selinux_install` resource is used to encapsulate the set of selinux packages to install in order to manage selinux. It also ensures the directory `/etc/selinux` is created.
 
 Recipes
 =======

@@ -3,11 +3,17 @@ case node[:platform_family]
 when 'debian'
   package 'selinux-basics'
 when 'ubuntu'
-  package 'selinux-basics' 
-  package 'selinux-policy-default' 
+  package 'selinux-basics'
+  package 'selinux-policy-default'
   package 'auditd'
 when 'rhel', 'fedora'
+  package 'policycoreutils'
+  package 'selinux-policy'
+  package 'selinux-policy-targeted'
+  package 'setools'
+  package 'setools-console'
   package 'libselinux-utils'
+  package 'mcstrans'
 else
   # implement support for your platform here!
   raise "#{node[:platform_family]} not supported!"
