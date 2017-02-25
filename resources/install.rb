@@ -1,5 +1,7 @@
+default_action :install
+
 action :install do
-  case node[:platform_family]
+  case node['platform_family']
   when 'debian'
     package 'selinux-basics'
   when 'ubuntu'
@@ -16,7 +18,7 @@ action :install do
     package 'mcstrans'
   else
     # implement support for your platform here!
-    raise "#{node[:platform_family]} not supported!"
+    raise "#{node['platform_family']} not supported!"
   end
 
   directory '/etc/selinux' do

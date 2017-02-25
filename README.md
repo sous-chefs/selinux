@@ -140,7 +140,7 @@ Or, you can apply the recipe to the run list (e.g., in a role):
 **Author:** Sean OMeara ([sean@sean.io](mailto:sean@sean.io))
 **Author:** Joshua Timberman ([joshua@chef.io](mailto:joshua@chef.io))
 
-**Copyright:** 2008-2016, Chef Software, Inc.
+**Copyright:** 2008-2017, Chef Software, Inc.
 
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
