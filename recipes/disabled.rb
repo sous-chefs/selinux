@@ -17,9 +17,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# this recipe will be deprecated in future releases
 
 include_recipe 'selinux::_common'
 
-selinux_state "SELinux Disabled" do
+selinux_state 'SELinux Disabled' do
   action :disabled
 end

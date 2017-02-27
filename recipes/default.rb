@@ -2,7 +2,7 @@
 # Cookbook Name:: selinux
 # Recipe:: default
 #
-# Copyright 2011, Chef Software, Inc.
+# Copyright 2017, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'selinux::_common'
+selinux_install 'selinux os prep'
 
-selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
-  action node['selinux']['state'].downcase.to_sym
+selinux_state "SELinux #{node['selinux']['status'].capitalize}" do
+  action node['selinux']['status'].downcase.to_sym
 end
 
 node['selinux']['booleans'].each do |boolean, value|
   value = SELinuxServiceHelpers.selinux_bool(value)
-  unless value.nil?
-    script "boolean_#{boolean}" do
-      interpreter "bash"
-      code "setsebool -P #{boolean} #{value}"
-      not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
-    end
+  next unless value.nil?
+  script "boolean_#{boolean}" do
+    interpreter 'bash'
+    code "setsebool -P #{boolean} #{value}"
+    not_if "getsebool #{boolean} |egrep -q \" #{value}\"$"
   end
 end

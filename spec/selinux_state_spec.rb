@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'selinux_state_test::default' do
-
   cached(:chef_run) do
     ChefSpec::SoloRunner.new.converge(described_recipe)
   end
@@ -17,5 +16,4 @@ describe 'selinux_state_test::default' do
   it 'permissive selinux' do
     expect(chef_run).to permissive_selinux_state('permissive')
   end
-
 end
