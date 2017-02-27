@@ -90,6 +90,7 @@ The `selinux_install` resource is used to encapsulate the set of selinux package
 Recipes
 =======
 
+All recipes will deprecate in the near future as they are just using the `selinux_state` resource.
 
 ## default
 

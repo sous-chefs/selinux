@@ -1,7 +1,7 @@
 selinux Cookbook CHANGELOG
 ==========================
 
-## 1.0.0 (2017-02-X)
+## 1.0.0 (2017-02-26)
 
 - Update to current cookbook engineering standards
 - Removed property `state` of resource `selinux_state` as `state` overwrites an existing method. Chef 13 exception fix.
