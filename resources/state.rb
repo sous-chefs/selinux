@@ -60,7 +60,7 @@ end
 
 action :permissive do
   execute 'selinux-permissive' do
-    only_if "getenforce | egrep -qx 'Disabled'"
+    not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 0'
   end if new_resource.temporary
 

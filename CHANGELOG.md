@@ -1,6 +1,10 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+## 1.0.1 (2017-02-26)
+
+- Fix logic error in the permissive state change
+
 ## 1.0.0 (2017-02-26)
 
 - Update to current cookbook engineering standards
