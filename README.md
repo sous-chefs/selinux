@@ -18,7 +18,7 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 ## Requirements
 
-- Chef 12.0.0 or higher
+- Chef 12.5 or higher
 
 
 ## Platform:
@@ -139,6 +139,7 @@ Or, you can apply the recipe to the run list (e.g., in a role):
 
 **Author:** Sean OMeara ([sean@sean.io](mailto:sean@sean.io))
 **Author:** Joshua Timberman ([joshua@chef.io](mailto:joshua@chef.io))
+**Author:** Jennifer Davis ([sigje@chef.io](mailto:sigje@chef.io))
 
 **Copyright:** 2008-2017, Chef Software, Inc.
 

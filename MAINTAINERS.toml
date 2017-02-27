@@ -21,7 +21,8 @@ Check out [How Cookbooks are Maintained](https://github.com/chef-cookbooks/commu
       maintainers = [
         'sigje',
         'tas50',
-        'thommay'
+        'thommay',
+        'cheeseplus'
       ]
 
 [people]
@@ -36,3 +37,7 @@ Check out [How Cookbooks are Maintained](https://github.com/chef-cookbooks/commu
   [people.thommay]
     name = "Thom May"
     github = "thommay"
+
+  [people.cheeseplus]
+    name = "Seth Thomas"
+    github = "cheeseplus"

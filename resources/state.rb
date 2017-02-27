@@ -19,7 +19,7 @@
 default_action :nothing
 
 property :temporary, [true, false], default: false
-property :policy, [String], default: 'targeted'
+property :policy, String, default: 'targeted'
 
 action_class do
   def getenforce

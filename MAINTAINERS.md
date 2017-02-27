@@ -12,3 +12,4 @@ Check out [How Cookbooks are Maintained](https://github.com/chef-cookbooks/commu
 * [Jennifer Davis](https://github.com/sigje)
 * [Tim Smith](https://github.com/tas50)
 * [Thom May](https://github.com/thommay)
+* [Seth Thomas](https://github.com/cheeseplus)
