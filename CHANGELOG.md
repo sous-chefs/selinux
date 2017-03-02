@@ -1,6 +1,10 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+## 1.0.2 (2017-03-01)
+
+- Remove setools* packages from install resource (utility to analyze and query policies, monitor and report audit logs, and manage file context). Future versions of this cookbook that might use this need to handle package install on Oracle Linux as not available in default repo.
+
 ## 1.0.1 (2017-02-26)
 
 - Fix logic error in the permissive state change
