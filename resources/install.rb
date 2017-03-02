@@ -12,8 +12,6 @@ action :install do
     package 'policycoreutils'
     package 'selinux-policy'
     package 'selinux-policy-targeted'
-    package 'setools'
-    package 'setools-console'
     package 'libselinux-utils'
     package 'mcstrans'
   else
