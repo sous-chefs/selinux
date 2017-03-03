@@ -76,11 +76,11 @@ Simply set SELinux to enforcing or permissive:
     end
 
 The action here is based on the value of the
-`node['selinux']['state']` attribute, which we convert to lower-case
+`node['selinux']['status']` attribute, which we convert to lower-case
 and make a symbol to pass to the action.
 
-    selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
-      action node['selinux']['state'].downcase.to_sym
+    selinux_state "SELinux #{node['selinux']['status'].capitalize}" do
+      action node['selinux']['status'].downcase.to_sym
     end
 
 ### selinux\_install
@@ -94,7 +94,7 @@ All recipes will deprecate in the near future as they are just using the `selinu
 
 ## default
 
-The default recipe will use the attribute `node['selinux']['state']`
+The default recipe will use the attribute `node['selinux']['status']`
 in the `selinux_state` LWRP's action. By default, this will be `:enforcing`.
 
 ## enforcing
@@ -113,7 +113,7 @@ Usage
 =====
 
 By default, this cookbook will have SELinux enforcing by default, as
-the default recipe uses the `node['selinux']['state']` attribute,
+the default recipe uses the `node['selinux']['status']` attribute,
 which is "enforcing." This is in line with the policy of enforcing by
 default on RHEL family distributions.
 
@@ -123,7 +123,7 @@ You can simply set the attribute in a role applied to the node:
     description "Base role applied to all nodes."
     default_attributes(
       "selinux" => {
-        "state" => "permissive"
+        "status" => "permissive"
       }
     )
 
