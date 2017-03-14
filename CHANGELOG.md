@@ -1,6 +1,10 @@
 selinux Cookbook CHANGELOG
 ==========================
 
+## 1.0.3 (2017-03-14)
+
+- Fix requirement in metadata to reflect need for Chef 12.7 as using action_class in state resource.
+
 ## 1.0.2 (2017-03-01)
 
 - Remove setools* packages from install resource (utility to analyze and query policies, monitor and report audit logs, and manage file context). Future versions of this cookbook that might use this need to handle package install on Oracle Linux as not available in default repo.
