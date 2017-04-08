@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: selinux
+# Cookbook:: selinux
 # Resource:: default
 #
-# Copyright 2016, Chef Software, Inc.
+# Copyright:: 2016-2017, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ default_action :nothing
 property :temporary, [true, false], default: false
 property :policy, String, default: 'targeted'
 
-action_class do
+action_class.class_eval do
   def getenforce
     @getenforce = shell_out('getenforce')
     @getenforce.stdout.chomp.downcase
