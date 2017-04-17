@@ -1,4 +1,5 @@
-# comments!
+selinux_install 'install packages'
+
 selinux_state 'permissive' do
   action :permissive
 end
