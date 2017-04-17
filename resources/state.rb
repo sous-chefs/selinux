@@ -21,28 +21,6 @@ default_action :nothing
 property :temporary, [true, false], default: false
 property :policy, String, default: 'targeted'
 
-action_class.class_eval do
-  def getenforce
-    @getenforce = shell_out('getenforce')
-    @getenforce.stdout.chomp.downcase
-  end
-
-  def render_selinux_template(status, policy = 'targeted')
-    template "#{status} selinux config" do
-      path '/etc/selinux/config'
-      source 'sysconfig/selinux.erb'
-      cookbook 'selinux'
-      variables(
-        selinux: status,
-        selinuxtype: policy
-      )
-    end
-    Chef::Log.warn('It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'enforcing'
-    Chef::Log.info('Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'permissive'
-    Chef::Log.info('Disabling selinux requires a reboot.') if getenforce != 'disabled' && status == 'disabled'
-  end
-end
-
 action :enforcing do
   # check for temporary attribute. if temporary, and disabled log error
   execute 'selinux-enforcing' do
@@ -65,4 +43,26 @@ action :permissive do
   end if new_resource.temporary
 
   render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
+end
+
+action_class.class_eval do
+  def getenforce
+    @getenforce = shell_out('getenforce')
+    @getenforce.stdout.chomp.downcase
+  end
+
+  def render_selinux_template(status, policy = 'targeted')
+    template "#{status} selinux config" do
+      path '/etc/selinux/config'
+      source 'sysconfig/selinux.erb'
+      cookbook 'selinux'
+      variables(
+        selinux: status,
+        selinuxtype: policy
+      )
+    end
+    Chef::Log.warn('It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'enforcing'
+    Chef::Log.info('Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'permissive'
+    Chef::Log.info('Disabling selinux requires a reboot.') if getenforce != 'disabled' && status == 'disabled'
+  end
 end

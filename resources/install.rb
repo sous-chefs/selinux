@@ -8,7 +8,7 @@ action :install do
     package 'selinux-basics'
     package 'selinux-policy-default'
     package 'auditd'
-  when 'rhel', 'fedora'
+  when 'rhel', 'fedora', 'amazon'
     package 'policycoreutils'
     package 'selinux-policy'
     package 'selinux-policy-targeted'
