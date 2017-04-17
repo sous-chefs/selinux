@@ -1,5 +1,12 @@
-selinux Cookbook CHANGELOG
-==========================
+# selinux Cookbook CHANGELOG
+This file is used to list changes made in each version of the selinux cookbook.
+
+## 1.0.4 (2017-04-17)
+
+- Switch to local delivery for testing
+- Use the standard apache license string
+- Updates for early Chef 12 and Chef 13 compatibility
+- Update and add copyright blocks to the various files
 
 ## 1.0.3 (2017-03-14)
 
