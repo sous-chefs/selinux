@@ -15,8 +15,8 @@ selinux Cookbook CHANGELOG
 
 ## 1.0.0 (2017-02-26)
 
+- **BREAKING CHANGE** `node['selinux']['state']` is now `node['selinux']['status']` to meet Chef 13 requirements.
 - Update to current cookbook engineering standards
-- Removed property `state` of resource `selinux_state` as `state` overwrites an existing method. Chef 13 exception fix.
 - Rewrite LWRP to 12.5 resources
 - Resolved cookstyle errors
 - Update package information for debian based on https://debian-handbook.info/browse/stable/sect.selinux.html
