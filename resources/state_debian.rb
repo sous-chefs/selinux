@@ -1,8 +1,8 @@
 #
 # Cookbook:: selinux
-# Resource:: state
+# Resource:: state_debian
 #
-# Copyright:: 2016-2017, Chef Software, Inc.
+# Copyright:: 2017, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default_action :nothing
+provides :selinux_state_debian
+provides :selinux_state, platform_family: 'debian' 
 
 property :temporary, [true, false], default: false
 property :policy, String, default: 'targeted'
@@ -26,23 +27,26 @@ action :enforcing do
   execute 'selinux-enforcing' do
     not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 1'
-  end 
+  end if new_resource.temporary
 
   render_selinux_template('enforcing', new_resource.policy) unless new_resource.temporary
+
 end
 
 action :disabled do
   log 'Temporary changes to the running SELinux status is not possible when SELinux is disabled.' if new_resource.temporary
   render_selinux_template('disabled', new_resource.policy) unless new_resource.temporary
+
 end
 
 action :permissive do
   execute 'selinux-permissive' do
     not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 0'
-  end 
+  end if new_resource.temporary
 
   render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
+
 end
 
 action_class.class_eval do
@@ -64,5 +68,6 @@ action_class.class_eval do
     Chef::Log.warn('It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'enforcing'
     Chef::Log.info('Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'permissive'
     Chef::Log.info('Disabling selinux requires a reboot.') if getenforce != 'disabled' && status == 'disabled'
+    Chef::Log.warn('Supporting selinux on Debian platforms is deprecated. Support for this platform will be removed in the next major release.')
   end
 end
