@@ -17,7 +17,7 @@
 # limitations under the License.
 
 provides :selinux_state_debian
-provides :selinux_state, platform_family: 'debian' 
+provides :selinux_state, platform_family: 'debian'
 
 property :temporary, [true, false], default: false
 property :policy, String, default: 'targeted'
@@ -28,15 +28,12 @@ action :enforcing do
     not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 1'
   end if new_resource.temporary
-
   render_selinux_template('enforcing', new_resource.policy) unless new_resource.temporary
-
 end
 
 action :disabled do
   log 'Temporary changes to the running SELinux status is not possible when SELinux is disabled.' if new_resource.temporary
   render_selinux_template('disabled', new_resource.policy) unless new_resource.temporary
-
 end
 
 action :permissive do
@@ -44,9 +41,7 @@ action :permissive do
     not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 0'
   end if new_resource.temporary
-
   render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
-
 end
 
 action_class.class_eval do

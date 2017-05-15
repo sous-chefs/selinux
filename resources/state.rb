@@ -26,7 +26,7 @@ action :enforcing do
   execute 'selinux-enforcing' do
     not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 1'
-  end 
+  end
 
   render_selinux_template('enforcing', new_resource.policy) unless new_resource.temporary
 end
@@ -40,7 +40,7 @@ action :permissive do
   execute 'selinux-permissive' do
     not_if "getenforce | egrep -qx 'Disabled'"
     command 'setenforce 0'
-  end 
+  end
 
   render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
 end
