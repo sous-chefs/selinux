@@ -1,7 +1,7 @@
 # selinux Cookbook CHANGELOG
 This file is used to list changes made in each version of the selinux cookbook.
 
-## UNRELEASED
+## 2.0.0 (2017-05-15)
 
 - Deprecate debian family support 
 - Make default for rhel family use setenforce regardless of whether a temporary change or not. Eliminates the requirement for a required reboot to effect change in the running system.
