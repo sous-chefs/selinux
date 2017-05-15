@@ -13,6 +13,7 @@ provisioner:
 verifier:
   name: inspec
 
+platforms: 
 - name: centos-6
   driver:
     image: centos:6
