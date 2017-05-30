@@ -1,6 +1,10 @@
 # selinux Cookbook CHANGELOG
 This file is used to list changes made in each version of the selinux cookbook.
 
+## 2.0.1 (2017-05-30)
+
+- Remove class_eval usage
+
 ## 2.0.0 (2017-05-15)
 
 - Deprecate debian family support 
