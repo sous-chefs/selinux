@@ -45,7 +45,7 @@ action :permissive do
   render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
 end
 
-action_class.class_eval do
+action_class do
   def getenforce
     @getenforce = shell_out('getenforce')
     @getenforce.stdout.chomp.downcase
