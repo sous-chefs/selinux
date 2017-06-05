@@ -38,7 +38,7 @@ end
 
 action :permissive do
   execute 'selinux-permissive' do
-    not_if "getenforce | egrep -qx 'Disabled'"
+    not_if "getenforce | egrep -qx 'Disabled|Permissive'"
     command 'setenforce 0'
   end
 
