@@ -1,6 +1,10 @@
 # selinux Cookbook CHANGELOG
 This file is used to list changes made in each version of the selinux cookbook.
 
+## 2.0.2 (2017-06-05)
+
+- Permissive guard should grep for permissive not just disabled
+
 ## 2.0.1 (2017-05-30)
 
 - Remove class_eval usage
