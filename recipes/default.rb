@@ -24,7 +24,7 @@ end
 
 node['selinux']['booleans'].each do |boolean, value|
   value = SELinuxServiceHelpers.selinux_bool(value)
-  next unless value.nil?
+  next if value.nil?
   script "boolean_#{boolean}" do
     interpreter 'bash'
     code "setsebool -P #{boolean} #{value}"
