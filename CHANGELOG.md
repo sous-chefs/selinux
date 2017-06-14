@@ -1,6 +1,10 @@
 # selinux Cookbook CHANGELOG
 This file is used to list changes made in each version of the selinux cookbook.
 
+## 2.0.3 (2017-06-13)
+
+- Fix boolean check within default recipe
+
 ## 2.0.2 (2017-06-05)
 
 - Permissive guard should grep for permissive not just disabled
