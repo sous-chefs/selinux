@@ -21,15 +21,9 @@ action :install do
   when 'debian'
     package 'selinux-basics'
   when 'ubuntu'
-    package 'selinux-basics'
-    package 'selinux-policy-default'
-    package 'auditd'
+    package %w(selinux-basics selinux-policy-default auditd)
   when 'rhel', 'fedora', 'amazon'
-    package 'policycoreutils'
-    package 'selinux-policy'
-    package 'selinux-policy-targeted'
-    package 'libselinux-utils'
-    package 'mcstrans'
+    package %w(policycoreutils selinux-policy selinux-policy-targeted libselinux-utils mcstrans)
   else
     # implement support for your platform here!
     raise "#{node['platform_family']} not supported!"
