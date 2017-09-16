@@ -1,6 +1,14 @@
 # selinux Cookbook CHANGELOG
 This file is used to list changes made in each version of the selinux cookbook.
 
+## 2.1.0 (2017-09-15)
+
+- Simplify Travis config and fix ChefDK 2.0 failures
+- Use bento slugs in Kitchen
+- Remove maintainer files
+- More cleanup of the maintainer files
+- Speed up install with multi-package install
+
 ## 2.0.3 (2017-06-13)
 
 - Fix boolean check within default recipe
