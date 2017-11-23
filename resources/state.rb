@@ -24,7 +24,7 @@ property :policy, String, default: 'targeted'
 action :enforcing do
   # check for temporary attribute. if temporary, and disabled log error
   execute 'selinux-enforcing' do
-    not_if "getenforce | egrep -qx 'Disabled'"
+    not_if "getenforce | egrep -qx 'Disabled|Enforcing'"
     command 'setenforce 1'
   end
 
