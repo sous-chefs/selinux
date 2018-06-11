@@ -23,7 +23,7 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 ## Requirements
 
-- Chef 12.7 or higher
+- Chef 13 or higher
 
 ## Platform:
 

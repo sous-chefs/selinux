@@ -19,12 +19,6 @@
 
 include Chef::Mixin::Checksum
 
-def whyrun_supported?
-  true
-end
-
-use_inline_resources
-
 action :create do
   # base directory to save all the selinux files from this cookbook
   base_dir = directory new_resource.base_dir do
