@@ -1,16 +1,7 @@
-Lint/AssignmentInCondition:
-  Exclude:
-    - 'libraries/selinux_file_helper.rb'
-    - 'libraries/selinux_module_helper.rb'
-
 Lint/UselessAssignment:
   Exclude:
-    - 'providers/module.rb'
-
-Style/IfUnlessModifier:
-  Exclude:
-    - 'libraries/selinux_module_helper.rb'
+    - 'resources/module.rb'
 
 Style/RegexpLiteral:
   Exclude:
-    - 'providers/module.rb'
+    - 'resources/module.rb'
