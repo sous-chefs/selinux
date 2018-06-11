@@ -58,7 +58,11 @@ action :create do
 
   # collecting checksum's, for installed file and informe the informed on
   # provider call
-  current_checksum = checksum(sefile_target_path) rescue nil
+  current_checksum = begin
+                       checksum(sefile_target_path)
+                     rescue
+                       nil
+                     end
   target_checksum = checksum(sefile_source_path)
 
   log "Current checksum: '#{current_checksum.to_s.slice!(0..8)}' " \
@@ -84,7 +88,7 @@ action :create do
     semodule = SELinux::Module.new(sefile_source.module_name)
 
     if semodule.installed?(sefile_source.version) && !new_resource.force
-      raise "SELinux module has changed but version is already installed " \
+      raise 'SELinux module has changed but version is already installed ' \
         "'#{sefile_name}' (v#{sefile_source.version}).\n" \
         " *** Consider a module version bump or use 'force' option. *** "
     end
@@ -135,7 +139,7 @@ end
 # prefix.
 def source_location
   if new_resource.source !~ /^selinux\//
-    return 'selinux/' + new_resource.source
+    'selinux/' + new_resource.source
   else
     new_resource.source
   end
@@ -144,7 +148,7 @@ end
 # Calls package installer to deploy SELinux policy development tools, which
 # will allow us to compile a module locally.
 def install_policy_devel_packages
-  ['make', 'policycoreutils'].each do |pkg|
+  %w(make policycoreutils).each do |pkg|
     package pkg do
       action :install
     end
@@ -171,7 +175,7 @@ def compile_selinux_modules(sefile_pp_target_path)
       raise "Compilation must have failed, no 'pp' " \
         "file found at: '#{sefile_pp_target_path}'"
     end
-    not_if { ::File.exists?(sefile_pp_target_path) }
+    not_if { ::File.exist?(sefile_pp_target_path) }
     action :nothing
   end
 end

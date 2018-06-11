@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe 'selinux_state_test::default' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(step_into: ['selinux_state']).
-      converge(described_recipe)
+    ChefSpec::SoloRunner.new(step_into: ['selinux_state'])
+                        .converge(described_recipe)
   end
 
   before do
@@ -11,11 +11,11 @@ describe 'selinux_state_test::default' do
     allow(runner).to receive(:run_command)
     allow(runner).to receive(:stdout).and_return('Permissive')
     allow_any_instance_of(Chef::Mixin::ShellOut).to(
-      receive(:shell_out).with('getenforce').and_return(runner) )
+      receive(:shell_out).with('getenforce').and_return(runner))
 
     stub_command(/getenforce.*?grep/).and_return(false)
     stub_command(/setenforce/).and_return(true)
-    stub_command("selinuxenabled").and_return('')
+    stub_command('selinuxenabled').and_return('')
   end
 
   it 'enforcing selinux' do # ~FC005

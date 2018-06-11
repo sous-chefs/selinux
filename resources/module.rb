@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: selinux
-#      Resource:: module
+# Cookbook:: selinux
+# Resource:: module
 #
-# Copyright 2016, Chef Software, Inc.
+# Copyright 2016-2018, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,14 +21,12 @@ actions :create, :remove
 default_action :create
 
 attribute :source,
-  :kind_of => String
+  kind_of: String
 
 attribute :base_dir,
-  :kind_of => String,
-  :default => '/etc/selinux/local'
+  kind_of: String,
+  default: '/etc/selinux/local'
 
 attribute :force,
-  :kind_of => [TrueClass, FalseClass],
-  :default => false
-
-# EOF
+  kind_of: [TrueClass, FalseClass],
+  default: false

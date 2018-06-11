@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe 'selinux_module_test::create' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(step_into: ['selinux_module']).
-      converge(described_recipe)
+    ChefSpec::SoloRunner.new(step_into: ['selinux_module'])
+                        .converge(described_recipe)
   end
 
   let(:selinux_file) { '/etc/selinux/local/test.te' }
@@ -34,7 +34,7 @@ aide       1.7.1
 ajaxterm   1.0.0
 alsa       1.12.2
 EOS
-    )
+                     )
   end
 
   before :each do
@@ -69,13 +69,12 @@ EOS
     expect(chef_run).to(
       render_file(selinux_file).with_content(selinux_contents))
   end
-
 end
 
 describe 'selinux_module_test::remove' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(step_into: ['selinux_module']).
-      converge(described_recipe)
+    ChefSpec::SoloRunner.new(step_into: ['selinux_module'])
+                        .converge(described_recipe)
   end
 
   before do

@@ -6,10 +6,8 @@ module SELinux
 
     # Class constructor. Saves the file conents on a instance variable.
     #   +content+  File.open results from a `.te` file;
-    def initialize(content=nil)
-      if content.nil? or content.empty?
-        raise 'No SELinux content informed!'
-      end
+    def initialize(content = nil)
+      raise 'No SELinux content informed!' if content.nil? || content.empty?
 
       @content = content
       @version = nil
@@ -26,7 +24,7 @@ module SELinux
       read_line_limit = ((@content.length * 2) / 10).ceil + 1
 
       line_number = 1
-      @content.each_line do |line| 
+      @content.each_line do |line|
         break if line_number >= read_line_limit
         line.chomp
 
@@ -35,11 +33,9 @@ module SELinux
           @module_name, @version = match.captures
         end
 
-        break if @version and @module_name
+        break if @version && @module_name
         line_number += 1
       end
     end
   end
 end
-
-# EOF

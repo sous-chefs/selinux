@@ -15,13 +15,9 @@ module SELinux
     # otherwise only if module name is installed.
     #   +version+  module version string;
     def installed?(version = nil)
-      unless @installed_modules.has_key?(@module_name)
-        return false
-      end
-      if version
-        return @installed_modules[@module_name] == version
-      end
-      return true
+      return false unless @installed_modules.key?(@module_name)
+      return @installed_modules[@module_name] == version if version
+      true
     end
 
     # Invokes command to list installed modules and using regexp converts this
@@ -41,7 +37,7 @@ module SELinux
     # Mixlib::ShellOut wrapper to execute `/sbin/semodule` to check for command
     # execution errors and return stdout.
     def exec_semodule_cmd
-      cmd = Mixlib::ShellOut.new('/usr/sbin/semodule --list-modules', :returns => [0])
+      cmd = Mixlib::ShellOut.new('/usr/sbin/semodule --list-modules', returns: [0])
       cmd.run_command
       unless cmd.stderr.empty?
         Chef::Log.fatal("Error on `#{cmd}`: #{cmd.stderr}")
@@ -50,5 +46,3 @@ module SELinux
     end
   end
 end
-
-# EOF
