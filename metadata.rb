@@ -2,7 +2,7 @@ name             'selinux'
 maintainer       'Chef Software, Inc.'
 maintainer_email 'cookbooks@chef.io'
 license          'Apache-2.0'
-description      'Manages SELinux policy state'
+description      'Manages SELinux policy state and rules.'
 version          '2.1.1'
 
 %w(redhat centos scientific oracle amazon fedora).each do |os|
