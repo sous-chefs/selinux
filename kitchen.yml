@@ -14,5 +14,7 @@ platforms:
 
 suites:
 - name: default
-  run_list: ["recipe[selinux]"]
-  attributes: {}
+  run_list:
+    - recipe[selinux_module_test::create]
+    - recipe[selinux_module_test::remove]
+    - recipe[selinux_state_test]
