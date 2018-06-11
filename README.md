@@ -29,8 +29,6 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 - RHEL 6/7
 
-**NOTE** Support for debian and ubuntu is deprecated. It will be removed with the next release. The behavior on debian and rhel family operating systems is different as of 2.0.0\. On debian and ubuntu systems if you want to enable SELinux you will need to do a few extra steps. As these are potentially destructive, rather than adding them to this cookbook adding this information here:
-
 ## Attributes
 
 - `node['selinux']['state']` - The SELinux policy enforcement state. The state to set by default, to match the default SELinux state on RHEL. Can be "enforcing", "permissive", "disabled"

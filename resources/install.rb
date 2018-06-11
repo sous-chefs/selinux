@@ -17,17 +17,7 @@
 # limitations under the License.
 
 action :install do
-  case node['platform_family']
-  when 'debian'
-    package 'selinux-basics'
-  when 'ubuntu'
-    package %w(selinux-basics selinux-policy-default auditd)
-  when 'rhel', 'fedora', 'amazon'
-    package %w(policycoreutils selinux-policy selinux-policy-targeted libselinux-utils mcstrans)
-  else
-    # implement support for your platform here!
-    raise "#{node['platform_family']} not supported!"
-  end
+  package %w(policycoreutils selinux-policy selinux-policy-targeted libselinux-utils mcstrans)
 
   directory '/etc/selinux' do
     owner 'root'
