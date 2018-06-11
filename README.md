@@ -74,7 +74,7 @@ The `selinux_state` resource is used to manage the SELinux state on the system. 
 
 ### Properties
 
-- `temporary` - true, false, default false. Allows the temporary change between permisive and enabled states which don't require a reboot.
+- `temporary` - true, false, default false. Allows the temporary change between permissive and enabled states which don't require a reboot.
 - `selinuxtype` - targeted, mls, default targeted. Determines the policy that will be configured in the `/etc/selinux/config` file. The default value is `targeted` which enables selinux in a mode where only selected processes are protected. `mls` is multilevel security which enables selinux in a mode where all processes are protected.
 
 ### Examples
@@ -198,7 +198,7 @@ run_list(
 - **Author:** Joshua Timberman ([joshua@chef.io](mailto:joshua@chef.io))
 - **Author:** Jennifer Davis ([sigje@chef.io](mailto:sigje@chef.io))
 
-**Copyright:** 2008-2017, Chef Software, Inc.
+**Copyright:** 2008-2018, Chef Software, Inc.
 
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
