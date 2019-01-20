@@ -33,7 +33,7 @@ aiccu      1.1.0
 aide       1.7.1
 ajaxterm   1.0.0
 alsa       1.12.2
-EOS
+    EOS
                      )
   end
 
