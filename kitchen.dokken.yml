@@ -9,6 +9,8 @@ transport:
 provisioner:
   name: dokken
   deprecations_as_errors: true
+  client_rb:
+    chef_license: accept
 
 verifier:
   name: inspec

@@ -26,7 +26,7 @@ module SELinux
       installed_modules = {}
       exec_semodule_cmd.each_line do |line|
         line.chomp
-        if match = line.match(/^(\w+.*?)\s+((\d+\.)?(\d+\.)?(\*|\d+))/)
+        if (match = line.match(/^(\w+.*?)\s+((\d+\.)?(\d+\.)?(\*|\d+))/))
           module_name, version = match.captures
           installed_modules[module_name] = version
         end

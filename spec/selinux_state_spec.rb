@@ -23,15 +23,13 @@ describe 'selinux_state_test::default' do
       ChefSpec::Matchers::ResourceMatcher.new(
         :selinux_state, :enforcing, 'enforcing'))
     expect(chef_run).to(
-      run_execute('selinux-enforcing').with_command('setenforce 1'))
+      run_execute('selinux-enforcing').with_command('/usr/sbin/setenforce 1'))
   end
 
   it 'disabled selinux' do
     expect(chef_run).to(
       ChefSpec::Matchers::ResourceMatcher.new(
         :selinux_state, :disabled, 'disabled'))
-    expect(chef_run).to(
-      run_execute('selinux-disabled').with_command('setenforce 0'))
     expect(chef_run).to(
       ChefSpec::Matchers::ResourceMatcher.new(
         :template, :create, 'disabled selinux config'))
@@ -41,6 +39,8 @@ describe 'selinux_state_test::default' do
     expect(chef_run).to(
       ChefSpec::Matchers::ResourceMatcher.new(
         :selinux_state, :permissive, 'permissive'))
+    expect(chef_run).to(
+      run_execute('selinux-permissive').with_command('/usr/sbin/setenforce 0'))
     expect(chef_run).to(
       render_file('/etc/selinux/config'))
   end

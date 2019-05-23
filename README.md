@@ -38,9 +38,7 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 ### selinux_state
 
-The `selinux_state` resource is used to manage the SELinux state on the system. It does this by using the `setenforce` command and rendering
-
-# the `/etc/selinux/config` file from a template.
+The `selinux_state` resource is used to manage the SELinux state on the system. It does this by using the `setenforce` command and rendering the `/etc/selinux/config` file from a template.
 
 ## selinux_module
 
