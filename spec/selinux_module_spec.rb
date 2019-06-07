@@ -45,8 +45,7 @@ alsa       1.12.2
   end
 
   it 'installs the dependency packages' do # ~FC005
-    expect(chef_run).to(install_package('make'))
-    expect(chef_run).to(install_package('policycoreutils'))
+    expect(chef_run).to(install_package('make, policycoreutils, selinux-policy-devel'))
   end
 
   it 'logs the steps taken' do
@@ -86,7 +85,6 @@ describe 'selinux_module_test::remove' do
   end
 
   it 'removes the `test` selinux module' do
-    expect(chef_run).to(write_log(/Removing SELinux/))
     expect(chef_run).to(
       ChefSpec::Matchers::ResourceMatcher.new(
         :selinux_module, :remove, 'test'))

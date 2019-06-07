@@ -66,8 +66,11 @@ action :create do
   log "Target checksum: '#{target_checksum.to_s.slice!(0..8)}' " \
     "('#{sefile_source_path}')"
 
-  # if target files have the same checksum, this provider is up-to-date
-  if target_checksum == current_checksum
+  # checking if module is already installed
+  semodule = SELinux::Module.new(sefile_source.module_name)
+
+  # if module is installed and target files have the same checksum, this provider is up-to-date
+  if semodule.installed?(sefile_source.version) && target_checksum == current_checksum
     log "SELinux module '#{sefile_source.module_name}', " \
       "version '#{sefile_source.version}', is up-to-date!"
   else
@@ -79,9 +82,6 @@ action :create do
       group 'root'
       action :create
     end
-
-    # checking if module is already installed
-    semodule = SELinux::Module.new(sefile_source.module_name)
 
     if semodule.installed?(sefile_source.version) && !new_resource.force
       raise 'SELinux module has changed but version is already installed ' \
@@ -103,7 +103,7 @@ action :remove do
   semodule = SELinux::Module.new(new_resource.name)
 
   if semodule.installed?
-    execute "Removing SELinux mdule: '#{new_resource.name}'" do
+    execute "Removing SELinux module: '#{new_resource.name}'" do
       command "semodule --remove='#{new_resource.name}'"
       action :run
     end
@@ -141,7 +141,7 @@ action_class do
   # Calls package installer to deploy SELinux policy development tools, which
   # will allow us to compile a module locally.
   def install_policy_devel_packages
-    package %w(make policycoreutils)
+    package %w(make policycoreutils selinux-policy-devel)
   end
 
   # Calling make to compile all modules on the SELinux folder, and add a hook to
