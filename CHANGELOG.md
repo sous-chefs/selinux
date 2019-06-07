@@ -2,10 +2,12 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## UNRELEASED
+## 3.0.0 (2019-06-06)
 
 - Support for SELinux Modules, via new resource `selinux_module`, able to compile `.te` files, install and remove modules;
 - Improving test coverage for all resources
+- Remove support for Ubuntu/Debian
+- Require Chef 13+
 
 ## 2.1.1 (2018-06-07)
 

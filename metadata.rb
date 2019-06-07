@@ -3,7 +3,7 @@ maintainer       'Chef Software, Inc.'
 maintainer_email 'cookbooks@chef.io'
 license          'Apache-2.0'
 description      'Manages SELinux policy state and rules.'
-version          '2.1.1'
+version          '3.0.0'
 
 %w(redhat centos scientific oracle amazon fedora).each do |os|
   supports os
