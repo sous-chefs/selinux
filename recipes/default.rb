@@ -18,8 +18,8 @@
 
 selinux_install 'selinux os prep'
 
-selinux_state "SELinux #{node['selinux']['status'].capitalize}" do
-  action node['selinux']['status'].downcase.to_sym
+selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
+  action node['selinux']['state'].downcase.to_sym
 end
 
 node['selinux']['booleans'].each do |boolean, value|
