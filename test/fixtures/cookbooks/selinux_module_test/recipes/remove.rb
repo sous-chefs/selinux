@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: selinux_module_test
+# Cookbook:: selinux_module_test
 #        Recipe:: remove
 #
 
