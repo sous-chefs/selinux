@@ -29,7 +29,7 @@ module SELinux
         line.chomp
 
         # extracting version and module name
-        if (match = line.match(/^module\s+(\w+)\s+([\d\.\-]+);/))
+        if (match = line.match(/^module\s+([\w_-]+)\s+([\d\.\-]+);/))
           @module_name, @version = match.captures
         end
 
