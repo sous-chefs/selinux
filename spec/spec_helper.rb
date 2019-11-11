@@ -10,6 +10,4 @@ RSpec.configure do |config|
   end
 end
 
-at_exit { ChefSpec::Coverage.report! }
-
 # EOF
