@@ -3,7 +3,7 @@ addons:
     sources:
       - chef-current-xenial
     packages:
-      - chefworkstation
+      - chef-workstation
 
 # Don't `bundle install` which takes about 1.5 mins
 install: echo "skip bundle install"
@@ -30,7 +30,7 @@ before_script:
   - cookstyle --version
   - foodcritic --version
 
-script: KITCHEN_LOCAL_YAML=kitchen.dokken.yml kitchen verify ${INSTANCE}
+script: CHEF_LICENSE=accept KITCHEN_LOCAL_YAML=kitchen.dokken.yml kitchen verify ${INSTANCE}
 
 matrix:
   include:
