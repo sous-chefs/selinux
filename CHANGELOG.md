@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## 3.0.1 (2019-11-14)
+
+- Remove the deprecated ChefSpec report - [@tas50](https://github.com/tas50)
+- Allow "-" and "_" for module names - [@ramereth](https://github.com/ramereth)
+- Update Fedora versions we test on - [@tas50](https://github.com/tas50)
+
 ## 3.0.0 (2019-06-06)
 
 - Support for SELinux Modules, via new resource `selinux_module`, able to compile `.te` files, install and remove modules;
