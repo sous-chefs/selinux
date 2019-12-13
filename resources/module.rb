@@ -32,7 +32,7 @@ action :create do
   # informed file extension (source attribute)
   sefile_source_ext = ::File.extname(sefile_source_path)
 
-  unless sefile_source_ext == '.te' # ~FC023
+  unless sefile_source_ext == '.te'
     log "SELinux must be a `.te` extention, informed: '#{sefile_source_ext}'" do
       level :fatal
     end

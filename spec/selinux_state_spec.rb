@@ -18,7 +18,7 @@ describe 'selinux_state_test::default' do
     stub_command('selinuxenabled').and_return('')
   end
 
-  it 'enforcing selinux' do # ~FC005
+  it 'enforcing selinux' do
     expect(chef_run).to(
       ChefSpec::Matchers::ResourceMatcher.new(
         :selinux_state, :enforcing, 'enforcing'))

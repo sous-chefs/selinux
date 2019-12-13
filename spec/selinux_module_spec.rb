@@ -44,7 +44,7 @@ alsa       1.12.2
       receive(:exist?).with(/test.pp/).and_return(true))
   end
 
-  it 'installs the dependency packages' do # ~FC005
+  it 'installs the dependency packages' do
     expect(chef_run).to(install_package('make, policycoreutils, selinux-policy-devel'))
   end
 
