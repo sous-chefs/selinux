@@ -154,7 +154,7 @@ action_class do
       command "make -C '#{new_resource.base_dir}' -f #{selinux_makefile}"
       timeout 120
       user 'root'
-      notifies :run, 'ruby_block[look_for_pp_file]', :immediate
+      notifies :run, 'ruby_block[look_for_pp_file]', :immediately
     end
 
     ruby_block 'look_for_pp_file' do
