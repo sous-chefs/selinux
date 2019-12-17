@@ -19,7 +19,7 @@
 
 property :source, String
 property :base_dir, String, default: '/etc/selinux/local'
-property :force, [TrueClass, FalseClass], default: false
+property :force, [true, false], default: false
 
 action :create do
   # base directory to save all the selinux files from this cookbook

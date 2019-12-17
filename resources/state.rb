@@ -18,7 +18,7 @@
 
 default_action :nothing
 
-property :temporary, [TrueClass, FalseClass], default: false
+property :temporary, [true, false], default: false
 property :policy, String, default: 'targeted'
 
 action :enforcing do
