@@ -61,9 +61,9 @@ action :create do
                      end
   target_checksum = checksum(sefile_source_path)
 
-  log "Current checksum: '#{current_checksum.to_s.slice!(0..8)}' " \
+  log "Current checksum: '#{current_checksum.to_s.slice(0..8)}' " \
     "('#{sefile_target_path}')"
-  log "Target checksum: '#{target_checksum.to_s.slice!(0..8)}' " \
+  log "Target checksum: '#{target_checksum.to_s.slice(0..8)}' " \
     "('#{sefile_source_path}')"
 
   # checking if module is already installed
