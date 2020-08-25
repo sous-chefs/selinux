@@ -2,6 +2,16 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## 3.0.2 (2020-08-25)
+
+- Fix failures in CI- [@shoekstra](https://github.com/shoekstra)
+- Specify platform to SoloRunner - [@shoekstra](https://github.com/shoekstra)
+- Remove unnecessary Foodcritic comments - [@tas50](https://github.com/tas50)
+- Notify :immediately not :immediate - [@tas50](https://github.com/tas50)
+- Add Github actions testing of style/unit - [@tas50](https://github.com/tas50)
+- [GH-67] - Do not try to modify frozen checksum - [@vzDevelopment](https://github.com/vzDevelopment)
+- Standardise files with files in chef-cookbooks/repo-management - [@xorimabot](https://github.com/xorimabot)
+
 ## 3.0.1 (2019-11-14)
 
 - Remove the deprecated ChefSpec report - [@tas50](https://github.com/tas50)
