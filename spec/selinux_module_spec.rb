@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'selinux_module_test::create' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(step_into: ['selinux_module'])
+    ChefSpec::SoloRunner.new(platform: 'centos', step_into: ['selinux_module'])
                         .converge(described_recipe)
   end
 
@@ -72,7 +72,7 @@ end
 
 describe 'selinux_module_test::remove' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(step_into: ['selinux_module'])
+    ChefSpec::SoloRunner.new(platform: 'centos', step_into: ['selinux_module'])
                         .converge(described_recipe)
   end
 

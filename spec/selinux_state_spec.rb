@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'selinux_state_test::default' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(step_into: ['selinux_state'])
+    ChefSpec::SoloRunner.new(platform: 'centos', step_into: ['selinux_state'])
                         .converge(described_recipe)
   end
 
