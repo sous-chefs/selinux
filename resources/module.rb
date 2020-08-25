@@ -2,7 +2,7 @@
 # Cookbook:: selinux
 # Resource:: module
 #
-# Copyright:: 2016-2018, Chef Software, Inc.
+# Copyright:: 2016-2019, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 
 property :source, String
 property :base_dir, String, default: '/etc/selinux/local'
-property :force, [TrueClass, FalseClass], default: false
+property :force, [true, false], default: false
 
 action :create do
   # base directory to save all the selinux files from this cookbook
@@ -32,7 +32,7 @@ action :create do
   # informed file extension (source attribute)
   sefile_source_ext = ::File.extname(sefile_source_path)
 
-  unless sefile_source_ext == '.te' # ~FC023
+  unless sefile_source_ext == '.te'
     log "SELinux must be a `.te` extention, informed: '#{sefile_source_ext}'" do
       level :fatal
     end
@@ -61,9 +61,9 @@ action :create do
                      end
   target_checksum = checksum(sefile_source_path)
 
-  log "Current checksum: '#{current_checksum.to_s.slice!(0..8)}' " \
+  log "Current checksum: '#{current_checksum.to_s.slice(0..8)}' " \
     "('#{sefile_target_path}')"
-  log "Target checksum: '#{target_checksum.to_s.slice!(0..8)}' " \
+  log "Target checksum: '#{target_checksum.to_s.slice(0..8)}' " \
     "('#{sefile_source_path}')"
 
   # checking if module is already installed
@@ -154,7 +154,7 @@ action_class do
       command "make -C '#{new_resource.base_dir}' -f #{selinux_makefile}"
       timeout 120
       user 'root'
-      notifies :run, 'ruby_block[look_for_pp_file]', :immediate
+      notifies :run, 'ruby_block[look_for_pp_file]', :immediately
     end
 
     ruby_block 'look_for_pp_file' do
