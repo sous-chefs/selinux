@@ -131,7 +131,7 @@ action_class do
   # not started with this directory first, this method will return 'selinux' as a
   # prefix.
   def source_location
-    if new_resource.source !~ /^selinux\//
+    if new_resource.source !~ %r{^selinux/}
       'selinux/' + new_resource.source
     else
       new_resource.source
