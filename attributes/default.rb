@@ -20,3 +20,4 @@
 
 default['selinux']['status'] = 'enforcing'
 default['selinux']['booleans'] = {}
+default['selinux']['skip_mcs'] = true
