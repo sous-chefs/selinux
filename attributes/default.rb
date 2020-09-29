@@ -18,6 +18,7 @@
 #
 # this recipe will be deprecated in future releases
 
-default['selinux']['status'] = 'enforcing'
+default['selinux']['state'] = 'enforcing'
+default['selinux']['state'] = node['selinux']['status'] if node['selinux']['status']
 default['selinux']['booleans'] = {}
 default['selinux']['install_mcstrans_package'] = true
