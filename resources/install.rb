@@ -35,7 +35,7 @@ action_class do
   #
   def package_list
     list = %w(policycoreutils selinux-policy selinux-policy-targeted libselinux-utils)
-    list << 'mcstrans' unless node['selinux']['skip_mcs']
+    list << 'mcstrans' if node['selinux']['install_mcstrans_package']
     list
   end
 end

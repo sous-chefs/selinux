@@ -20,4 +20,4 @@
 
 default['selinux']['status'] = 'enforcing'
 default['selinux']['booleans'] = {}
-default['selinux']['skip_mcs'] = true
+default['selinux']['install_mcstrans_package'] = true

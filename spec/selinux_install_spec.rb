@@ -9,10 +9,10 @@ describe 'selinux_install_test::default' do
     end
   end
 
-  context 'When user passes skip_mcs attribute as a false' do
+  context 'When user passes install_mcstrans_package attribute as a true' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'redhat', step_into: ['selinux_install']) do |node|
-        node.normal['selinux']['skip_mcs'] = false
+        node.normal['selinux']['install_mcstrans_package'] = true
       end.converge(described_recipe)
     end
 
@@ -23,10 +23,10 @@ describe 'selinux_install_test::default' do
     end
   end
 
-  context 'When user passes skip_mcs attribute as a true' do
+  context 'When user passes install_mcstrans_package attribute as a false' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'redhat', step_into: ['selinux_install']) do |node|
-        node.normal['selinux']['skip_mcs'] = true
+        node.normal['selinux']['install_mcstrans_package'] = false
       end.converge(described_recipe)
     end
 
