@@ -16,6 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include SELinux::Install
+
+property :packages, [String, Array],
+          default: lazy { default_install_packages }
+
 action :install do
   package package_list
 
@@ -34,7 +39,7 @@ action_class do
   # @return [Array<string>]
   #
   def package_list
-    list = %w(policycoreutils selinux-policy selinux-policy-targeted libselinux-utils)
+    list = new_resource.packages.dup
     list << 'mcstrans' if node['selinux']['install_mcstrans_package']
     list
   end

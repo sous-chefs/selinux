@@ -15,7 +15,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+include SELinux::Install
 
 property :source, String
 property :base_dir, String, default: '/etc/selinux/local'
@@ -141,7 +142,9 @@ action_class do
   # Calls package installer to deploy SELinux policy development tools, which
   # will allow us to compile a module locally.
   def install_policy_devel_packages
-    package %w(make policycoreutils selinux-policy-devel)
+    package 'install_policy_devel_packages' do
+      package_name default_install_packages_policy
+    end
   end
 
   # Calling make to compile all modules on the SELinux folder, and add a hook to

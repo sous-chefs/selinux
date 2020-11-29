@@ -45,7 +45,7 @@ alsa       1.12.2
   end
 
   it 'installs the dependency packages' do
-    expect(chef_run).to(install_package('make, policycoreutils, selinux-policy-devel'))
+    expect(chef_run).to(install_package('install_policy_devel_packages'))
   end
 
   it 'logs the steps taken' do

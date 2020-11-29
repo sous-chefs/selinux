@@ -1,6 +1,6 @@
 #
 # Cookbook:: selinux_module_test
-#        Recipe:: remove
+# Recipe:: remove
 #
 
 selinux_install 'selinux os prep'

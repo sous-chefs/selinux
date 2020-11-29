@@ -20,7 +20,11 @@ env:
   matrix:
   - CHEF_LICENSE=accept INSTANCE=default-centos-6
   - CHEF_LICENSE=accept INSTANCE=default-centos-7
-  - CHEF_LICENSE=accept INSTANCE=default-fedora-28
+  - CHEF_LICENSE=accept INSTANCE=default-centos-8
+  - CHEF_LICENSE=accept INSTANCE=default-fedora-33
+  - CHEF_LICENSE=accept INSTANCE=default-debian-10
+  - CHEF_LICENSE=accept INSTANCE=default-ubuntu-1804
+  - CHEF_LICENSE=accept INSTANCE=default-ubuntu-2004
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )

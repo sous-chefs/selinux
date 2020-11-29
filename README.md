@@ -28,12 +28,18 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 ## Platform:
 
 - RHEL 6/7
+- CentOS 6/7
+- Fedora
+- Ubuntu
+- Debian
 
 ## Attributes
 
 - `node['selinux']['state']` - The SELinux policy enforcement state. The state to set by default, to match the default SELinux state on RHEL. Can be "enforcing", "permissive", "disabled"
 - `node['selinux']['booleans']` - A hash of SELinux boolean names and the values they should be set to. Values can be off, false, or 0 to disable; or on, true, or 1 to enable.
+- `node['selinux']['packages']` - An array of packages needed to manage SELinux
 - `node['selinux']['install_mcstrans_package']` - Install mcstrans package, Default is `true`. If don't want to install mcstrans package, sets as a `false`
+- `node['selinux']['policy_devel_packages']` - An array of packages required to manage SELinux policy files
 
 ## Resources Overview
 

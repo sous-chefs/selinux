@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## Unreleased
+
+- Restore support for Debian/Ubuntu
+
 ## 3.1.1 (2020-09-29)
 
 - Move `default['selinux']['status']` attribute to `default['selinux']['state']` to avoid conflicts with Ohai in Chef Infra Client 16 - [@shoekstra](https://github.com/shoekstra)

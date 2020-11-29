@@ -21,4 +21,4 @@
 default['selinux']['state'] = 'enforcing'
 default['selinux']['state'] = node['selinux']['status'] if node['selinux']['status']
 default['selinux']['booleans'] = {}
-default['selinux']['install_mcstrans_package'] = true
+default['selinux']['install_mcstrans_package'] = !platform_family?('debian')

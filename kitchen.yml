@@ -3,6 +3,8 @@ driver:
 
 provisioner:
   name: chef_zero
+  product_version: latest
+  install_strategy: always
 
 verifier:
   name: inspec
@@ -10,7 +12,11 @@ verifier:
 platforms:
   - name: centos-6
   - name: centos-7
-  - name: fedora-29
+  - name: centos-8
+  - name: fedora-33
+  - name: debian-10
+  - name: ubuntu-1804
+  - name: ubuntu-2004
 
 suites:
 - name: default
