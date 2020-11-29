@@ -20,51 +20,58 @@ unified_mode true
 
 default_action :nothing
 
-property :temporary, [true, false], default: false
-property :policy, String, default: 'targeted'
+property :persistent, [true, false],
+          default: true
 
-action :enforcing do
-  # check for temporary attribute. if temporary, and disabled log error
-  execute 'selinux-enforcing' do
-    not_if "/usr/sbin/getenforce | egrep -qx 'Disabled|Enforcing'"
-    command '/usr/sbin/setenforce 1'
-  end
+property :policy, String,
+          default: 'targeted',
+          equal_to: %w(targeted strict),
+          description: 'SELinux policy type'
 
-  render_selinux_template('enforcing', new_resource.policy) unless new_resource.temporary
-end
-
-action :disabled do
-  log 'Temporary changes to the running SELinux status is not possible when SELinux is disabled.' if new_resource.temporary
-  render_selinux_template('disabled', new_resource.policy) unless new_resource.temporary
-end
-
-action :permissive do
-  execute 'selinux-permissive' do
-    not_if "/usr/sbin/getenforce | egrep -qx 'Disabled|Permissive'"
-    command '/usr/sbin/setenforce 0'
-  end
-
-  render_selinux_template('permissive', new_resource.policy) unless new_resource.temporary
-end
+deprecated_property_alias 'temporary', 'persistent', 'The temporary property was renamed persistent in the 4.0 release of this cookbook. Please update your cookbooks to use the new property name.'
 
 action_class do
-  def getenforce
-    @getenforce = shell_out('getenforce')
-    @getenforce.stdout.chomp.downcase
+  def enforce_status
+    shell_out!('getenforce').stdout.strip.downcase.to_sym
   end
 
-  def render_selinux_template(status, policy = 'targeted')
-    template "#{status} selinux config" do
+  def render_selinux_template(action)
+    template "#{action} selinux config" do
       path '/etc/selinux/config'
       source 'sysconfig/selinux.erb'
       cookbook 'selinux'
       variables(
-        selinux: status,
-        selinuxtype: policy
+        selinux: action,
+        selinuxtype: new_resource.policy
       )
     end
-    Chef::Log.warn('It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'enforcing'
-    Chef::Log.info('Changes from disabled require a reboot. ') if getenforce == 'disabled' && status == 'permissive'
-    Chef::Log.info('Disabling selinux requires a reboot.') if getenforce != 'disabled' && status == 'disabled'
+
+    Chef::Log.warn(
+      'It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot.'
+    ) if enforce_status == :disabled && action == :enforcing
+
+    Chef::Log.info('Changes from disabled require a reboot.') if enforce_status == :disabled && %i(enforcing permissive).include?(action)
+    Chef::Log.info('Disabling selinux requires a reboot.') if enforce_status != :disabled && action == :disabled
   end
+end
+
+action :enforcing do
+  execute 'selinux-enforcing' do
+    command '/usr/sbin/setenforce 1'
+  end unless enforce_status.eql?(:enforcing)
+
+  render_selinux_template('enforcing', new_resource.policy) if new_resource.persistent
+end
+
+action :disabled do
+  raise 'A non-persistent change to the disabled SELinux status is not possible.' unless new_resource.persistent
+  render_selinux_template('disabled', new_resource.policy)
+end
+
+action :permissive do
+  execute 'selinux-permissive' do
+    command '/usr/sbin/setenforce 0'
+  end unless enforce_status.eql?(:permissive)
+
+  render_selinux_template('permissive', new_resource.policy) if new_resource.persistent
 end

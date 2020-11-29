@@ -14,7 +14,11 @@ verifier:
 platforms:
   - name: centos-7
   - name: centos-8
+  - name: centos-stream-8
   - name: fedora-latest
+  - name: debian-10
+  - name: ubuntu-1804
+  - name: ubuntu-2004
 
 suites:
   - name: default

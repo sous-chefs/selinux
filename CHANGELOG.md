@@ -4,6 +4,10 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+- Refactor as a library cookbook
+- Restore support for Debian/Ubuntu
+- Expand test platforms
+
 ## 4.0.0 - *2021-07-21*
 
 - Sous Chefs adoption

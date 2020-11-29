@@ -31,36 +31,23 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 - Chef 15.3 or higher
 
-## Platform:
+## Platform
 
 - RHEL 7+
+- CentOS 7+
+- Fedora
+- Ubuntu
+- Debian
 
 ## Attributes
 
 - `node['selinux']['state']` - The SELinux policy enforcement state. The state to set by default, to match the default SELinux state on RHEL. Can be "enforcing", "permissive", "disabled"
 - `node['selinux']['booleans']` - A hash of SELinux boolean names and the values they should be set to. Values can be off, false, or 0 to disable; or on, true, or 1 to enable.
+- `node['selinux']['packages']` - An array of packages needed to manage SELinux
 - `node['selinux']['install_mcstrans_package']` - Install mcstrans package, Default is `true`. If don't want to install mcstrans package, sets as a `false`
+- `node['selinux']['policy_devel_packages']` - An array of packages required to manage SELinux policy files
 
 ## Resources Overview
-
-### selinux_state
-
-The `selinux_state` resource is used to manage the SELinux state on the system. It does this by using the `setenforce` command and rendering the `/etc/selinux/config` file from a template.
-
-### selinux_module
-
-This provider is intended to be part of the SELinux analysis workflow using tools like `audit2allow`.
-
-#### Actions
-
-- `:create`: install the module;
-- `:remove`: remove the module;
-
-#### Options
-
-- `source`: SELinux `.te` file, to be parsed, compiled and deployed as module. If simple basename informed, the provider will first look into `files/default/selinux` directory;
-- `base_dir`: Base directory to create and manage SELinux files, by default is `/etc/selinux/local`;
-- `force`: Boolean. Indicates if provider should re-install the same version of SELinux module already installed, in case the source `.te` file changes;
 
 ### selinux_state
 

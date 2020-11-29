@@ -1,6 +1,6 @@
 #
 # Cookbook:: selinux_module_test
-#        Recipe:: create
+# Recipe:: create
 #
 
 selinux_install 'selinux os prep'
