@@ -1,8 +1,8 @@
 #
 # Cookbook:: selinux
-# Recipe:: default
+# Resource:: boolean
 #
-# Copyright:: 2017-2019, Chef Software, Inc.
+# Copyright:: 2016-2019, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,17 +16,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-selinux_install 'selinux os prep'
+unified_mode true
 
-selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
-  action node['selinux']['state'].downcase.to_sym
+property :boolean, String,
+          required: true
+
+property :value, [Integer, String, TrueClass, FalseClass],
+          required: true
+
+action :set do
+  script "boolean_#{new_resource.boolean}" do
+    interpreter 'bash'
+    code "setsebool -P #{new_resource.boolean} #{selinux_bool_value}"
+    not_if "getsebool #{new_resource.boolean} |egrep -q \" #{selinux_bool_value}\"$"
+  end
 end
 
-node['selinux']['booleans'].each do |boolean, value|
-  selinux_boolean "boolean_#{boolean}" do
-    boolean boolean
-    value value
-
-    action :set
+action_class do
+  def selinux_bool_value
+    SELinuxServiceHelpers.selinux_bool(new_resource.value)
   end
 end
