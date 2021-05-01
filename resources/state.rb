@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+unified_mode true
+
 default_action :nothing
 
 property :temporary, [true, false], default: false
