@@ -20,8 +20,12 @@ unified_mode true
 
 default_action :nothing
 
+property :config_file, String,
+          default: '/etc/selinux/config'
+
 property :persistent, [true, false],
-          default: true
+          default: true,
+          description: 'Persist status update to the selinux configuration file'
 
 property :policy, String,
           default: 'targeted',
@@ -37,11 +41,11 @@ action_class do
 
   def render_selinux_template(action)
     template "#{action} selinux config" do
-      path '/etc/selinux/config'
+      path new_resource.config_file
       source 'sysconfig/selinux.erb'
       cookbook 'selinux'
       variables(
-        selinux: action,
+        selinux: action.to_s,
         selinuxtype: new_resource.policy
       )
     end
@@ -60,12 +64,12 @@ action :enforcing do
     command '/usr/sbin/setenforce 1'
   end unless enforce_status.eql?(:enforcing)
 
-  render_selinux_template('enforcing', new_resource.policy) if new_resource.persistent
+  render_selinux_template(action) if new_resource.persistent
 end
 
 action :disabled do
   raise 'A non-persistent change to the disabled SELinux status is not possible.' unless new_resource.persistent
-  render_selinux_template('disabled', new_resource.policy)
+  render_selinux_template(action)
 end
 
 action :permissive do
@@ -73,5 +77,5 @@ action :permissive do
     command '/usr/sbin/setenforce 0'
   end unless enforce_status.eql?(:permissive)
 
-  render_selinux_template('permissive', new_resource.policy) if new_resource.persistent
+  render_selinux_template(action) if new_resource.persistent
 end

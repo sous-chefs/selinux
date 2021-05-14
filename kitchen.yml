@@ -21,8 +21,19 @@ platforms:
   - name: ubuntu-2004
 
 suites:
-  - name: default
+  - name: enforcing
     run_list:
-      - recipe[selinux_module_test::create]
-      - recipe[selinux_module_test::remove]
-      - recipe[selinux_state_test]
+      - recipe[selinux_test::install]
+      - recipe[selinux_test::state_enforcing]
+      - recipe[selinux_test::module]
+      - recipe[selinux_test::boolean]
+  - name: permissive
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux_test::state_permissive]
+      - recipe[selinux_test::module]
+      - recipe[selinux_test::boolean]
+  - name: disabled
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux_test::state_disabled]
