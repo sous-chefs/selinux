@@ -7,6 +7,9 @@ provisioner:
   product_name: chef
   chef_license: accept-no-persist
   deprecations_as_errors: true
+  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
+  install_strategy: always
+  log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
 
 verifier:
   name: inspec
@@ -25,15 +28,28 @@ suites:
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux_test::state_enforcing]
-      - recipe[selinux_test::module]
+      - recipe[selinux_test::module_create]
       - recipe[selinux_test::boolean]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/enforcing
   - name: permissive
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux_test::state_permissive]
-      - recipe[selinux_test::module]
+      - recipe[selinux_test::module_create]
+      - recipe[selinux_test::module_remove]
       - recipe[selinux_test::boolean]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/permissive
   - name: disabled
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux_test::state_disabled]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/disabled
