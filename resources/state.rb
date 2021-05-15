@@ -40,6 +40,12 @@ action_class do
   end
 
   def render_selinux_template(action)
+    Chef::Log.warn(
+      'It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot.'
+    ) if enforce_status == :disabled && action == :enforcing
+    Chef::Log.warn('Changes from disabled require a reboot.') if enforce_status == :disabled && %i(enforcing permissive).include?(action)
+    Chef::Log.warn('Disabling selinux requires a reboot.') if enforce_status != :disabled && action == :disabled
+
     template "#{action} selinux config" do
       path new_resource.config_file
       source 'selinux.erb'
@@ -49,20 +55,15 @@ action_class do
         selinuxtype: new_resource.policy
       )
     end
-
-    Chef::Log.warn(
-      'It is advised to set the configuration to permissive to relabel the filesystem prior to enabling. Changes from disabled require a reboot.'
-    ) if enforce_status == :disabled && action == :enforcing
-
-    Chef::Log.info('Changes from disabled require a reboot.') if enforce_status == :disabled && %i(enforcing permissive).include?(action)
-    Chef::Log.info('Disabling selinux requires a reboot.') if enforce_status != :disabled && action == :disabled
   end
 end
 
 action :enforcing do
+  Chef::Log.warn('Unable to set SELinux enforcement to enforcing as SELinux is currently disabled.') if enforce_status == :disabled
+
   execute 'selinux-enforcing' do
     command '/usr/sbin/setenforce 1'
-  end unless enforce_status.eql?(:enforcing)
+  end unless %i(enforcing disabled).include?(enforce_status)
 
   render_selinux_template(action) if new_resource.persistent
 end
@@ -73,9 +74,11 @@ action :disabled do
 end
 
 action :permissive do
+  Chef::Log.warn('Unable to set SELinux enforcement to permissive as SELinux is currently disabled.') if enforce_status == :disabled
+
   execute 'selinux-permissive' do
     command '/usr/sbin/setenforce 0'
-  end unless enforce_status.eql?(:permissive)
+  end unless %i(permissive disabled).include?(enforce_status)
 
   render_selinux_template(action) if new_resource.persistent
 end
