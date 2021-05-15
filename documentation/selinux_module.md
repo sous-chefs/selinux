@@ -10,6 +10,8 @@ Introduced: v4.0.0
 
 - `:create`
 - `:delete`
+- `:install`
+- `:remove`
 
 ## Properties
 

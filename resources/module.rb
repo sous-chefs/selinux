@@ -19,33 +19,53 @@
 unified_mode true
 
 property :cookbook, String,
-          default: lazy { cookbook_name }
+          default: lazy { cookbook_name },
+          description: 'Cookbook to source from module source file from'
 
 property :source, String,
-          coerce: proc { |p| p.match?(%r{^selinux/}) ? p : "selinux/#{p}" }
+          description: 'Module source file name'
+
+property :content, String,
+          description: 'Module source as String'
 
 property :base_dir, String,
-          default: '/etc/selinux/local'
+          default: '/etc/selinux/local',
+          description: 'Directory to create module source file in'
 
 property :module_name, String,
-          default: lazy { name }
+          default: lazy { name },
+          description: 'Override the module name'
 
 action :create do
   directory new_resource.base_dir
   sefile_target_path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}.te")
   sefile_pp_target_path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}.pp")
 
-  cookbook_file sefile_target_path do
-    cookbook new_resource.cookbook
-    source new_resource.source
+  if property_is_set?(:content)
+    file sefile_target_path do
+      content new_resource.content
 
-    mode '0600'
-    owner 'root'
-    group 'root'
+      mode '0600'
+      owner 'root'
+      group 'root'
 
-    action :create
+      action :create
 
-    notifies :run, "execute[Compiling SELinux modules at '#{new_resource.base_dir}']", :immediately
+      notifies :run, "execute[Compiling SELinux modules at '#{new_resource.base_dir}']", :immediately
+    end
+  else
+    cookbook_file sefile_target_path do
+      cookbook new_resource.cookbook
+      source new_resource.source
+
+      mode '0600'
+      owner 'root'
+      group 'root'
+
+      action :create
+
+      notifies :run, "execute[Compiling SELinux modules at '#{new_resource.base_dir}']", :immediately
+    end
   end
 
   execute "Compiling SELinux modules at '#{new_resource.base_dir}'" do
@@ -67,7 +87,7 @@ action :create do
   end
 end
 
-action :remove do
+action :delete do
   execute "Removing SELinux module: '#{new_resource.module_name}'" do
     command "semodule --remove='#{new_resource.module_name}'"
     action :run
