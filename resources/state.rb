@@ -42,7 +42,7 @@ action_class do
   def render_selinux_template(action)
     template "#{action} selinux config" do
       path new_resource.config_file
-      source 'sysconfig/selinux.erb'
+      source 'selinux.erb'
       cookbook 'selinux'
       variables(
         selinux: action.to_s,
