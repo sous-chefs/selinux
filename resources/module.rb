@@ -2,7 +2,7 @@
 # Cookbook:: selinux
 # Resource:: module
 #
-# Copyright:: 2016-2019, Chef Software, Inc.
+# Copyright:: 2016-2021, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+unified_mode true
 
 property :source, String
 property :base_dir, String, default: '/etc/selinux/local'
@@ -75,7 +77,7 @@ action :create do
       "version '#{sefile_source.version}', is up-to-date!"
   else
     # rendering selinux file to base directory
-    sefile_target = file sefile_target_path do
+    file sefile_target_path do
       content sefile_source.content
       mode '0600'
       owner 'root'
