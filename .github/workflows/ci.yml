@@ -42,7 +42,8 @@ jobs:
         os:
           - centos-7
           - centos-8
-          - fedora-latest
+          # TODO: reenable once https://github.com/chef/bento/issues/1333 is fixed
+          # - fedora-latest
         suite:
           - default
       fail-fast: false
