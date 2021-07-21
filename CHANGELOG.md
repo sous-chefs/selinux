@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## Unreleased
+## 4.0.0 - *2021-07-21*
 
 - Sous Chefs adoption
 - Enable `unified_mode` for Chef 17 compatibility
