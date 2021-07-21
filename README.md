@@ -1,6 +1,12 @@
 # SELinux Cookbook
 
-[![Build Status](https://travis-ci.org/chef-cookbooks/selinux.svg?branch=master)](https://travis-ci.org/chef-cookbooks/selinux) [![Cookbook Version](https://img.shields.io/cookbook/v/selinux.svg)](https://supermarket.chef.io/cookbooks/selinux)
+[![Cookbook Version](https://img.shields.io/cookbook/v/selnux.svg)](https://supermarket.chef.io/cookbooks/selinux)
+[![CI State](https://github.com/sous-chefs/selinux/workflows/ci/badge.svg)](https://github.com/sous-chefs/selinux/actions?query=workflow%3Aci)
+[![OpenCollective](https://opencollective.com/sous-chefs/backers/badge.svg)](#backers)
+[![OpenCollective](https://opencollective.com/sous-chefs/sponsors/badge.svg)](#sponsors)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+
+## Description
 
 The SELinux (Security Enhanced Linux) cookbook provides recipes for manipulating SELinux policy enforcement state.
 
@@ -23,11 +29,11 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 ## Requirements
 
-- Chef 13 or higher
+- Chef 15.3 or higher
 
 ## Platform:
 
-- RHEL 6/7
+- RHEL 7+
 
 ## Attributes
 
@@ -41,37 +47,33 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 The `selinux_state` resource is used to manage the SELinux state on the system. It does this by using the `setenforce` command and rendering the `/etc/selinux/config` file from a template.
 
-## selinux_module
+### selinux_module
 
 This provider is intended to be part of the SELinux analysis workflow using tools like `audit2allow`.
 
-### Actions
+#### Actions
 
 - `:create`: install the module;
 - `:remove`: remove the module;
 
-### Options
+#### Options
 
 - `source`: SELinux `.te` file, to be parsed, compiled and deployed as module. If simple basename informed, the provider will first look into `files/default/selinux` directory;
 - `base_dir`: Base directory to create and manage SELinux files, by default is `/etc/selinux/local`;
 - `force`: Boolean. Indicates if provider should re-install the same version of SELinux module already installed, in case the source `.te` file changes;
 
-### Attributes
-
-LWRP interface, recipe attributes are not applicable here.
-
-## selinux_state
+### selinux_state
 
 The `selinux_state` resource is used to manage the SELinux state on the system. It does this by using the `setenforce` command and rendering the `/etc/selinux/config` file from a template.
 
-### Actions
+#### Actions
 
 - `:nothing`: default action, does nothing
 - `:enforcing`: Sets SELinux to enforcing.
 - `:disabled`: Sets SELinux to disabled.
 - `:permissive`: Sets SELinux to permissive.
 
-### Properties
+#### Properties
 
 - `temporary` - true, false, default false. Allows the temporary change between permissive and enabled states which don't require a reboot.
 - `selinuxtype` - targeted, mls, default targeted. Determines the policy that will be configured in the `/etc/selinux/config` file. The default value is `targeted` which enables selinux in a mode where only selected processes are protected. `mls` is multilevel security which enables selinux in a mode where all processes are protected.
@@ -171,7 +173,7 @@ By default, this cookbook will have SELinux enforcing by default, as the default
 
 You can simply set the attribute in a role applied to the node:
 
-```
+```ruby
 name "base"
 description "Base role applied to all nodes."
 default_attributes(
@@ -183,7 +185,7 @@ default_attributes(
 
 Or, you can apply the recipe to the run list (e.g., in a role):
 
-```
+```ruby
 name "base"
 description "Base role applied to all nodes."
 run_list(
@@ -191,24 +193,31 @@ run_list(
 )
 ```
 
-## License & Authors
+## Maintainers
 
-- **Author:** Sean OMeara ([sean@sean.io](mailto:sean@sean.io))
-- **Author:** Joshua Timberman ([joshua@chef.io](mailto:joshua@chef.io))
-- **Author:** Jennifer Davis ([sigje@chef.io](mailto:sigje@chef.io))
+This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of Chef cookbook maintainers working together to maintain important cookbooks. If you’d like to know more please visit [sous-chefs.org](https://sous-chefs.org/) or come chat with us on the Chef Community Slack in [#sous-chefs](https://chefcommunity.slack.com/messages/C2V7B88SF).
 
-**Copyright:** 2008-2018, Chef Software, Inc.
+## Contributors
 
-```
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+This project exists thanks to all the people who [contribute.](https://opencollective.com/sous-chefs/contributors.svg?width=890&button=false)
 
-    http://www.apache.org/licenses/LICENSE-2.0
+### Backers
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+Thank you to all our backers!
+
+![https://opencollective.com/sous-chefs#backers](https://opencollective.com/sous-chefs/backers.svg?width=600&avatarHeight=40)
+
+### Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website.
+
+![https://opencollective.com/sous-chefs/sponsor/0/website](https://opencollective.com/sous-chefs/sponsor/0/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/1/website](https://opencollective.com/sous-chefs/sponsor/1/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/2/website](https://opencollective.com/sous-chefs/sponsor/2/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/3/website](https://opencollective.com/sous-chefs/sponsor/3/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/4/website](https://opencollective.com/sous-chefs/sponsor/4/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/5/website](https://opencollective.com/sous-chefs/sponsor/5/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/6/website](https://opencollective.com/sous-chefs/sponsor/6/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/7/website](https://opencollective.com/sous-chefs/sponsor/7/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/8/website](https://opencollective.com/sous-chefs/sponsor/8/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/9/website](https://opencollective.com/sous-chefs/sponsor/9/avatar.svg?avatarHeight=100)

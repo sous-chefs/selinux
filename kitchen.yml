@@ -1,20 +1,24 @@
+---
 driver:
   name: vagrant
 
 provisioner:
   name: chef_zero
+  product_name: chef
+  chef_license: accept-no-persist
+  deprecations_as_errors: true
 
 verifier:
   name: inspec
 
 platforms:
-  - name: centos-6
   - name: centos-7
-  - name: fedora-29
+  - name: centos-8
+  - name: fedora-latest
 
 suites:
-- name: default
-  run_list:
-    - recipe[selinux_module_test::create]
-    - recipe[selinux_module_test::remove]
-    - recipe[selinux_state_test]
+  - name: default
+    run_list:
+      - recipe[selinux_module_test::create]
+      - recipe[selinux_module_test::remove]
+      - recipe[selinux_state_test]

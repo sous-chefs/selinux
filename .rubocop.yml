@@ -1,7 +1,6 @@
-Lint/UselessAssignment:
-  Exclude:
-    - 'resources/module.rb'
-
-Style/RegexpLiteral:
-  Exclude:
-    - 'resources/module.rb'
+AllCops:
+  TargetChefVersion: 17.latest
+Chef/Modernize/FoodcriticComments:
+  Enabled: true
+Chef/Style/CopyrightCommentFormat:
+  Enabled: true
