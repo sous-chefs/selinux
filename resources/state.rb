@@ -18,6 +18,8 @@
 
 unified_mode true
 
+include SELinux::Cookbook::StateHelpers
+
 default_action :nothing
 
 property :config_file, String,
@@ -28,8 +30,8 @@ property :persistent, [true, false],
           description: 'Persist status update to the selinux configuration file'
 
 property :policy, String,
-          default: 'targeted',
-          equal_to: %w(targeted strict),
+          default: lazy { default_policy_platform },
+          equal_to: %w(default minimum mls src strict targeted),
           description: 'SELinux policy type'
 
 property :automatic_reboot, [true, false, Symbol],

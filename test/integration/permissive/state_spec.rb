@@ -12,5 +12,5 @@ describe selinux do
   it { should_not be_disabled }
   it { should_not be_enforcing }
   it { should be_permissive }
-  its('policy') { should eq 'targeted' }
+  its('policy') { should eq os.family.eql?('debian') ? 'default' : 'targeted' }
 end
