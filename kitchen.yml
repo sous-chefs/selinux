@@ -20,8 +20,8 @@ platforms:
   - name: centos-stream-8
   - name: fedora-latest
   - name: debian-10
-  - name: ubuntu-1804
-  - name: ubuntu-2004
+  - name: ubuntu-18.04
+  - name: ubuntu-20.04
 
 suites:
   - name: enforcing

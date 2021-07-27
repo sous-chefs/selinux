@@ -42,10 +42,15 @@ jobs:
         os:
           - centos-7
           - centos-8
-          # TODO: reenable once https://github.com/chef/bento/issues/1333 is fixed
-          # - fedora-latest
+          - centos-stream-8
+          # - fedora-latest # TODO: reenable once https://github.com/chef/bento/issues/1333 is fixed
+          - debian-10
+          - ubuntu-1804
+          - ubuntu-2004
         suite:
-          - default
+          - enforcing
+          - permissive
+          - disabled
       fail-fast: false
 
     steps:
