@@ -8,8 +8,10 @@ provisioner:
   chef_license: accept-no-persist
   deprecations_as_errors: true
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
-  install_strategy: always
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
+  # Allow reboots
+  max_retries: 10
+  wait_for_retry: 180
 
 verifier:
   name: inspec

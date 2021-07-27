@@ -18,5 +18,6 @@
 selinux_install 'selinux'
 
 selinux_state 'disabled' do
+  automatic_reboot true
   action :disabled
 end

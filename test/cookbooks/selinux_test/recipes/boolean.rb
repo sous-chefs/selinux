@@ -1,5 +1,6 @@
 selinux_boolean 'ssh_keysign' do
   value true
+  not_if { platform_family?('debian') }
 end
 
 selinux_boolean 'httpd_enable_cgi' do

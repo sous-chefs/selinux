@@ -18,5 +18,6 @@
 selinux_install 'selinux'
 
 selinux_state 'permissive' do
+  automatic_reboot true
   action :permissive
 end
