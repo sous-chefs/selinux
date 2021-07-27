@@ -27,7 +27,7 @@ suites:
   - name: enforcing
     run_list:
       - recipe[selinux_test::install]
-      - recipe[selinux_test::state_enforcing]
+      - recipe[selinux::enforcing]
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::boolean]
     verifier:
@@ -37,7 +37,7 @@ suites:
   - name: permissive
     run_list:
       - recipe[selinux_test::install]
-      - recipe[selinux_test::state_permissive]
+      - recipe[selinux::permissive]
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::module_remove]
       - recipe[selinux_test::boolean]
@@ -48,7 +48,7 @@ suites:
   - name: disabled
     run_list:
       - recipe[selinux_test::install]
-      - recipe[selinux_test::state_disabled]
+      - recipe[selinux::disabled]
     verifier:
       inspec_tests:
         - test/integration/common
