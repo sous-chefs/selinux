@@ -10,7 +10,7 @@ provisioner:
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
   # Allow reboots
-  max_retries: 10
+  max_retries: 60
   wait_for_retry: 300
   root_path: /var/tmp/kitchen
 
@@ -31,6 +31,7 @@ suites:
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::enforcing]
+      - recipe[selinux_test::debian_enforcing_prepare]
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::boolean]
     verifier:
