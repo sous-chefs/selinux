@@ -36,7 +36,16 @@ load_current_value do |new_resource|
   value shell_out!("getsebool #{new_resource.boolean}").stdout.split('-->').map(&:strip).last
 end
 
+action_class do
+  include SELinux::Cookbook::StateHelpers
+end
+
 action :set do
+  if selinux_disabled?
+    Chef::Log.warn("Unable to set SELinux boolean #{new_resource.name} as SELinux is disabled")
+    return
+  end
+
   converge_if_changed do
     cmd = 'setsebool'
     cmd += ' -P' if new_resource.persistent
