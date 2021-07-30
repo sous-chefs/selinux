@@ -36,13 +36,20 @@ property :module_name, String,
           default: lazy { name },
           description: 'Override the module name'
 
+action_class do
+  def selinux_module_filepath(type)
+    path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}")
+    path.concat(".#{type}") if type
+
+    path
+  end
+end
+
 action :create do
   directory new_resource.base_dir
-  sefile_target_path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}.te")
-  sefile_pp_target_path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}.pp")
 
   if property_is_set?(:content)
-    file sefile_target_path do
+    file selinux_module_filepath('te') do
       content new_resource.content
 
       mode '0600'
@@ -54,7 +61,7 @@ action :create do
       notifies :run, "execute[Compiling SELinux modules at '#{new_resource.base_dir}']", :immediately
     end
   else
-    cookbook_file sefile_target_path do
+    cookbook_file selinux_module_filepath('te') do
       cookbook new_resource.cookbook
       source new_resource.source
 
@@ -76,19 +83,38 @@ action :create do
 
     action :nothing
 
-    notifies :run, "execute[Installing SELinux '.pp' module: '#{sefile_pp_target_path}']", :immediately
+    notifies :run, "execute[Install SELinux module '#{selinux_module_filepath('pp')}']", :immediately
   end
 
-  raise "Compilation must have failed, no 'pp' file found at: '#{sefile_pp_target_path}'" unless ::File.exist?(sefile_pp_target_path)
+  raise "Compilation must have failed, no 'pp' file found at: '#{selinux_module_filepath('pp')}'" unless ::File.exist?(selinux_module_filepath('pp'))
 
-  execute "Installing SELinux '.pp' module: '#{sefile_pp_target_path}'" do
-    command "semodule --install '#{sefile_pp_target_path}'"
+  execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
+    command "semodule --install '#{selinux_module_filepath('pp')}'"
     action :nothing
   end
 end
 
 action :delete do
-  execute "Removing SELinux module: '#{new_resource.module_name}'" do
+  %w(fc if pp te).each do |type|
+    next unless ::File.exist?(selinux_module_filepath(type))
+
+    file selinux_module_filepath(type) do
+      action :delete
+    end
+  end
+end
+
+action :install do
+  raise "Module must be compiled before it can be installed, no 'pp' file found at: '#{selinux_module_filepath('pp')}'" unless ::File.exist?(selinux_module_filepath('pp'))
+
+  execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
+    command "semodule --install '#{selinux_module_filepath('pp')}'"
+    action :nothing
+  end
+end
+
+action :remove do
+  execute "Remove SELinux module: '#{new_resource.module_name}'" do
     command "semodule --remove='#{new_resource.module_name}'"
     action :run
   end if SELinux::Cookbook::ModuleHelpers.installed?(new_resource.module_name)

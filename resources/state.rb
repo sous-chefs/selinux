@@ -65,41 +65,42 @@ action_class do
   end
 
   def node_selinux_restart
-    outer_action = action
-    if new_resource.automatic_reboot
-      reboot 'selinux_state_change' do
-        delay_mins 1
-        reason "SELinux state change to #{outer_action} from #{selinux_state}"
-
-        action new_resource.automatic_reboot.is_a?(Symbol) ? new_resource.automatic_reboot : :reboot_now
-      end
-    else
+    unless new_resource.automatic_reboot
       Chef::Log.warn("SELinux state change to #{action} requires a manual reboot as SELinux is currently #{selinux_state} and automatic reboots are disabled.")
+      return
+    end
+
+    outer_action = action
+    reboot 'selinux_state_change' do
+      delay_mins 1
+      reason "SELinux state change to #{outer_action} from #{selinux_state}"
+
+      action new_resource.automatic_reboot.is_a?(Symbol) ? new_resource.automatic_reboot : :reboot_now
     end
   end
 end
 
 action :enforcing do
-  execute 'selinux-enforcing' do
+  execute 'selinux-setenforce-enforcing' do
     command '/usr/sbin/setenforce 1'
   end unless selinux_disabled? || selinux_enforcing?
 
-  execute 'selinux-activate' do
+  execute 'debian-selinux-activate' do
     command '/usr/sbin/selinux-activate'
-  end if platform_family?('debian') && selinux_disabled?
+  end if selinux_activate_required?
 
   render_selinux_template(action) if new_resource.persistent
   node_selinux_restart if state_change_reboot_required?
 end
 
 action :permissive do
-  execute 'selinux-permissive' do
+  execute 'selinux-setenforce-permissive' do
     command '/usr/sbin/setenforce 0'
   end unless selinux_disabled? || selinux_permissive?
 
-  execute 'selinux-activate' do
+  execute 'debian-selinux-activate' do
     command '/usr/sbin/selinux-activate'
-  end if platform_family?('debian') && selinux_disabled?
+  end if selinux_activate_required?
 
   render_selinux_template(action) if new_resource.persistent
   node_selinux_restart if state_change_reboot_required?

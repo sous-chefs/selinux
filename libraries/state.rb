@@ -24,6 +24,12 @@ module SELinux
         state
       end
 
+      def selinux_activate_required?
+        return false unless platform_family?('debian')
+
+        !File.read('/etc/default/grub').match?('security=selinux')
+      end
+
       def default_policy_platform
         case node['platform_family']
         when 'rhel', 'fedora', 'amazon'
