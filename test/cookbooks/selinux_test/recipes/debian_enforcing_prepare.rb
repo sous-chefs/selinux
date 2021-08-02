@@ -14,6 +14,15 @@ selinux_module 'selinux_module_allow_loading' do
   action :create
 end
 
+# Ubuntu won't allow kitchen to connect by default
+selinux_module 'selinux_module_allow_kitchen_converge' do
+  cookbook 'selinux_test'
+  source 'kitchenConverge.te'
+  module_name 'kitchenConverge'
+
+  action :create
+end
+
 # Debian platforms won't allow SELinux modules and booleans to be read by inspec over SSH
 selinux_module 'selinux_module_allow_kitchen_verify' do
   cookbook 'selinux_test'
@@ -24,6 +33,5 @@ selinux_module 'selinux_module_allow_kitchen_verify' do
 end
 
 selinux_state 'reset_enforcing' do
-  persistent false
   action :enforcing
 end

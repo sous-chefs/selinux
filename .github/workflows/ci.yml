@@ -51,6 +51,9 @@ jobs:
           - enforcing
           - permissive
           - disabled
+        exclude:
+          - os: ubuntu-1804
+            suite: enforcing
       fail-fast: false
 
     steps:

@@ -1,3 +1,3 @@
 selinux_module 'test' do
-  action :delete
+  action %i(remove delete)
 end

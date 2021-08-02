@@ -30,7 +30,7 @@ suites:
   - name: enforcing
     run_list:
       - recipe[selinux_test::install]
-      - recipe[selinux::enforcing]
+      - recipe[selinux_test::enforcing]
       - recipe[selinux_test::debian_enforcing_prepare]
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::boolean]
