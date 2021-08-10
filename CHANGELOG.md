@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## Unreleased
+## 5.0.0 - *2021-08-10*
 
 ### Note: With version 5.0.0 the default recipe has been removed
 
