@@ -15,159 +15,107 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 unified_mode true
 
-property :source, String
-property :base_dir, String, default: '/etc/selinux/local'
-property :force, [true, false], default: false
+property :cookbook, String,
+          default: lazy { cookbook_name },
+          description: 'Cookbook to source from module source file from'
+
+property :source, String,
+          description: 'Module source file name'
+
+property :content, String,
+          description: 'Module source as String'
+
+property :base_dir, String,
+          default: '/etc/selinux/local',
+          description: 'Directory to create module source file in'
+
+property :module_name, String,
+          default: lazy { name },
+          description: 'Override the module name'
+
+action_class do
+  def selinux_module_filepath(type)
+    path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}")
+    path.concat(".#{type}") if type
+
+    path
+  end
+end
 
 action :create do
-  # base directory to save all the selinux files from this cookbook
-  base_dir = directory new_resource.base_dir do
-    action :create
-  end
+  directory new_resource.base_dir
 
-  # finding source file path based on provider runtime attributes
-  sefile_source_path = find_source_file_path
-  # informed file extension (source attribute)
-  sefile_source_ext = ::File.extname(sefile_source_path)
+  if property_is_set?(:content)
+    file selinux_module_filepath('te') do
+      content new_resource.content
 
-  unless sefile_source_ext == '.te'
-    log "SELinux must be a `.te` extention, informed: '#{sefile_source_ext}'" do
-      level :fatal
-    end
-  end
-
-  # helper class to read meta-information about the SELinux Module
-  sefile_source = SELinux::File.new(::File.open(sefile_source_path).read)
-  # based on full path, extracting the file-name
-  sefile_name = ::File.basename(sefile_source_path)
-
-  # using based directory plus file-name to create destination path and also
-  # for (to be compiled) `.pp` module
-  sefile_target_path = ::File.join(base_dir.path, sefile_name)
-  sefile_pp_target_path = ::File.join(
-    base_dir.path,
-    # inline extension swap, from `.te` to `.pp`
-    ::File.basename(sefile_source_path, '.te') + '.pp'
-  )
-
-  # collecting checksum's, for installed file and informe the informed on
-  # provider call
-  current_checksum = begin
-                       checksum(sefile_target_path)
-                     rescue
-                       nil
-                     end
-  target_checksum = checksum(sefile_source_path)
-
-  log "Current checksum: '#{current_checksum.to_s.slice(0..8)}' " \
-    "('#{sefile_target_path}')"
-  log "Target checksum: '#{target_checksum.to_s.slice(0..8)}' " \
-    "('#{sefile_source_path}')"
-
-  # checking if module is already installed
-  semodule = SELinux::Module.new(sefile_source.module_name)
-
-  # if module is installed and target files have the same checksum, this provider is up-to-date
-  if semodule.installed?(sefile_source.version) && target_checksum == current_checksum
-    log "SELinux module '#{sefile_source.module_name}', " \
-      "version '#{sefile_source.version}', is up-to-date!"
-  else
-    # rendering selinux file to base directory
-    file sefile_target_path do
-      content sefile_source.content
       mode '0600'
       owner 'root'
       group 'root'
+
       action :create
-    end
 
-    if semodule.installed?(sefile_source.version) && !new_resource.force
-      raise 'SELinux module has changed but version is already installed ' \
-        "'#{sefile_name}' (v#{sefile_source.version}).\n" \
-        " *** Consider a module version bump or use 'force' option. *** "
+      notifies :run, "execute[Compiling SELinux modules at '#{new_resource.base_dir}']", :immediately
     end
+  else
+    cookbook_file selinux_module_filepath('te') do
+      cookbook new_resource.cookbook
+      source new_resource.source
 
-    install_policy_devel_packages
-    compile_selinux_modules(sefile_pp_target_path)
+      mode '0600'
+      owner 'root'
+      group 'root'
 
-    execute "Installing SELinux '.pp' module: '#{sefile_pp_target_path}'" do
-      command "semodule --install '#{sefile_pp_target_path}'"
-      action :run
+      action :create
+
+      notifies :run, "execute[Compiling SELinux modules at '#{new_resource.base_dir}']", :immediately
     end
+  end
+
+  execute "Compiling SELinux modules at '#{new_resource.base_dir}'" do
+    cwd new_resource.base_dir
+    command "make -C #{new_resource.base_dir} -f /usr/share/selinux/devel/Makefile"
+    timeout 120
+    user 'root'
+
+    action :nothing
+
+    notifies :run, "execute[Install SELinux module '#{selinux_module_filepath('pp')}']", :immediately
+  end
+
+  raise "Compilation must have failed, no 'pp' file found at: '#{selinux_module_filepath('pp')}'" unless ::File.exist?(selinux_module_filepath('pp'))
+
+  execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
+    command "semodule --install '#{selinux_module_filepath('pp')}'"
+    action :nothing
+  end
+end
+
+action :delete do
+  %w(fc if pp te).each do |type|
+    next unless ::File.exist?(selinux_module_filepath(type))
+
+    file selinux_module_filepath(type) do
+      action :delete
+    end
+  end
+end
+
+action :install do
+  raise "Module must be compiled before it can be installed, no 'pp' file found at: '#{selinux_module_filepath('pp')}'" unless ::File.exist?(selinux_module_filepath('pp'))
+
+  execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
+    command "semodule --install '#{selinux_module_filepath('pp')}'"
+    action :nothing
   end
 end
 
 action :remove do
-  semodule = SELinux::Module.new(new_resource.name)
-
-  if semodule.installed?
-    execute "Removing SELinux module: '#{new_resource.name}'" do
-      command "semodule --remove='#{new_resource.name}'"
-      action :run
-    end
-  end
-end
-
-action_class do
-  include Chef::Mixin::Checksum
-
-  # Returns the actual path of the informed 'file' attribute
-  def find_source_file_path
-    # determining from which cookbook to get the files from
-    cookbook = run_context.cookbook_collection[@new_resource.cookbook_name]
-
-    # using chef internals to look for the desired file and return it, when it
-    # finds more than one possible occurnence error will spawn
-    cookbook.preferred_filename_on_disk_location(
-      run_context.node,
-      :files,
-      source_location
-    )
-  end
-
-  # Wrapper new_resource.source to find files under 'selinux' directory, if it's
-  # not started with this directory first, this method will return 'selinux' as a
-  # prefix.
-  def source_location
-    if new_resource.source !~ %r{^selinux/}
-      'selinux/' + new_resource.source
-    else
-      new_resource.source
-    end
-  end
-
-  # Calls package installer to deploy SELinux policy development tools, which
-  # will allow us to compile a module locally.
-  def install_policy_devel_packages
-    package %w(make policycoreutils selinux-policy-devel)
-  end
-
-  # Calling make to compile all modules on the SELinux folder, and add a hook to
-  # handle desired `.pp` file creation, it will raise if not found.
-  def compile_selinux_modules(sefile_pp_target_path)
-    selinux_makefile = '/usr/share/selinux/devel/Makefile'
-
-    execute "Compiling SELinux modules at '#{new_resource.base_dir}'" do
-      cwd new_resource.base_dir
-      command "make -C '#{new_resource.base_dir}' -f #{selinux_makefile}"
-      timeout 120
-      user 'root'
-      notifies :run, 'ruby_block[look_for_pp_file]', :immediately
-    end
-
-    ruby_block 'look_for_pp_file' do
-      block do
-        Chef::Log.fatal(
-          "Can't find compiled file: '#{sefile_pp_target_path}'.")
-        raise "Compilation must have failed, no 'pp' " \
-          "file found at: '#{sefile_pp_target_path}'"
-      end
-      not_if { ::File.exist?(sefile_pp_target_path) }
-      action :nothing
-    end
-  end
+  execute "Remove SELinux module: '#{new_resource.module_name}'" do
+    command "semodule --remove='#{new_resource.module_name}'"
+    action :run
+  end if SELinux::Cookbook::ModuleHelpers.installed?(new_resource.module_name)
 end

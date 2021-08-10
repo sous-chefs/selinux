@@ -4,6 +4,16 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+### Note: With version 5.0.0 the default recipe has been removed
+
+- Major refactoring
+- Restore support for Debian based distros
+- All resources now use unified_mode
+- Added selinux_boolean resource
+- Remove attributes and default recipe
+  - Replaced with a set of bare recipes for the three selinux states
+- Add automatic restart function to `selinux_state` resource
+
 ## 4.0.0 - *2021-07-21*
 
 - Sous Chefs adoption

@@ -1,9 +1,7 @@
+
 #
-# Author:: Sean OMeara (<someara@chef.io>)
 # Cookbook:: selinux
 # Recipe:: enforcing
-#
-# Copyright:: 2011-2021, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,10 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# this recipe will be deprecated in future releases
 
-include_recipe 'selinux::_common'
+selinux_install 'selinux'
 
-selinux_state 'SELinux Enforcing' do
+selinux_state 'enforcing' do
+  automatic_reboot true
   action :enforcing
 end

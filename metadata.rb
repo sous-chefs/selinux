@@ -8,6 +8,6 @@ source_url       'https://github.com/sous-chefs/selinux'
 issues_url       'https://github.com/sous-chefs/selinux/issues'
 chef_version     '>= 15.3'
 
-%w(redhat centos scientific oracle amazon fedora).each do |os|
+%w(redhat centos scientific oracle amazon fedora debian ubuntu).each do |os|
   supports os
 end

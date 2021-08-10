@@ -7,6 +7,12 @@ provisioner:
   product_name: chef
   chef_license: accept-no-persist
   deprecations_as_errors: true
+  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
+  log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
+  # Allow reboots
+  max_retries: 60
+  wait_for_retry: 300
+  root_path: /var/tmp/kitchen
 
 verifier:
   name: inspec
@@ -14,11 +20,40 @@ verifier:
 platforms:
   - name: centos-7
   - name: centos-8
+  - name: centos-stream-8
   - name: fedora-latest
+  - name: debian-10
+  - name: ubuntu-18.04
+  - name: ubuntu-20.04
 
 suites:
-  - name: default
+  - name: enforcing
     run_list:
-      - recipe[selinux_module_test::create]
-      - recipe[selinux_module_test::remove]
-      - recipe[selinux_state_test]
+      - recipe[selinux_test::install]
+      - recipe[selinux_test::enforcing]
+      - recipe[selinux_test::debian_enforcing_prepare]
+      - recipe[selinux_test::module_create]
+      - recipe[selinux_test::boolean]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/enforcing
+  - name: permissive
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux::permissive]
+      - recipe[selinux_test::module_create]
+      - recipe[selinux_test::module_remove]
+      - recipe[selinux_test::boolean]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/permissive
+  - name: disabled
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux::disabled]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/disabled
