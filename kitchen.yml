@@ -4,14 +4,22 @@ driver:
 
 provisioner:
   name: chef_zero
-  product_name: chef
+  product_name: cinc
   chef_license: accept-no-persist
+  multiple_converge: 2
+  enforce_idempotency: true
   deprecations_as_errors: true
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
   # Allow reboots
+  retry_on_exit_code:
+  - 35 # 35 is the exit code signaling that the node is rebooting
+  - 1
   max_retries: 60
   wait_for_retry: 300
+  client_rb:
+    exit_status: :enabled # Opt-in to the standardized exit codes
+    client_fork: false  # Forked instances don't return the real exit code
   root_path: /var/tmp/kitchen
 
 verifier:
@@ -36,10 +44,6 @@ suites:
       - recipe[selinux_test::debian_enforcing_prepare]
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::boolean]
-    verifier:
-      inspec_tests:
-        - test/integration/common
-        - test/integration/enforcing
   - name: permissive
     run_list:
       - recipe[selinux_test::install]
@@ -47,31 +51,21 @@ suites:
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::module_remove]
       - recipe[selinux_test::boolean]
-    verifier:
-      inspec_tests:
-        - test/integration/common
-        - test/integration/permissive
+    provisioner:
+      # not idempotent due to module_create/remove
+      multiple_converge: 1
+      enforce_idempotency: false
   - name: disabled
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::disabled]
-    verifier:
-      inspec_tests:
-        - test/integration/common
-        - test/integration/disabled
   - name: port
     run_list:
       - recipe[selinux_test::install]
+      - recipe[selinux::permissive]
       - recipe[selinux_test::port]
-    verifier:
-      inspec_tests:
-        - test/integration/common
-        - test/integration/port
   - name: fcontext
     run_list:
       - recipe[selinux_test::install]
+      - recipe[selinux::permissive]
       - recipe[selinux_test::fcontext]
-    verifier:
-      inspec_tests:
-        - test/integration/common
-        - test/integration/fcontext
