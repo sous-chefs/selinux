@@ -18,9 +18,9 @@
 
 unified_mode true
 
-property :cookbook, String,
-          default: lazy { cookbook_name },
-          description: 'Cookbook to source from module source file from'
+property :module_name, String,
+          name_property: true,
+          description: 'Override the module name'
 
 property :source, String,
           description: 'Module source file name'
@@ -28,13 +28,13 @@ property :source, String,
 property :content, String,
           description: 'Module source as String'
 
+property :cookbook, String,
+          default: lazy { cookbook_name },
+          description: 'Cookbook to source from module source file from'
+
 property :base_dir, String,
           default: '/etc/selinux/local',
           description: 'Directory to create module source file in'
-
-property :module_name, String,
-          default: lazy { name },
-          description: 'Override the module name'
 
 action_class do
   def selinux_module_filepath(type)

@@ -59,3 +59,19 @@ suites:
       inspec_tests:
         - test/integration/common
         - test/integration/disabled
+  - name: port
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux_test::port]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/port
+  - name: fcontext
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux_test::fcontext]
+    verifier:
+      inspec_tests:
+        - test/integration/common
+        - test/integration/fcontext

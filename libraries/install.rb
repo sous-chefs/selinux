@@ -13,7 +13,7 @@ module SELinux
               %w(make policycoreutils selinux-basics selinux-policy-default selinux-policy-dev auditd)
             end
           else
-            %w(make policycoreutils selinux-basics selinux-policy-default selinux-policy-dev auditd)
+            %w(make policycoreutils selinux-basics selinux-policy-default selinux-policy-dev auditd setools)
           end
         end
       end

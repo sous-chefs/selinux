@@ -6,9 +6,7 @@ module SELinux
       extend self
 
       def installed?(module_name)
-        return true if list_installed_modules.include?(module_name)
-
-        false
+        list_installed_modules.include?(module_name)
       end
 
       private
