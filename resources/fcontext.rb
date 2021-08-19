@@ -19,73 +19,111 @@ unified_mode true
 
 property :file_spec, String,
           name_property: true,
-          description: ''
+          description: 'Path to or regex matching the files or directoriesto label'
 
-property :secontext, String,
-          description: ''
+property :label, String,
+          required: %i(add modify addormodify),
+          description: 'SELinux label to assign'
 
 property :file_type, String,
           default: 'a',
           equal_to: %w(a f d c b s l p),
-          description: ''
+          description: 'The type of the file being labeled'
 
-property :allow_disabled, [true, false],
-          default: true
+deprecated_property_alias :secontext, :label, '`secontext` was renamed to `label` to reflect upstream terminology'
+
+action_class do
+  include SELinux::Cookbook::StateHelpers
+
+  def current_file_context
+    file_hash = {
+      'a' => 'all files',
+      'f' => 'regular file',
+      'd' => 'directory',
+      'c' => 'character device',
+      'b' => 'block device',
+      's' => 'socket',
+      'l' => 'symbolic link',
+      'p' => 'named pipe',
+    }
+
+    contexts = shell_out!('semanage fcontext -l').stdout.split("\n")
+    # pull out file label from user:role:label:level context string
+    contexts.grep(/^#{Regexp.escape(new_resource.file_spec)}\s+#{file_hash[new_resource.file_type]}/) do |c|
+      c.match(/.+ (?<user>.+):(?<role>.+):(?<label>.+):(?<level>.+)$/)[:label]
+      # match returns ['foo'] or [], shift converts that to 'foo' or nil
+    end.shift
+  end
+
+  # Run restorecon to fix label
+  # https://github.com/sous-chefs/selinux_policy/pull/72#issuecomment-338718721
+  def relabel_files
+    spec = new_resource.file_spec
+    escaped = Regexp.escape spec
+
+    # find common path between regex and string
+    common = if spec == escaped
+               spec
+             else
+               index = spec.size.times { |i| break i if spec[i] != escaped[i] }
+               ::File.dirname spec[0...index]
+             end
+
+    # if path is not absolute, ignore it and search everything
+    common = '/' if common[0] != '/'
+
+    if ::File.exist? common
+      shell_out!("find #{common.shellescape} -ignore_readdir_race -regextype posix-egrep -regex #{spec.shellescape} -prune -print0 | xargs -0 restorecon -iRv")
+    end
+  end
+end
 
 action :addormodify do
   run_action(:add)
   run_action(:modify)
 end
 
-# Run restorecon to fix label
-# https://github.com/sous-chefs/selinux_policy/pull/72#issuecomment-338718721
-action :relabel do
-  spec = new_resource.file_spec
-  escaped = Regexp.escape spec
+# Create if doesn't exist, do not touch if fcontext is already registered
+action :add do
+  if selinux_disabled?
+    Chef::Log.warn("Unable to add SELinux fcontext #{new_resource.name} as SELinux is disabled")
+    return
+  end
 
-  # find common path between regex and string
-  common = if spec == escaped
-             spec
-           else
-             index = spec.size.times { |i| break i if spec[i] != escaped[i] }
-             ::File.dirname spec[0...index]
-           end
-
-  # if path is not absolute, ignore it and search everything
-  common = '/' if common[0] != '/'
-
-  execute 'selinux-fcontext-relabel' do
-    command "find #{common.shellescape} -ignore_readdir_race -regextype posix-egrep -regex #{spec.shellescape} -prune -print0 2>/dev/null | xargs -0 restorecon -iRv"
-    only_if { ::File.exist? common }
+  unless current_file_context
+    converge_by "adding label #{new_resource.label} to #{new_resource.file_spec}" do
+      shell_out!("semanage fcontext -a -f #{new_resource.file_type} -t #{new_resource.label} '#{new_resource.file_spec}'")
+      relabel_files
+    end
   end
 end
 
-# Create if doesn't exist, do not touch if fcontext is already registered
-action :add do
-  execute "selinux-fcontext-#{new_resource.secontext}-add" do
-    command "semanage fcontext -a #{semanage_options(new_resource.file_type)} -t #{new_resource.secontext} '#{new_resource.file_spec}'"
-    not_if fcontext_defined(new_resource.file_spec, new_resource.file_type)
-    only_if { use_selinux(new_resource.allow_disabled) }
-    notifies :relabel, new_resource, :immediately
+# Only modify if fcontext exists & doesn't have the correct label already
+action :modify do
+  if selinux_disabled?
+    Chef::Log.warn("Unable to modify SELinux fcontext #{new_resource.name} as SELinux is disabled")
+    return
+  end
+
+  if current_file_context && current_file_context != new_resource.label
+    converge_by "modifying label #{new_resource.label} to #{new_resource.file_spec}" do
+      shell_out!("semanage fcontext -m -f #{new_resource.file_type} -t #{new_resource.label} '#{new_resource.file_spec}'")
+      relabel_files
+    end
   end
 end
 
 # Delete if exists
 action :delete do
-  execute "selinux-fcontext-#{new_resource.secontext}-delete" do
-    command "semanage fcontext #{semanage_options(new_resource.file_type)} -d '#{new_resource.file_spec}'"
-    only_if fcontext_defined(new_resource.file_spec, new_resource.file_type, new_resource.secontext)
-    only_if { use_selinux(new_resource.allow_disabled) }
-    notifies :relabel, new_resource, :immediately
+  if selinux_disabled?
+    Chef::Log.warn("Unable to delete SELinux fcontext #{new_resource.name} as SELinux is disabled")
+    return
   end
-end
 
-action :modify do
-  execute "selinux-fcontext-#{new_resource.secontext}-modify" do
-    command "semanage fcontext -m #{semanage_options(new_resource.file_type)} -t #{new_resource.secontext} '#{new_resource.file_spec}'"
-    only_if fcontext_defined(new_resource.file_spec, new_resource.file_type)
-    not_if  fcontext_defined(new_resource.file_spec, new_resource.file_type, new_resource.secontext)
-    only_if { use_selinux(new_resource.allow_disabled) }
-    notifies :relabel, new_resource, :immediately
+  if current_file_context
+    converge_by "deleting label for #{new_resource.file_spec}" do
+      shell_out!("semanage fcontext -f #{new_resource.file_type} -d '#{new_resource.file_spec}'")
+      relabel_files
+    end
   end
 end

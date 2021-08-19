@@ -17,6 +17,8 @@ property :secontext, String,
           description: 'SELinux context to assign to the port'
 
 action_class do
+  include SELinux::Cookbook::StateHelpers
+
   def current_port_context
     # use awk to see if the given port is within a reported port range
     shell_out!(
@@ -36,6 +38,11 @@ end
 
 # Create if doesn't exist, do not touch if port is already registered (even under different type)
 action :add do
+  if selinux_disabled?
+    Chef::Log.warn("Unable to add SELinux port #{new_resource.name} as SELinux is disabled")
+    return
+  end
+
   if current_port_context.empty?
     converge_by "Adding context #{new_resource.secontext} to port #{new_resource.port}/#{new_resource.protocol}" do
       shell_out!("semanage port -a -t #{new_resource.secontext} -p #{new_resource.protocol} #{new_resource.port}")
@@ -45,6 +52,11 @@ end
 
 # Only modify port if it exists & doesn't have the correct context already
 action :modify do
+  if selinux_disabled?
+    Chef::Log.warn("Unable to modify SELinux port #{new_resource.name} as SELinux is disabled")
+    return
+  end
+
   if !current_port_context.empty? && current_port_context != new_resource.secontext
     converge_by "Modifying context #{new_resource.secontext} to port #{new_resource.port}/#{new_resource.protocol}" do
       shell_out!("semanage port -m -t #{new_resource.secontext} -p #{new_resource.protocol} #{new_resource.port}")
@@ -54,6 +66,11 @@ end
 
 # Delete if exists
 action :delete do
+  if selinux_disabled?
+    Chef::Log.warn("Unable to delete SELinux port #{new_resource.name} as SELinux is disabled")
+    return
+  end
+
   unless current_port_context.empty?
     converge_by "Deleting context from port #{new_resource.port}/#{new_resource.protocol}" do
       shell_out!("semanage port -d -p #{new_resource.protocol} #{new_resource.port}")

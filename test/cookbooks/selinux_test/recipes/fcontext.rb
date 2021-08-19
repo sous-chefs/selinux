@@ -4,23 +4,20 @@ directory '/opt/selinux-test'
   file "/opt/selinux-test/#{f}"
 end
 
-link '/opt/selinux-test/quux' do
-  to '/opt/selinux-test/foo'
-  link_type :symbolic
-end
+directory '/opt/selinux-test/quux'
 
 # single file
 selinux_fcontext '/opt/selinux-test/foo' do
-  secontext 'httpd_sys_content_t'
+  label 'httpd_sys_content_t'
 end
 
 # regex
 selinux_fcontext '/opt/selinux-test/b.+' do
-  secontext 'boot_t'
+  label 'boot_t'
 end
 
 # file type
 selinux_fcontext '/opt/selinux-test/.+' do
-  secontext 'httpd_tmp_t'
-  file_type 'l'
+  label 'etc_t'
+  file_type 'd'
 end

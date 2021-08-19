@@ -4,7 +4,7 @@ driver:
 
 provisioner:
   name: chef_zero
-  product_name: cinc
+  product_name: chef
   chef_license: accept-no-persist
   multiple_converge: 2
   enforce_idempotency: true
@@ -14,7 +14,6 @@ provisioner:
   # Allow reboots
   retry_on_exit_code:
   - 35 # 35 is the exit code signaling that the node is rebooting
-  - 1
   max_retries: 60
   wait_for_retry: 300
   client_rb:

@@ -1,13 +1,21 @@
 include_controls 'common'
 
 control 'fcontext' do
-  title 'Verofy that SELinux file contexts are set correctly'
+  title 'Verify that SELinux file contexts are set correctly'
 
-  describe command('stat -c "%n %C" /opt/selinux-test/*') do
-    its('stdout') { should match 'foo unconfined_u:object_r:httpd_sys_content_t:s0' }
-    its('stdout') { should match 'bar unconfined_u:object_r:boot_t:s0' }
-    its('stdout') { should match 'baz unconfined_u:object_r:boot_t:s0' }
-    its('stdout') { should match 'quux unconfined_u:object_r:httpd_tmp_t:s0' }
-    its('stdout') { should_not match 'usr_t:s0' }
+  describe file('/opt/selinux-test/foo') do
+    its('selinux_label') { should match 'httpd_sys_content_t' }
+  end
+
+  describe file('/opt/selinux-test/bar') do
+    its('selinux_label') { should match 'boot_t' }
+  end
+
+  describe file('/opt/selinux-test/baz') do
+    its('selinux_label') { should match 'boot_t' }
+  end
+
+  describe file('/opt/selinux-test/quux') do
+    its('selinux_label') { should match 'etc_t' }
   end
 end
