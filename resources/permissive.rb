@@ -25,7 +25,7 @@ end
 action :delete do
   if current_permissives.include? new_resource.context
     converge_by "deleting permissive context #{new_resource.context}" do
-      shell_out!("semanage permissive -a '#{new_resource.context}'")
+      shell_out!("semanage permissive -d '#{new_resource.context}'")
     end
   end
 end

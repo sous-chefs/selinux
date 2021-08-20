@@ -45,7 +45,7 @@ action :add do
 
   if current_port_context.empty?
     converge_by "Adding context #{new_resource.secontext} to port #{new_resource.port}/#{new_resource.protocol}" do
-      shell_out!("semanage port -a -t #{new_resource.secontext} -p #{new_resource.protocol} #{new_resource.port}")
+      shell_out!("semanage port -a -t '#{new_resource.secontext}' -p #{new_resource.protocol} #{new_resource.port}")
     end
   end
 end
@@ -59,7 +59,7 @@ action :modify do
 
   if !current_port_context.empty? && current_port_context != new_resource.secontext
     converge_by "Modifying context #{new_resource.secontext} to port #{new_resource.port}/#{new_resource.protocol}" do
-      shell_out!("semanage port -m -t #{new_resource.secontext} -p #{new_resource.protocol} #{new_resource.port}")
+      shell_out!("semanage port -m -t '#{new_resource.secontext}' -p #{new_resource.protocol} #{new_resource.port}")
     end
   end
 end

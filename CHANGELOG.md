@@ -4,8 +4,8 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
-- Merge `selinux_policy` resources into this cookbook (`_fcontext` and `_port`)
-  - `selinux_policy_module` not merged since it is a duplicate of `selinux_module`
+- Import `selinux_policy` resources into this cookbook (`_fcontext`, `_permissive`, and `_port`)
+  - `selinux_policy_module` not imported since it is a duplicate of `selinux_module`
 
 ## 5.1.1 - *2021-08-30*
 

@@ -48,7 +48,7 @@ action_class do
     contexts = shell_out!('semanage fcontext -l').stdout.split("\n")
     # pull out file label from user:role:type:level context string
     contexts.grep(/^#{Regexp.escape(new_resource.file_spec)}\s+#{file_hash[new_resource.file_type]}/) do |c|
-      c.match(/.+ (?<user>.+):(?<role>.+):(?<label>.+):(?<level>.+)$/)[:type]
+      c.match(/.+ (?<user>.+):(?<role>.+):(?<type>.+):(?<level>.+)$/)[:type]
       # match returns ['foo'] or [], shift converts that to 'foo' or nil
     end.shift
   end
@@ -89,8 +89,8 @@ action :add do
   end
 
   unless current_file_context
-    converge_by "adding label #{new_resource.label} to #{new_resource.file_spec}" do
-      shell_out!("semanage fcontext -a -f #{new_resource.file_type} -t #{new_resource.label} '#{new_resource.file_spec}'")
+    converge_by "adding label #{new_resource.secontext} to #{new_resource.file_spec}" do
+      shell_out!("semanage fcontext -a -f #{new_resource.file_type} -t #{new_resource.secontext} '#{new_resource.file_spec}'")
       relabel_files
     end
   end
@@ -103,9 +103,9 @@ action :modify do
     return
   end
 
-  if current_file_context && current_file_context != new_resource.label
-    converge_by "modifying label #{new_resource.label} to #{new_resource.file_spec}" do
-      shell_out!("semanage fcontext -m -f #{new_resource.file_type} -t #{new_resource.label} '#{new_resource.file_spec}'")
+  if current_file_context && current_file_context != new_resource.secontext
+    converge_by "modifying label #{new_resource.secontext} to #{new_resource.file_spec}" do
+      shell_out!("semanage fcontext -m -f #{new_resource.file_type} -t #{new_resource.secontext} '#{new_resource.file_spec}'")
       relabel_files
     end
   end
@@ -120,7 +120,7 @@ action :delete do
 
   if current_file_context
     converge_by "deleting label for #{new_resource.file_spec}" do
-      shell_out!("semanage fcontext -f #{new_resource.file_type} -d '#{new_resource.file_spec}'")
+      shell_out!("semanage fcontext -d -f #{new_resource.file_type} '#{new_resource.file_spec}'")
       relabel_files
     end
   end

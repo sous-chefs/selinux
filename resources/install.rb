@@ -47,4 +47,8 @@ action :install do
   end
 end
 
-%i(upgrade remove).each { |action_type| send(:action, action_type) { do_package_action(action) } }
+%i(upgrade remove).each do |a|
+  action a do
+    do_package_action(a)
+  end
+end

@@ -40,8 +40,10 @@ action_class do
   def selinux_module_filepath(type)
     path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}")
     path.concat(".#{type}") if type
+  end
 
-    path
+  def list_installed_modules
+    shell_out!('semodule --list-modules').stdout.split("\n")
   end
 end
 
@@ -109,13 +111,14 @@ action :install do
 
   execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
     command "semodule --install '#{selinux_module_filepath('pp')}'"
-    action :nothing
+    action :run
   end
 end
 
 action :remove do
-  execute "Remove SELinux module: '#{new_resource.module_name}'" do
-    command "semodule --remove='#{new_resource.module_name}'"
+  execute "Remove SELinux module '#{new_resource.module_name}'" do
+    command "semodule --remove '#{new_resource.module_name}'"
     action :run
-  end if SELinux::Cookbook::ModuleHelpers.installed?(new_resource.module_name)
+    only_if { list_installed_modules.include? new_resource.module_name }
+  end
 end
