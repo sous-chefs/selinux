@@ -43,7 +43,7 @@ action_class do
   end
 
   def list_installed_modules
-    shell_out!('semodule --list-modules').stdout.split("\n")
+    shell_out!('semodule --list-modules').stdout.split("\n").map { |x| x.split(/\s/)[0] }
   end
 end
 
