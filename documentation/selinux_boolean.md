@@ -12,11 +12,11 @@ Introduced: v4.0.0
 
 ## Properties
 
-| Name         | Type                         | Default | Description                                     | Allowed Values |
-| ------------ | ---------------------------- | ------- | ----------------------------------------------- | -------------- |
-| `boolean`    | String                       |         | SELinux boolean to set                          |                |
-| `value`      | Integer, String, true, false |         | SELinux boolean value                           | `on`, `off`    |
-| `persistent` | true, false                  | true    | Set to true for value setting to survive reboot |                |
+| Name         | Type                         | Default       | Description                                     | Allowed Values |
+| ------------ | ---------------------------- | ------------- | ----------------------------------------------- | -------------- |
+| `boolean`    | String                       | Resource name | SELinux boolean to set                          |                |
+| `value`      | Integer, String, true, false |               | SELinux boolean value                           | `on`, `off`    |
+| `persistent` | true, false                  | `true`        | Set to true for value setting to survive reboot |                |
 
 ## Examples
 
