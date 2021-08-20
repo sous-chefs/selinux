@@ -3,25 +3,29 @@
 unified_mode true
 
 property :context, String,
-          name_property: true
+          name_property: true,
+          description: 'The SELinux context to permit'
 
-property :allow_disabled, [true, false],
-          default: true
+action_class do
+  def current_permissives
+    shell_out!('semanage permissive -ln').stdout.split("\n")
+  end
+end
 
 # Create if doesn't exist, do not touch if permissive is already registered (even under different type)
 action :add do
-  execute "selinux-permissive-#{new_resource.context}-add" do
-    command "#{semanage_cmd} permissive -a '#{new_resource.context}'"
-    not_if  "#{semanage_cmd} permissive -l | grep -Fxq '#{new_resource.context}'"
-    only_if { use_selinux(new_resource.allow_disabled) }
+  unless current_permissives.include? new_resource.context
+    converge_by "adding permissive context #{new_resource.context}" do
+      shell_out!("semanage permissive -a '#{new_resource.context}'")
+    end
   end
 end
 
 # Delete if exists
 action :delete do
-  execute "selinux-permissive-#{new_resource.context}-delete" do
-    command "#{semanage_cmd} permissive -d '#{new_resource.context}'"
-    only_if "#{semanage_cmd} permissive -l | grep -Fxq '#{new_resource.context}'"
-    only_if { use_selinux(new_resource.allow_disabled) }
+  if current_permissives.include? new_resource.context
+    converge_by "deleting permissive context #{new_resource.context}" do
+      shell_out!("semanage permissive -a '#{new_resource.context}'")
+    end
   end
 end

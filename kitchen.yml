@@ -62,9 +62,17 @@ suites:
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
+      - recipe[selinux_test::debian_enforcing_prepare]
       - recipe[selinux_test::port]
   - name: fcontext
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
+      - recipe[selinux_test::debian_enforcing_prepare]
       - recipe[selinux_test::fcontext]
+  - name: permissive_resource
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux::permissive]
+      - recipe[selinux_test::debian_enforcing_prepare]
+      - recipe[selinux_test::permissive_resource]

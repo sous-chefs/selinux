@@ -21,16 +21,14 @@ property :file_spec, String,
           name_property: true,
           description: 'Path to or regex matching the files or directoriesto label'
 
-property :label, String,
+property :secontext, String,
           required: %i(add modify addormodify),
-          description: 'SELinux label to assign'
+          description: 'SELinux context to assign'
 
 property :file_type, String,
           default: 'a',
           equal_to: %w(a f d c b s l p),
           description: 'The type of the file being labeled'
-
-deprecated_property_alias :secontext, :label, '`secontext` was renamed to `label` to reflect upstream terminology'
 
 action_class do
   include SELinux::Cookbook::StateHelpers
@@ -48,9 +46,9 @@ action_class do
     }
 
     contexts = shell_out!('semanage fcontext -l').stdout.split("\n")
-    # pull out file label from user:role:label:level context string
+    # pull out file label from user:role:type:level context string
     contexts.grep(/^#{Regexp.escape(new_resource.file_spec)}\s+#{file_hash[new_resource.file_type]}/) do |c|
-      c.match(/.+ (?<user>.+):(?<role>.+):(?<label>.+):(?<level>.+)$/)[:label]
+      c.match(/.+ (?<user>.+):(?<role>.+):(?<label>.+):(?<level>.+)$/)[:type]
       # match returns ['foo'] or [], shift converts that to 'foo' or nil
     end.shift
   end
