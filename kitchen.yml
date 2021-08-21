@@ -25,6 +25,8 @@ platforms:
   - name: debian-10
   - name: ubuntu-18.04
   - name: ubuntu-20.04
+  - name: oracle-7
+  - name: oracle-8
 
 suites:
   - name: enforcing

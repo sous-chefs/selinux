@@ -47,6 +47,8 @@ jobs:
           - debian-10
           - ubuntu-1804
           - ubuntu-2004
+          - oracle-7
+          - oracle-8
         suite:
           - enforcing
           - permissive
