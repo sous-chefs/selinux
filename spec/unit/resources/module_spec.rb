@@ -103,21 +103,27 @@ describe 'selinux_module' do
   end
 
   context 'install' do
-    before do
-      allow(File).to receive(:exist?).with(%r{/etc/selinux/local/test.pp}).and_return(true)
-    end
-
     recipe do
-      selinux_module 'test' do
+      selinux_module 'installed' do
+        action :install
+      end
+
+      selinux_module 'gone' do
         action :install
       end
     end
 
-    it do
-      is_expected.to run_execute("Install SELinux module '/etc/selinux/local/test.pp'").with(
-        command: "semodule --install '/etc/selinux/local/test.pp'"
-      )
+    stubs_for_provider('selinux_module[installed]') do |provider|
+      allow(provider).to receive_shell_out('semodule --list-modules', stdout: 'installed')
     end
+
+    stubs_for_provider('selinux_module[gone]') do |provider|
+      allow(provider).to receive_shell_out('semodule --list-modules', stdout: 'other')
+      allow(provider).to receive_shell_out('semodule --install \'/etc/selinux/local/gone.pp\'')
+    end
+
+    it { is_expected.to install_selinux_module('installed') }
+    it { is_expected.to install_selinux_module('gone') }
   end
 
   context 'remove' do
@@ -133,18 +139,14 @@ describe 'selinux_module' do
 
     stubs_for_provider('selinux_module[installed]') do |provider|
       allow(provider).to receive_shell_out('semodule --list-modules', stdout: 'installed')
+      allow(provider).to receive_shell_out('semodule --remove \'installed\'')
     end
 
     stubs_for_provider('selinux_module[gone]') do |provider|
       allow(provider).to receive_shell_out('semodule --list-modules', stdout: 'other')
     end
 
-    it do
-      is_expected.to run_execute("Remove SELinux module 'installed'").with(
-        command: "semodule --remove 'installed'"
-      )
-    end
-
-    it { is_expected.to_not run_execute("Remove SELinux module 'gone'") }
+    it { is_expected.to remove_selinux_module('installed') }
+    it { is_expected.to remove_selinux_module('gone') }
   end
 end
