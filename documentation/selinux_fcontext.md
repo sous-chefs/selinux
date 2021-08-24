@@ -6,12 +6,12 @@ Set the SELinux context of files with `semanage fcontext`.
 
 ## Actions
 
-| Action         | Description                                                                     |
-| -------------- | ------------------------------------------------------------------------------- |
-| `:addormodify` | *(Default)* Assigns the file to the right context regardless of previous state. |
-| `:add`         | Assigns the file context if not set.(`-a`)                                      |
-| `:modify`      | Updates the file context if previously set.(`-m`)                               |
-| `:delete`      | Removes the file context if set. (`-d`)                                         |
+| Action    | Description                                                                     |
+| --------- | ------------------------------------------------------------------------------- |
+| `:manage` | *(Default)* Assigns the file to the right context regardless of previous state. |
+| `:add`    | Assigns the file context if not set.(`-a`)                                      |
+| `:modify` | Updates the file context if previously set.(`-m`)                               |
+| `:delete` | Removes the file context if set. (`-d`)                                         |
 
 ## Properties
 

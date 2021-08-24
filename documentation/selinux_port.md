@@ -6,16 +6,16 @@ Allows assigning a network port to a certain SELinux context, e.g. for running a
 
 ## Actions
 
-| Action         | Description                                                                     |
-| -------------- | ------------------------------------------------------------------------------- |
-| `:addormodify` | *(Default)* Assigns the port to the right context regardless of previous state. |
-| `:add`         | Assigns the port context if not set.(`-a`)                                      |
-| `:modify`      | Updates the port context if previously set.(`-m`)                               |
-| `:delete`      | Removes the port context if set. (`-d`)                                         |
+| Action    | Description                                                                     |
+| --------- | ------------------------------------------------------------------------------- |
+| `:manage` | *(Default)* Assigns the port to the right context regardless of previous state. |
+| `:add`    | Assigns the port context if not set.(`-a`)                                      |
+| `:modify` | Updates the port context if previously set.(`-m`)                               |
+| `:delete` | Removes the port context if set. (`-d`)                                         |
 
 ## Properties
 
-| Name        | Type   | Default value | Description                                |
+| Name        | Type   | Default       | Description                                |
 | ----------- | ------ | ------------- | ------------------------------------------ |
 | `port`      | String | Resource name | The port in question.                      |
 | `protocol`  | String |               | Either `tcp` or `udp`.                     |

@@ -8,9 +8,11 @@ Introduced: v4.0.0
 
 ## Actions
 
-- `:install`
-- `:upgrade`
-- `:remove`
+| Action     | Description                           |
+| ---------- | ------------------------------------- |
+| `:install` | *(Default)* Install required packages |
+| `:upgrade` | Upgrade required packages             |
+| `:remove`  | Remove any SELinux-related packages   |
 
 ## Properties
 

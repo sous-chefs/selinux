@@ -8,17 +8,22 @@ Introduced: v4.0.0
 
 ## Actions
 
-- `:disabled`
-- `:enforcing`
-- `:permissive`
+| Action        | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `:enforcing`  | *(Default)* Set the SELinux state to enforcing |
+| `:permissive` | Set the state to permissive                    |
+| `:disabled`   | Set the state to disabled                      |
+`
+> ⚠ Switching to or from `disabled` requires a reboot!
 
 ## Properties
 
-| Name          | Type        | Default               | Description                                             |
-| ------------- | ----------- | --------------------- | ------------------------------------------------------- |
-| `config_file` | String      | `/etc/selinux/config` | Path to SELinux config file on disk                     |
-| `persistent`  | true, false | `true`                | Persist status update to the selinux configuration file |
-| `policy`      | String      | `targeted`            | SELinux policy type                                     |
+| Name               | Type                | Default               | Description                                                        |
+| ------------------ | ------------------- | --------------------- | ------------------------------------------------------------------ |
+| `config_file`      | String              | `/etc/selinux/config` | Path to SELinux config file on disk                                |
+| `persistent`       | true, false         | `true`                | Persist status update to the selinux configuration file            |
+| `policy`           | String              | `targeted`            | SELinux policy type                                                |
+| `automatic_reboot` | true, false, Symbol | `false`               | Whether to automatically reboot the node if needed to change state |
 
 ## Examples
 

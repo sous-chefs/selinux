@@ -8,10 +8,12 @@ Introduced: v4.0.0
 
 ## Actions
 
-- `:create`
-- `:delete`
-- `:install`
-- `:remove`
+| Action     | Description                                          |
+| ---------- | ---------------------------------------------------- |
+| `:create`  | *(Default)* Compile a module and install it          |
+| `:delete`  | Remove module source files from `/etc/selinux/local` |
+| `:install` | Install a compiled module into the system            |
+| `:remove`  | Remove a module from the system                      |
 
 ## Properties
 
