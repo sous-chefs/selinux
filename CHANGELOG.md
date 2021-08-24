@@ -7,7 +7,7 @@ This file is used to list changes made in each version of the selinux cookbook.
 - Import `selinux_policy` resources into this cookbook (`_fcontext`, `_permissive`, and `_port`)
   - `selinux_policy_module` not imported since it is a duplicate of `selinux_module`
 
-#### Deprecations
+### Deprecations
 
 - `selinux_fcontext` action `addormodify` renamed to `manage`
 - `selinux_port` action `addormodify` renamed to `manage`
