@@ -43,7 +43,7 @@ action_class do
   end
 
   def list_installed_modules
-    shell_out!('semodule --list-modules').stdout.split("\n").map { |x| x.split(/\s/)[0] }
+    shell_out!('semodule --list-modules').stdout.split("\n").map { |x| x.split(/\s/).first }
   end
 end
 
@@ -109,16 +109,17 @@ end
 action :install do
   raise "Module must be compiled before it can be installed, no 'pp' file found at: '#{selinux_module_filepath('pp')}'" unless ::File.exist?(selinux_module_filepath('pp'))
 
-  execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
-    command "semodule --install '#{selinux_module_filepath('pp')}'"
-    action :run
+  unless list_installed_modules.include? new_resource.module_name
+    converge_by "Install SELinux module #{selinux_module_filepath('pp')}" do
+      shell_out!("semodule --install '#{selinux_module_filepath('pp')}'")
+    end
   end
 end
 
 action :remove do
-  execute "Remove SELinux module '#{new_resource.module_name}'" do
-    command "semodule --remove '#{new_resource.module_name}'"
-    action :run
-    only_if { list_installed_modules.include? new_resource.module_name }
+  if list_installed_modules.include? new_resource.module_name
+    converge_by "Remove SELinux module #{new_resource.module_name}" do
+      shell_out!("semodule --remove '#{new_resource.module_name}'")
+    end
   end
 end

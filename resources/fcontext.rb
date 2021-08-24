@@ -22,7 +22,7 @@ property :file_spec, String,
           description: 'Path to or regex matching the files or directoriesto label'
 
 property :secontext, String,
-          required: %i(add modify addormodify),
+          required: %i(add modify manage),
           description: 'SELinux context to assign'
 
 property :file_type, String,
@@ -76,9 +76,14 @@ action_class do
   end
 end
 
-action :addormodify do
+action :manage do
   run_action(:add)
   run_action(:modify)
+end
+
+action :addormodify do
+  Chef::Log.warn('The :addormodify action for selinux_fcontext is deprecated and will be removed in a future release. Use the :manage action instead.')
+  run_action(:manage)
 end
 
 # Create if doesn't exist, do not touch if fcontext is already registered

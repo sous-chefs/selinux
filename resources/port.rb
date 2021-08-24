@@ -9,11 +9,11 @@ property :port, [Integer, String],
 
 property :protocol, String,
           equal_to: %w(tcp udp),
-          required: %i(addormodify add modify),
+          required: %i(manage add modify),
           description: 'Protocol to modify'
 
 property :secontext, String,
-          required: %i(addormodify add modify),
+          required: %i(manage add modify),
           description: 'SELinux context to assign to the port'
 
 action_class do
@@ -30,10 +30,14 @@ action_class do
   end
 end
 
+action :manage do
+  run_action(:add)
+  run_action(:modify)
+end
+
 action :addormodify do
-  # TODO: We can be a bit more clever here, and try to detect if it's already there then modify
-  run_action(:add)    # Try to add new port
-  run_action(:modify) # Try to modify existing port
+  Chef::Log.warn('The :addormodify action for selinux_port is deprecated and will be removed in a future release. Use the :manage action instead.')
+  run_action(:manage)
 end
 
 # Create if doesn't exist, do not touch if port is already registered (even under different type)

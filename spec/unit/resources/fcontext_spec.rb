@@ -11,7 +11,7 @@ describe 'selinux_fcontext' do
   recipe do
     selinux_fcontext '/test' do
       secontext 'foo'
-      action %i(addormodify add modify delete)
+      action %i(manage add modify delete)
     end
   end
 
@@ -30,7 +30,7 @@ describe 'selinux_fcontext' do
     end
 
     # needed to have the test run
-    it { is_expected.to addormodify_selinux_fcontext('/test') }
+    it { is_expected.to manage_selinux_fcontext('/test') }
     it { is_expected.to add_selinux_fcontext('/test') }
     it { is_expected.to modify_selinux_fcontext('/test') }
     it { is_expected.to delete_selinux_fcontext('/test') }
@@ -52,7 +52,7 @@ describe 'selinux_fcontext' do
     end
 
     # needed to have the test run
-    it { is_expected.to addormodify_selinux_fcontext('/test') }
+    it { is_expected.to manage_selinux_fcontext('/test') }
     it { is_expected.to add_selinux_fcontext('/test') }
     it { is_expected.to modify_selinux_fcontext('/test') }
     it { is_expected.to delete_selinux_fcontext('/test') }
@@ -73,7 +73,7 @@ describe 'selinux_fcontext' do
     end
 
     # needed to have the test run
-    it { is_expected.to addormodify_selinux_fcontext('/test') }
+    it { is_expected.to manage_selinux_fcontext('/test') }
     it { is_expected.to add_selinux_fcontext('/test') }
     it { is_expected.to modify_selinux_fcontext('/test') }
     it { is_expected.to delete_selinux_fcontext('/test') }

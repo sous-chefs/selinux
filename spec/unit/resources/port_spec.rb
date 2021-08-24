@@ -12,7 +12,7 @@ describe 'selinux_port' do
     selinux_port '1234' do
       protocol 'tcp'
       secontext 'test_t'
-      action %i(addormodify add modify delete)
+      action %i(manage add modify delete)
     end
   end
 
@@ -32,7 +32,7 @@ describe 'selinux_port' do
     end
 
     # needed to have the test run
-    it { is_expected.to addormodify_selinux_port('1234') }
+    it { is_expected.to manage_selinux_port('1234') }
     it { is_expected.to add_selinux_port('1234') }
     it { is_expected.to modify_selinux_port('1234') }
     it { is_expected.to delete_selinux_port('1234') }
@@ -55,7 +55,7 @@ describe 'selinux_port' do
     end
 
     # needed to have the test run
-    it { is_expected.to addormodify_selinux_port('1234') }
+    it { is_expected.to manage_selinux_port('1234') }
     it { is_expected.to add_selinux_port('1234') }
     it { is_expected.to modify_selinux_port('1234') }
     it { is_expected.to delete_selinux_port('1234') }
@@ -77,7 +77,7 @@ describe 'selinux_port' do
     end
 
     # needed to have the test run
-    it { is_expected.to addormodify_selinux_port('1234') }
+    it { is_expected.to manage_selinux_port('1234') }
     it { is_expected.to add_selinux_port('1234') }
     it { is_expected.to modify_selinux_port('1234') }
     it { is_expected.to delete_selinux_port('1234') }
