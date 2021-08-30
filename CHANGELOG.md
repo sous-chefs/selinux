@@ -4,7 +4,11 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+- Standardise files with files in sous-chefs/repo-management
+
 ## 5.1.0 - *2021-08-21*
+
+- Fix `selinux_install` on Alma Linux / Oracle Linux
 
 ## 5.0.0 - *2021-08-10*
 
