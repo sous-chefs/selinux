@@ -44,8 +44,11 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 The following resources are provided:
 
 - [selinux_boolean](documentation/selinux_boolean.md)
+- [selinux_fcontext](documentation/selinux_fcontext.md)
 - [selinux_install](documentation/selinux_install.md)
 - [selinux_module](documentation/selinux_module.md)
+- [selinux_permissive](documentation/selinux_permissive.md)
+- [selinux_port](documentation/selinux_port.md)
 - [selinux_state](documentation/selinux_state.md)
 
 ## Maintainers

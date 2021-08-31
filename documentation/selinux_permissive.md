@@ -4,6 +4,8 @@
 
 Allows some types to misbehave without stopping them. Not as good as specific policies, but better than disabling SELinux entirely.
 
+> This does not set the SELinux state to permissive! Use [`selinux_state`](selinux_state.md) for that.
+
 ## Actions
 
 | Action    | Description                                        |
