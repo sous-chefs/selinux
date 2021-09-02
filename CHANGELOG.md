@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## Unreleased
+## 6.0.0 - *2021-09-02*
 
 - Import `selinux_policy` resources into this cookbook (`_fcontext`, `_permissive`, and `_port`)
   - `selinux_policy_module` not imported since it is a duplicate of `selinux_module`
