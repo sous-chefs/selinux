@@ -12,7 +12,7 @@ describe 'selinux_state' do
     end
 
     stubs_for_provider('selinux_state[disabled]') do |provider|
-      allow(provider).to receive_shell_out('getenforce').and_return(double(error!: nil, stdout: 'Disabled'))
+      allow(provider).to receive_shell_out('getenforce', stdout: 'Disabled')
     end
 
     it 'Creates the selinux config file correctly' do
@@ -29,7 +29,7 @@ describe 'selinux_state' do
     end
 
     stubs_for_provider('selinux_state[permissive]') do |provider|
-      allow(provider).to receive_shell_out('getenforce').and_return(double(error!: nil, stdout: 'Permissive'))
+      allow(provider).to receive_shell_out('getenforce', stdout: 'Permissive')
     end
 
     it 'Creates the selinux config file correctly' do
@@ -46,7 +46,7 @@ describe 'selinux_state' do
     end
 
     stubs_for_provider('selinux_state[enforcing]') do |provider|
-      allow(provider).to receive_shell_out('getenforce').and_return(double(error!: nil, stdout: 'Enforcing'))
+      allow(provider).to receive_shell_out('getenforce', stdout: 'Enforcing')
     end
 
     it 'Creates the selinux config file correctly' do

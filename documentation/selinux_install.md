@@ -8,39 +8,38 @@ Introduced: v4.0.0
 
 ## Actions
 
-- `:install`
-- `:upgrade`
-- `:remove`
+| Action     | Description                           |
+| ---------- | ------------------------------------- |
+| `:install` | *(Default)* Install required packages |
+| `:upgrade` | Upgrade required packages             |
+| `:remove`  | Remove any SELinux-related packages   |
 
 ## Properties
 
-| Name       | Type          | Default                    | Description                 |
-| ---------- | ------------- | -------------------------- | --------------------------- |
-| `packages` | String, Array | `default_install_packages` | SELinux packages for system |
+| Name       | Type          | Default                                                   | Description                 |
+| ---------- | ------------- | --------------------------------------------------------- | --------------------------- |
+| `packages` | String, Array | see [`default_install_packages`](../libraries/install.rb) | SELinux packages for system |
 
 ## Examples
 
 ### Default installation
 
 ```ruby
-selinux_install '' do
-  action :install
-end
+selinux_install 'example'
 ```
 
-### Install with excluded packages
+### Install with custom packages
 
 ```ruby
-selinux_install '' do
-  packages_exclude %w(policycoreutils selinux-policy selinux-policy-targeted )
-  action :install
+selinux_install 'example' do
+  packages %w(policycoreutils selinux-policy selinux-policy-targeted)
 end
 ```
 
 ### Uninstall
 
 ```ruby
-selinux_install '' do
+selinux_install 'example' do
   action :remove
 end
 ```

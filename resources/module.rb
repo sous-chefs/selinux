@@ -18,9 +18,9 @@
 
 unified_mode true
 
-property :cookbook, String,
-          default: lazy { cookbook_name },
-          description: 'Cookbook to source from module source file from'
+property :module_name, String,
+          name_property: true,
+          description: 'Override the module name'
 
 property :source, String,
           description: 'Module source file name'
@@ -28,20 +28,22 @@ property :source, String,
 property :content, String,
           description: 'Module source as String'
 
+property :cookbook, String,
+          default: lazy { cookbook_name },
+          description: 'Cookbook to source from module source file from'
+
 property :base_dir, String,
           default: '/etc/selinux/local',
           description: 'Directory to create module source file in'
-
-property :module_name, String,
-          default: lazy { name },
-          description: 'Override the module name'
 
 action_class do
   def selinux_module_filepath(type)
     path = ::File.join(new_resource.base_dir, "#{new_resource.module_name}")
     path.concat(".#{type}") if type
+  end
 
-    path
+  def list_installed_modules
+    shell_out!('semodule --list-modules').stdout.split("\n").map { |x| x.split(/\s/).first }
   end
 end
 
@@ -107,15 +109,17 @@ end
 action :install do
   raise "Module must be compiled before it can be installed, no 'pp' file found at: '#{selinux_module_filepath('pp')}'" unless ::File.exist?(selinux_module_filepath('pp'))
 
-  execute "Install SELinux module '#{selinux_module_filepath('pp')}'" do
-    command "semodule --install '#{selinux_module_filepath('pp')}'"
-    action :nothing
+  unless list_installed_modules.include? new_resource.module_name
+    converge_by "Install SELinux module #{selinux_module_filepath('pp')}" do
+      shell_out!("semodule --install '#{selinux_module_filepath('pp')}'")
+    end
   end
 end
 
 action :remove do
-  execute "Remove SELinux module: '#{new_resource.module_name}'" do
-    command "semodule --remove='#{new_resource.module_name}'"
-    action :run
-  end if SELinux::Cookbook::ModuleHelpers.installed?(new_resource.module_name)
+  if list_installed_modules.include? new_resource.module_name
+    converge_by "Remove SELinux module #{new_resource.module_name}" do
+      shell_out!("semodule --remove '#{new_resource.module_name}'")
+    end
+  end
 end
