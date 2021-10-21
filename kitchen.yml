@@ -3,8 +3,8 @@ driver:
   name: vagrant
 
 provisioner:
-  name: chef_zero
-  product_name: chef
+  name: chef_infra
+  product_name: <%= ENV['CHEF_PRODUCT_NAME'] || 'chef' %>
   chef_license: accept-no-persist
   multiple_converge: 2
   enforce_idempotency: true

@@ -41,7 +41,7 @@ action_class do
         seinfo --portcon=#{new_resource.port} | grep 'portcon #{new_resource.protocol}' | \
         awk -F: '$(NF-1) !~ /reserved_port_t$/ && $(NF-3) !~ /[0-9]*-[0-9]*/ {print $(NF-1)}'
       CMD
-    ).stdout.strip
+    ).stdout.split
   end
 end
 
@@ -76,7 +76,7 @@ action :modify do
     return
   end
 
-  if !current_port_context.empty? && current_port_context != new_resource.secontext
+  if !current_port_context.empty? && !current_port_context.include?(new_resource.secontext)
     converge_by "Modifying context #{new_resource.secontext} to port #{new_resource.port}/#{new_resource.protocol}" do
       shell_out!("semanage port -m -t '#{new_resource.secontext}' -p #{new_resource.protocol} #{new_resource.port}")
     end
