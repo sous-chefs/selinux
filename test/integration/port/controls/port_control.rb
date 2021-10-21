@@ -3,19 +3,11 @@ include_controls 'common'
 control 'port' do
   title 'Verify that SELinux port contexts are set correctly'
 
-  describe command('seinfo --portcon=29000') do
+  describe command('seinfo --portcon') do
     its('stdout') { should match 'portcon tcp 29000 system_u:object_r:http_port_t:s0' }
     its('stdout') { should match 'portcon udp 29000 system_u:object_r:http_port_t:s0' }
-  end
-
-  describe command('seinfo --portcon=29001') do
     its('stdout') { should match 'portcon tcp 29001 system_u:object_r:ssh_port_t:s0' }
-  end
-
-  describe command('seinfo --portcon=8080') do
-    its('stdout') { should match 'portcon tcp 8080 system_u:object_r:ssh_port_t:s0' }
-  end
-  describe command('seinfo --portcon=8081') do
-    its('stdout') { should match 'portcon tcp 8081 system_u:object_r:ssh_port_t:s0' }
+    its('stdout') { should match 'portcon tcp 8080 system_u:object_r:http_port_t:s0' }
+    its('stdout') { should match 'portcon tcp 8081 system_u:object_r:http_port_t:s0' }
   end
 end
