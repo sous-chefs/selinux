@@ -9,3 +9,10 @@ selinux_port '29001' do
   protocol 'tcp'
   secontext 'ssh_port_t'
 end
+
+%w(8080 8081).each do |port|
+  selinux_port port do
+    protocol 'tcp'
+    secontext 'http_port_t'
+  end
+end
