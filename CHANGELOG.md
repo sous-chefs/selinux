@@ -4,6 +4,8 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 6.0.2 - *2022-01-01*
 
 - resolved cookstyle error: resources/install.rb:5:1 refactor: `Chef/Style/CopyrightCommentFormat`
