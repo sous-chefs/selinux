@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## Unreleased
+## 6.0.3 - *2022-02-08*
 
 - Remove delivery folder
 
