@@ -13,7 +13,7 @@ describe 'selinux_install' do
 
     it do
       is_expected.to install_package('selinux').with(
-        package_name: %w(make policycoreutils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+        package_name: %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
       )
     end
   end
@@ -23,7 +23,7 @@ describe 'selinux_install' do
 
     it do
       is_expected.to install_package('selinux').with(
-        package_name: %w(make policycoreutils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+        package_name: %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
       )
     end
   end

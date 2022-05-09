@@ -4,6 +4,10 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+- Add missing `policycoreutils-python` package
+- Include additional platforms and suites for testing
+- Run `apt_update` in `selinux_install` on Debian-based systems
+
 ## 6.0.5 - *2022-09-18*
 
 - Standardise files with files in sous-chefs/repo-management

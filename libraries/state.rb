@@ -27,7 +27,7 @@ module SELinux
       def selinux_activate_required?
         return false unless platform_family?('debian')
 
-        !File.read('/etc/default/grub').match?('security=selinux')
+        !File.read('/proc/cmdline').match?('security=selinux')
       end
 
       def default_policy_platform
