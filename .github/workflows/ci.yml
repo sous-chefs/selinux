@@ -22,6 +22,7 @@ jobs:
           - centos-stream-8
           # - fedora-latest # TODO: reenable once https://github.com/chef/bento/issues/1333 is fixed
           - debian-10
+          - debian-11
           - ubuntu-1804
           - ubuntu-2004
           - oracle-7

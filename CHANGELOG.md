@@ -5,7 +5,7 @@ This file is used to list changes made in each version of the selinux cookbook.
 ## Unreleased
 
 - Standardise files with files in sous-chefs/repo-management
-- Add testing for Alma Linux and Rocky Linux
+- Add testing for Debian 11, Alma Linux and Rocky Linux
 - Remove testing for CentOS 8 (prefer Stream instead)
 - Update Github CI config
 
