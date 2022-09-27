@@ -13,7 +13,7 @@ provisioner:
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
   # Allow reboots
   max_retries: 60
-  wait_for_retry: 300
+  wait_for_retry: 180
   root_path: /var/tmp/kitchen
 
 verifier:

@@ -38,10 +38,6 @@ jobs:
           - disabled
           - port
           - fcontext
-        exclude:
-          # Not working
-          - os: ubuntu-1804
-            suite: enforcing
       fail-fast: false
 
     steps:

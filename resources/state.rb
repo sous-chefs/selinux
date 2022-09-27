@@ -86,7 +86,7 @@ action :enforcing do
   end unless selinux_disabled? || selinux_enforcing?
 
   execute 'debian-selinux-activate' do
-    command '/usr/sbin/selinux-activate'
+    command selinux_activate_cmd
   end if selinux_activate_required?
 
   render_selinux_template(action) if new_resource.persistent
@@ -99,7 +99,7 @@ action :permissive do
   end unless selinux_disabled? || selinux_permissive?
 
   execute 'debian-selinux-activate' do
-    command '/usr/sbin/selinux-activate'
+    command selinux_activate_cmd
   end if selinux_activate_required?
 
   render_selinux_template(action) if new_resource.persistent

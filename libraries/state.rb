@@ -14,7 +14,9 @@ module SELinux
       end
 
       def state_change_reboot_required?
-        (selinux_disabled? && %i(enforcing permissive).include?(action)) || ((selinux_enforcing? || selinux_permissive?) && action == :disabled)
+        (selinux_disabled? && %i(enforcing permissive).include?(action)) ||
+          ((selinux_enforcing? || selinux_permissive?) && action == :disabled) ||
+          (selinux_activate_required? && %i(enforcing permissive).include?(action))
       end
 
       def selinux_state
@@ -26,8 +28,23 @@ module SELinux
 
       def selinux_activate_required?
         return false unless platform_family?('debian')
+        sestatus = shell_out!('sestatus -v').stdout.strip
 
-        !File.read('/proc/cmdline').match?('security=selinux')
+        # Ensure we're booted up to a system which has selinux activated and filesystem is properly labeled
+        if File.read('/proc/cmdline').match?('security=selinux') && sestatus.match?(%r{/usr/sbin/sshd.*sshd_exec_t})
+          false
+        else
+          true
+        end
+      end
+
+      def selinux_activate_cmd
+        # selinux-activate is semi-broken on Ubuntu 18.04 however this method does work
+        if platform?('ubuntu') && node['platform_version'] == '18.04'
+          'touch /.autorelabel'
+        else
+          '/usr/sbin/selinux-activate'
+        end
       end
 
       def default_policy_platform
