@@ -29,6 +29,8 @@ action_class do
     # friendly message for unsupported platforms
     raise "The platform #{node['platform']} is not currently supported by the `selinux_install` resource. Please file an issue at https://github.com/sous-chefs/selinux/issues/new with details on the platform this cookbook is running on." if new_resource.packages.nil?
 
+    apt_update 'selinux' if platform_family?('debian')
+
     package 'selinux' do
       package_name new_resource.packages
       action action

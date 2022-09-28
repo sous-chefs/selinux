@@ -18,23 +18,26 @@ jobs:
       matrix:
         os:
           - almalinux-8
+          - amazonlinux-2
           - centos-7
           - centos-stream-8
-          # - fedora-latest # TODO: reenable once https://github.com/chef/bento/issues/1333 is fixed
+          - fedora-latest
           - debian-10
           - debian-11
-          - ubuntu-1804
-          - ubuntu-2004
           - oracle-7
           - oracle-8
           - rockylinux-8
+          - ubuntu-1804
+          - ubuntu-2004
+          # Disabled due to image problems:
+          # https://github.com/chef/bento/issues/1405
+          # - ubuntu-2204
         suite:
           - enforcing
           - permissive
           - disabled
-        exclude:
-          - os: ubuntu-1804
-            suite: enforcing
+          - port
+          - fcontext
       fail-fast: false
 
     steps:

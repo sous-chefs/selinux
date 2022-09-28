@@ -13,7 +13,7 @@ provisioner:
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
   # Allow reboots
   max_retries: 60
-  wait_for_retry: 300
+  wait_for_retry: 180
   root_path: /var/tmp/kitchen
 
 verifier:
@@ -21,16 +21,18 @@ verifier:
 
 platforms:
   - name: almalinux-8
+  - name: amazonlinux-2
   - name: centos-7
   - name: centos-stream-8
-  - name: fedora-latest
   - name: debian-10
   - name: debian-11
-  - name: ubuntu-18.04
-  - name: ubuntu-20.04
+  - name: fedora-latest
   - name: oracle-7
   - name: oracle-8
   - name: rockylinux-8
+  - name: ubuntu-18.04
+  - name: ubuntu-20.04
+  - name: ubuntu-22.04
 
 suites:
   - name: enforcing

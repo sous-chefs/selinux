@@ -3,8 +3,17 @@ module SELinux
     module InstallHelpers
       def default_install_packages
         case node['platform_family']
-        when 'rhel', 'fedora', 'amazon'
-          %w(make policycoreutils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+        when 'rhel'
+          case node['platform_version'].to_i
+          when 7
+            %w(make policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+          else
+            %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+          end
+        when 'amazon'
+          %w(make policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+        when 'fedora'
+          %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
         when 'debian'
           if node['platform'] == 'ubuntu'
             if node['platform_version'].to_f == 18.04
