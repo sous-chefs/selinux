@@ -2,6 +2,8 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## Unreleased
+
 ## 6.0.6 - *2022-09-28*
 
 - Add missing `policycoreutils-python` package
