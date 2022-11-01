@@ -39,7 +39,7 @@ This file is used to list changes made in each version of the selinux cookbook.
 ## 6.0.0 - *2021-09-02*
 
 - Import `selinux_policy` resources into this cookbook (`_fcontext`, `_permissive`, and `_port`)
-  - `selinux_policy_module` not imported since it is a duplicate of `selinux_module`
+- `selinux_policy_module` not imported since it is a duplicate of `selinux_module`
 
 ### Deprecations
 
@@ -63,7 +63,7 @@ This file is used to list changes made in each version of the selinux cookbook.
 - All resources now use unified_mode
 - Added selinux_boolean resource
 - Remove attributes and default recipe
-  - Replaced with a set of bare recipes for the three selinux states
+- Replaced with a set of bare recipes for the three selinux states
 - Add automatic restart function to `selinux_state` resource
 
 ## 4.0.0 - *2021-07-21*
@@ -161,8 +161,7 @@ This file is used to list changes made in each version of the selinux cookbook.
 - Rewrite LWRP to 12.5 resources
 - Resolved cookstyle errors
 - Update package information for debian based on <https://debian-handbook.info/browse/stable/sect.selinux.html>
-
-  - selinux-activate looks like it's required to ACTUALLY activate selinux on non-RHEL systems. This seems like it could be destructive if unexpected.
+- selinux-activate looks like it's required to ACTUALLY activate selinux on non-RHEL systems. This seems like it could be destructive if unexpected.
 
 - Add property temporary to allow for switching between permissive and enabled
 
