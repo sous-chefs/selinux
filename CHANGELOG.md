@@ -2,6 +2,8 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## Unreleased
+
 ## 6.0.7 - *2022-11-01*
 
 - Fix CentOS 6 package requirements
