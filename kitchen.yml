@@ -9,7 +9,7 @@ provisioner:
   multiple_converge: 2
   enforce_idempotency: true
   deprecations_as_errors: true
-  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
+  product_version: <%= ENV['CHEF_VERSION'] || '17' %>
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
   # Allow reboots
   max_retries: 60
