@@ -32,7 +32,7 @@ property :secontext, String,
           description: 'SELinux context to assign to the port'
 
 action_class do
-  include SELinux::Cookbook::StateHelpers
+  include ::SELinux::Cookbook::StateHelpers
 
   def current_port_context
     # use awk to see if the given port is within a reported port range

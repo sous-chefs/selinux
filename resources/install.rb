@@ -18,7 +18,7 @@
 
 unified_mode true
 
-include SELinux::Cookbook::InstallHelpers
+include ::SELinux::Cookbook::InstallHelpers
 
 property :packages, [String, Array],
           default: lazy { default_install_packages },

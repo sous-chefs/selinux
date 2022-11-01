@@ -31,7 +31,7 @@ property :file_type, String,
           description: 'The type of the file being labeled'
 
 action_class do
-  include SELinux::Cookbook::StateHelpers
+  include ::SELinux::Cookbook::StateHelpers
 
   def current_file_context
     file_hash = {

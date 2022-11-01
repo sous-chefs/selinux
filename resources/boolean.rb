@@ -24,7 +24,7 @@ property :boolean, String,
 property :value, [Integer, String, true, false],
           required: true,
           equal_to: %w(on off),
-          coerce: proc { |p| SELinux::Cookbook::BooleanHelpers.selinux_bool(p) },
+          coerce: proc { |p| ::SELinux::Cookbook::BooleanHelpers.selinux_bool(p) },
           description: 'SELinux boolean value'
 
 property :persistent, [true, false],
@@ -37,7 +37,7 @@ load_current_value do |new_resource|
 end
 
 action_class do
-  include SELinux::Cookbook::StateHelpers
+  include ::SELinux::Cookbook::StateHelpers
 end
 
 action :set do

@@ -18,7 +18,7 @@
 
 unified_mode true
 
-include SELinux::Cookbook::StateHelpers
+include ::SELinux::Cookbook::StateHelpers
 
 default_action :nothing
 
@@ -41,7 +41,7 @@ property :automatic_reboot, [true, false, Symbol],
 deprecated_property_alias 'temporary', 'persistent', 'The temporary property was renamed persistent in the 4.0 release of this cookbook. Please update your cookbooks to use the new property name.'
 
 action_class do
-  include SELinux::Cookbook::StateHelpers
+  include ::SELinux::Cookbook::StateHelpers
 
   def render_selinux_template(action)
     Chef::Log.warn(

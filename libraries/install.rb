@@ -5,6 +5,8 @@ module SELinux
         case node['platform_family']
         when 'rhel'
           case node['platform_version'].to_i
+          when 6
+            %w(make policycoreutils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
           when 7
             %w(make policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
           else

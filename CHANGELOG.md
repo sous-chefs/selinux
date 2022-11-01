@@ -4,6 +4,9 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+- Fix CentOS 6 package requirements
+- Fix Chef 18 compatibility
+
 ## 6.0.6 - *2022-09-28*
 
 - Add missing `policycoreutils-python` package
