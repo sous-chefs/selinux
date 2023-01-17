@@ -72,3 +72,9 @@ suites:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
       - recipe[selinux_test::permissive_resource]
+  - name: user_login_mapping
+    run_list:
+      - recipe[selinux_test::install]
+      - recipe[selinux::permissive]
+      - recipe[selinux_test::user]
+      - recipe[selinux_test::login]

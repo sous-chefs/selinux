@@ -46,10 +46,12 @@ The following resources are provided:
 - [selinux_boolean](documentation/selinux_boolean.md)
 - [selinux_fcontext](documentation/selinux_fcontext.md)
 - [selinux_install](documentation/selinux_install.md)
+- [selinux_login](documentation/selinux_login.md)
 - [selinux_module](documentation/selinux_module.md)
 - [selinux_permissive](documentation/selinux_permissive.md)
 - [selinux_port](documentation/selinux_port.md)
 - [selinux_state](documentation/selinux_state.md)
+- [selinux_user](documentation/selinux_user.md)
 
 ## Maintainers
 
