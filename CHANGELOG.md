@@ -2,6 +2,8 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## Unreleased
+
 ## 6.1.0 - *2023-01-18*
 
 - resolved cookstyle error: resources/install.rb:5:1 refactor: `Chef/Style/CopyrightCommentFormat`
