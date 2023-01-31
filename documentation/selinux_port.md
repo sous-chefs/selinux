@@ -1,6 +1,6 @@
 [Back to resource list](../README.md#resources)
 
-# selinux_policy_port
+# selinux_port
 
 Allows assigning a network port to a certain SELinux context, e.g. for running a webserver on a non-standard port.
 
@@ -25,7 +25,7 @@ Allows assigning a network port to a certain SELinux context, e.g. for running a
 
 ```ruby
 # Allow nginx/apache to bind to port 5678 by giving it the http_port_t context
-selinux_policy_port '5678' do
+selinux_port '5678' do
  protocol 'tcp'
  secontext 'http_port_t'
 end
