@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## Unreleased
+## 6.1.3 - *2023-02-15*
 
 ## 6.1.2 - *2023-02-14*
 
