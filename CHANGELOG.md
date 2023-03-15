@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
-## Unreleased
+## 6.1.5 - *2023-03-15*
 
 Standardise files with files in sous-chefs/repo-management
 
