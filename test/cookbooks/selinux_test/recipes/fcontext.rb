@@ -26,7 +26,7 @@ end
 # Use converge counter so we only do the fcontext manipulation in first round. Otherwise
 # the "enforce_idempotency" will cause converge to fail.
 
-node.run_state['chef_converge_counter'] = shellout('cat /tmp/chef_converge_counter').stdout.to_i
+node.run_state['chef_converge_counter'] = shell_out('cat /tmp/chef_converge_counter').stdout.to_i
 node.run_state['chef_converge_counter'] += 1
 file '/tmp/chef_converge_counter' do
   content lazy { node.run_state['chef_converge_counter'].to_s }
