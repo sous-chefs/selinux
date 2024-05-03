@@ -4,6 +4,10 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+- resolved cookstyle error: resources/install.rb:5:1 refactor: `Chef/Style/CopyrightCommentFormat`
+- resolved cookstyle error: resources/module.rb:5:1 refactor: `Chef/Style/CopyrightCommentFormat`
+- resolved cookstyle error: resources/state.rb:5:1 refactor: `Chef/Style/CopyrightCommentFormat`
+
 ## 6.1.17 - *2024-05-03*
 
 ## 6.1.16 - *2024-05-03*
