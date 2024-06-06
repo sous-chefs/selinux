@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_state
+
+[Back to resource list](../README.md#resources)
 
 The `selinux_state` resource is used to manage the SELinux state on the system. It does this by using the `setenforce` command and rendering the `/etc/selinux/config` file from a template.
 
@@ -13,7 +13,7 @@ Introduced: v4.0.0
 | `:enforcing`  | *(Default)* Set the SELinux state to enforcing |
 | `:permissive` | Set the state to permissive                    |
 | `:disabled`   | Set the state to disabled                      |
-`
+
 > ⚠ Switching to or from `disabled` requires a reboot!
 
 ## Properties

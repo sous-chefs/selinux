@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_port
+
+[Back to resource list](../README.md#resources)
 
 Allows assigning a network port to a certain SELinux context, e.g. for running a webserver on a non-standard port.
 

@@ -56,5 +56,3 @@ selinux_fcontext '/home/[^/]+/\.ssh(/.*)?' do
   action :delete
   only_if { node.run_state['chef_converge_counter'] == 1 }
 end
-
-
