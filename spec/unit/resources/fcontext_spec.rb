@@ -17,9 +17,10 @@ describe 'selinux_fcontext' do
 
   context 'when not set' do
     stubs_for_provider('selinux_fcontext[/test]') do |provider|
-      allow(provider).to receive_shell_out('semanage fcontext -l', stdout: <<~EOF)
+      allow(provider).to receive_shell_out('semanage fcontext -l', stdout: <<~EOF
         /other/files        all files        user:role:type:level
       EOF
+      )
     end
 
     # this is what actually checks that the fcontext was set correctly
@@ -38,15 +39,18 @@ describe 'selinux_fcontext' do
 
   context 'when set to incorrect value' do
     stubs_for_provider('selinux_fcontext[/test]') do |provider|
-      allow(provider).to receive_shell_out('semanage fcontext -l', stdout: <<~EOF)
-        /test        all files        user:role:type:level
+      allow(provider).to receive_shell_out('semanage fcontext -l', stdout: <<~EOF
+        /test        all files        user:role:type:level'
       EOF
+      )
     end
 
     # this is what actually checks that the fcontext was set correctly
     # incorrect commands would not be stubbed and would throw error
     stubs_for_provider('selinux_fcontext[/test]') do |provider|
-      # when set but incorrect, only modify calls (-m) and delete calls (-d) should happen
+      # when set but incorrect, the incorrect context is "deemed" as the built-in type, and
+      # attemp to perform the full cycle of activities
+      allow(provider).to receive_shell_out("semanage fcontext -a -f a -t foo '/test'")
       allow(provider).to receive_shell_out("semanage fcontext -m -f a -t foo '/test'")
       allow(provider).to receive_shell_out("semanage fcontext -d -f a '/test'")
     end
@@ -60,9 +64,10 @@ describe 'selinux_fcontext' do
 
   context 'when set to correct value' do
     stubs_for_provider('selinux_fcontext[/test]') do |provider|
-      allow(provider).to receive_shell_out('semanage fcontext -l', stdout: <<~EOF)
+      allow(provider).to receive_shell_out('semanage fcontext -l', stdout: <<~EOF
         /test        all files        user:role:foo:level
       EOF
+      )
     end
 
     # this is what actually checks that the fcontext was set correctly

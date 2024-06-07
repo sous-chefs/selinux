@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_login
+
+[Back to resource list](../README.md#resources)
 
 The `selinux_login` resource is used to manage Linux user to SELinux user mappings on the system.
 

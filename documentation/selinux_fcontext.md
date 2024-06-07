@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_fcontext
+
+[Back to resource list](../README.md#resources)
 
 Set the SELinux context of files with `semanage fcontext`.
 

@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_module
+
+[Back to resource list](../README.md#resources)
 
 Create an SELinux module from a cookfile file or content provided as a string.
 

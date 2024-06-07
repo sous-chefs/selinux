@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_boolean
+
+[Back to resource list](../README.md#resources)
 
 Set SELinux boolean values.
 
