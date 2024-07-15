@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_install
+
+[Back to resource list](../README.md#resources)
 
 The `selinux_install` resource is used to encapsulate the set of selinux packages to install in order to manage selinux. It also ensures the directory `/etc/selinux` is created.
 

@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_permissive
+
+[Back to resource list](../README.md#resources)
 
 Allows some types to misbehave without stopping them. Not as good as specific policies, but better than disabling SELinux entirely.
 

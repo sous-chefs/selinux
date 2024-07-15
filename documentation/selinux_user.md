@@ -1,6 +1,6 @@
-[Back to resource list](../README.md#resources)
-
 # selinux_user
+
+[Back to resource list](../README.md#resources)
 
 The `selinux_user` resource is used to manage SELinux users on the system.
 

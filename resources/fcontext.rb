@@ -93,7 +93,14 @@ action :add do
     return
   end
 
-  unless current_file_context
+  # "add" is performed in two scenarios.
+  # 1: The local file_contexts.local has an entry for new_resource.file_spec, but secontext <> new_resource.secontext
+  # 2. The local file_contexts.local does NOT have an entry for new_resource.file_spec, AND
+  #    either the system default (file_contexts) does not have an entry for new_resource.file_spec, or the secontext <> new_resource.secontext
+  # In both scenarios, file_contexts.local is created with a new entry, or the secontext is updated.
+
+  cfc = current_file_context
+  unless cfc && cfc == new_resource.secontext
     converge_by "adding label #{new_resource.secontext} to #{new_resource.file_spec}" do
       shell_out!("semanage fcontext -a -f #{new_resource.file_type} -t #{new_resource.secontext} '#{new_resource.file_spec}'")
       relabel_files
