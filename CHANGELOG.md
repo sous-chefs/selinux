@@ -4,6 +4,8 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+- fix documentation for `selinux_fcontext`
+
 ## 6.2.0 - *2024-07-15*
 
 ## 6.1.19 - *2024-07-15*
