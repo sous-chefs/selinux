@@ -36,12 +36,12 @@ Supported file types:
 
 ```ruby
 # Allow http servers (e.g. nginx/apache) to modify moodle files
-selinux_policy_fcontext '/var/www/moodle(/.*)?' do
+selinux_fcontext '/var/www/moodle(/.*)?' do
   secontext 'httpd_sys_rw_content_t'
 end
 
 # Adapt a symbolic link
-selinux_policy_fcontext '/var/www/symlink_to_webroot' do
+selinux_fcontext '/var/www/symlink_to_webroot' do
   secontext 'httpd_sys_rw_content_t'
   file_type 'l'
 end
