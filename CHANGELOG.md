@@ -4,6 +4,8 @@ This file is used to list changes made in each version of the selinux cookbook.
 
 ## Unreleased
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 6.2.1 - *2024-08-13*
 
 - fix documentation for `selinux_fcontext`
