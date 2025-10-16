@@ -5,6 +5,13 @@ This file is used to list changes made in each version of the selinux cookbook.
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
+## [6.2.5](https://github.com/sous-chefs/selinux/compare/6.2.4...v6.2.5) (2025-10-16)
+
+
+### Bug Fixes
+
+* **ci:** Update workflows to use release pipeline ([#139](https://github.com/sous-chefs/selinux/issues/139)) ([1167da1](https://github.com/sous-chefs/selinux/commit/1167da1dd9aa62a5b6c1a5413460a4d3a42c71c3))
+
 ## 6.2.3 - *2025-06-08*
 
 Standardise files with files in sous-chefs/repo-management
