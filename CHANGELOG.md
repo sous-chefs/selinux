@@ -2,6 +2,13 @@
 
 This file is used to list changes made in each version of the selinux cookbook.
 
+## Unreleased
+
+### Deprecations
+
+* Deprecated this cookbook because Chef Infra Client 18.0 and later include built-in `selinux_*` resources.
+* Direct future resource fixes to Chef Infra Client instead of maintaining duplicate resource implementations here.
+
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
