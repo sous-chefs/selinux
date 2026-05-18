@@ -1,0 +1,11 @@
+---
+name: default
+title: Default suite tests for the SELinux cookbook
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: Verifies the default resource-only SELinux install workflow
+version: 1.0.0
+
+depends:
+  - name: common
+    path: test/integration/common

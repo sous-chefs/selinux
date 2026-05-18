@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Cookbook:: selinux
 # Resource:: login
@@ -15,6 +17,7 @@
 # limitations under the License.
 #
 
+provides :selinux_login
 unified_mode true
 
 property :login, String,

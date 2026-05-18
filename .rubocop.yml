@@ -1,5 +1,6 @@
-AllCops:
-  TargetChefVersion: 17.latest
+inherit_gem:
+  cookstyle: config/cookstyle.yml
+
 Chef/Modernize/FoodcriticComments:
   Enabled: true
 Chef/Style/CopyrightCommentFormat:

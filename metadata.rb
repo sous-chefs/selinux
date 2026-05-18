@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 name             'selinux'
 maintainer       'Sous Chefs'
 maintainer_email 'help@sous-chefs.org'
@@ -8,6 +10,12 @@ source_url       'https://github.com/sous-chefs/selinux'
 issues_url       'https://github.com/sous-chefs/selinux/issues'
 chef_version     '>= 15.3'
 
-%w(redhat centos scientific oracle amazon fedora debian ubuntu).each do |os|
-  supports os
-end
+supports 'almalinux', '>= 8.0'
+supports 'amazon', '>= 2.0'
+supports 'centos_stream', '>= 9.0'
+supports 'debian', '>= 12.0'
+supports 'fedora'
+supports 'oracle', '>= 8.0'
+supports 'redhat', '>= 8.0'
+supports 'rocky', '>= 8.0'
+supports 'ubuntu', '>= 22.04'

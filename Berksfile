@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 source 'https://supermarket.chef.io'
 
 metadata
 
-group :unit do
-  cookbook 'selinux_test', path: 'test/cookbooks/selinux_test'
+group :integration do
+  cookbook 'test', path: 'test/cookbooks/test'
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SELinux
   module Cookbook
     module BooleanHelpers

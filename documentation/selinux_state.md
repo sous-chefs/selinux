@@ -49,30 +49,14 @@ end
 
 ### Managing SELinux State (`selinux_state`)
 
-Simply set SELinux to enforcing or permissive:
+Set SELinux to enforcing or permissive:
 
 ```ruby
-selinux_state "SELinux Enforcing" do
+selinux_state 'SELinux Enforcing' do
   action :enforcing
 end
 
-selinux_state "SELinux Permissive" do
+selinux_state 'SELinux Permissive' do
   action :permissive
-end
-```
-
-The action here is based on the value of the `node['selinux']['state']` attribute, which we convert to lower-case and make a symbol to pass to the action.
-
-```ruby
-selinux_state "SELinux #{node['selinux']['state'].capitalize}" do
-  action node['selinux']['state'].downcase.to_sym
-end
-```
-
-The action here is based on the value of the `node['selinux']['status']` attribute, which we convert to lower-case and make a symbol to pass to the action.
-
-```ruby
-selinux_state "SELinux #{node['selinux']['status'].capitalize}" do
-  action node['selinux']['status'].downcase.to_sym
 end
 ```

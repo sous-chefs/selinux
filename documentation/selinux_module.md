@@ -29,7 +29,7 @@ Introduced: v4.0.0
 
 ```ruby
 selinux_module 'test_create' do
-  cookbook 'selinux_test'
+  cookbook 'test'
   source 'test.te'
   module_name 'test'
   action :install

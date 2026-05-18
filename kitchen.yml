@@ -11,72 +11,120 @@ provisioner:
   deprecations_as_errors: true
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
-  # Allow reboots
   max_retries: 60
   wait_for_retry: 180
   root_path: /var/tmp/kitchen
 
 verifier:
   name: inspec
+  sudo: true
 
 platforms:
   - name: almalinux-8
   - name: almalinux-9
+  - name: almalinux-10
   - name: amazonlinux-2
   - name: amazonlinux-2023
   - name: centos-stream-9
-  - name: debian-11
+  - name: centos-stream-10
   - name: debian-12
+  - name: debian-13
   - name: fedora-latest
-  - name: oracle-8
-  - name: oracle-9
+  - name: oraclelinux-8
+  - name: oraclelinux-9
   - name: rockylinux-8
   - name: rockylinux-9
-  - name: ubuntu-20.04
+  - name: rockylinux-10
   - name: ubuntu-22.04
   - name: ubuntu-24.04
 
+x-run_lists:
+  default: &default_run_list
+    - recipe[test::default]
+  enforcing: &enforcing_run_list
+    - recipe[test::install]
+    - recipe[test::enforcing]
+    - recipe[test::debian_enforcing_prepare]
+    - recipe[test::module_create]
+    - recipe[test::module_remove]
+    - recipe[test::boolean]
+  permissive: &permissive_run_list
+    - recipe[test::install]
+    - recipe[test::permissive]
+    - recipe[test::module_create]
+    - recipe[test::boolean]
+  disabled: &disabled_run_list
+    - recipe[test::install]
+    - recipe[test::disabled]
+  port: &port_run_list
+    - recipe[test::install]
+    - recipe[test::permissive]
+    - recipe[test::port]
+  fcontext: &fcontext_run_list
+    - recipe[test::install]
+    - recipe[test::permissive]
+    - recipe[test::fcontext]
+  permissive_resource: &permissive_resource_run_list
+    - recipe[test::install]
+    - recipe[test::permissive]
+    - recipe[test::permissive_resource]
+  user_login_mapping: &user_login_mapping_run_list
+    - recipe[test::install]
+    - recipe[test::permissive]
+    - recipe[test::user]
+    - recipe[test::login]
+
+x-verifiers:
+  default: &default_verifier
+    inspec_tests:
+      - path: test/integration/default
+  enforcing: &enforcing_verifier
+    inspec_tests:
+      - path: test/integration/enforcing
+  permissive: &permissive_verifier
+    inspec_tests:
+      - path: test/integration/permissive
+  disabled: &disabled_verifier
+    inspec_tests:
+      - path: test/integration/disabled
+  port: &port_verifier
+    inspec_tests:
+      - path: test/integration/port
+  fcontext: &fcontext_verifier
+    inspec_tests:
+      - path: test/integration/fcontext
+  permissive_resource: &permissive_resource_verifier
+    inspec_tests:
+      - path: test/integration/permissive_resource
+  user_login_mapping: &user_login_mapping_verifier
+    inspec_tests:
+      - path: test/integration/user_login_mapping
+
 suites:
+  - name: default
+    run_list: *default_run_list
+    verifier: *default_verifier
   - name: enforcing
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux_test::enforcing]
-      - recipe[selinux_test::debian_enforcing_prepare]
-      - recipe[selinux_test::module_create]
-      - recipe[selinux_test::module_remove]
-      - recipe[selinux_test::boolean]
+    run_list: *enforcing_run_list
+    verifier: *enforcing_verifier
     provisioner:
-      # not idempotent on debian/ubuntu due to debian_enforcing_prepare & module_create/remove
       multiple_converge: 1
       enforce_idempotency: false
   - name: permissive
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux::permissive]
-      - recipe[selinux_test::module_create]
-      - recipe[selinux_test::boolean]
+    run_list: *permissive_run_list
+    verifier: *permissive_verifier
   - name: disabled
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux::disabled]
+    run_list: *disabled_run_list
+    verifier: *disabled_verifier
   - name: port
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux::permissive]
-      - recipe[selinux_test::port]
+    run_list: *port_run_list
+    verifier: *port_verifier
   - name: fcontext
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux::permissive]
-      - recipe[selinux_test::fcontext]
+    run_list: *fcontext_run_list
+    verifier: *fcontext_verifier
   - name: permissive_resource
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux::permissive]
-      - recipe[selinux_test::permissive_resource]
+    run_list: *permissive_resource_run_list
+    verifier: *permissive_resource_verifier
   - name: user_login_mapping
-    run_list:
-      - recipe[selinux_test::install]
-      - recipe[selinux::permissive]
-      - recipe[selinux_test::user]
-      - recipe[selinux_test::login]
+    run_list: *user_login_mapping_run_list
+    verifier: *user_login_mapping_verifier

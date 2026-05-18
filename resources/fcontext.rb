@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Cookbook:: selinux
 # Resource:: fcontext
@@ -15,6 +17,7 @@
 # limitations under the License.
 #
 
+provides :selinux_fcontext
 unified_mode true
 
 property :file_spec, String,
@@ -68,7 +71,7 @@ action_class do
              end
 
     # if path is not absolute, ignore it and search everything
-    common = '/' if common.first != '/'
+    common = '/' unless common.start_with?('/')
 
     if ::File.exist? common
       shell_out!("find #{common.shellescape} -ignore_readdir_race -regextype posix-egrep -regex #{spec.shellescape} -prune -print0 | xargs -0 restorecon -iRv")

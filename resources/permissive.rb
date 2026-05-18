@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Cookbook:: selinux
 # Resource:: permissive
@@ -15,6 +17,7 @@
 # limitations under the License.
 #
 
+provides :selinux_permissive
 unified_mode true
 
 property :context, String,

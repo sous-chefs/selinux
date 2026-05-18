@@ -5,6 +5,8 @@ rules:
     max: 256
     level: warning
   document-start: disable
+  truthy:
+    allowed-values: ['true', 'false', 'on']
   braces:
     forbid: false
     min-spaces-inside: 0
@@ -13,3 +15,5 @@ rules:
     max-spaces-inside-empty: -1
   comments:
     min-spaces-from-content: 1
+  empty-lines:
+    max: 2

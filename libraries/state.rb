@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SELinux
   module Cookbook
     module StateHelpers
@@ -39,12 +41,7 @@ module SELinux
       end
 
       def selinux_activate_cmd
-        # selinux-activate is semi-broken on Ubuntu 18.04 however this method does work
-        if platform?('ubuntu') && node['platform_version'] == '18.04'
-          'touch /.autorelabel'
-        else
-          '/usr/sbin/selinux-activate'
-        end
+        '/usr/sbin/selinux-activate'
       end
 
       def default_policy_platform

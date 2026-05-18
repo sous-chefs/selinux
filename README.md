@@ -8,7 +8,7 @@
 
 ## Description
 
-The SELinux (Security Enhanced Linux) cookbook provides recipes for manipulating SELinux policy enforcement state.
+The SELinux (Security Enhanced Linux) cookbook provides custom resources for manipulating SELinux policy enforcement state and policy rules.
 
 SELinux can have one of three settings:
 
@@ -31,13 +31,21 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 - Chef 15.3 or higher
 
+## Migration
+
+See [migration.md](migration.md) for the breaking recipe-to-resource migration guide.
+
 ## Platform
 
-- RHEL 7+
-- CentOS 7+
+- AlmaLinux 8+
+- Amazon Linux 2+
+- CentOS Stream 9+
+- Debian 12+
 - Fedora
-- Ubuntu
-- Debian
+- Oracle Linux 8+
+- Red Hat Enterprise Linux 8+
+- Rocky Linux 8+
+- Ubuntu 22.04+
 
 ## Resources
 

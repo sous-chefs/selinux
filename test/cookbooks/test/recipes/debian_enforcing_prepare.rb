@@ -7,7 +7,7 @@ end
 
 # Debian platforms won't allow a SELinux module to be loaded by default as it will be blocked by SELinux
 selinux_module 'selinux_module_allow_loading' do
-  cookbook 'selinux_test'
+  cookbook 'test'
   source 'moduleLoad.te'
   module_name 'moduleLoad'
 
@@ -16,7 +16,7 @@ end
 
 # Ubuntu won't allow kitchen to connect by default
 selinux_module 'selinux_module_allow_kitchen_converge' do
-  cookbook 'selinux_test'
+  cookbook 'test'
   source 'kitchenConverge.te'
   module_name 'kitchenConverge'
 
@@ -25,7 +25,7 @@ end
 
 # Debian platforms won't allow SELinux modules and booleans to be read by inspec over SSH
 selinux_module 'selinux_module_allow_kitchen_verify' do
-  cookbook 'selinux_test'
+  cookbook 'test'
   source 'kitchenVerify.te'
   module_name 'kitchenVerify'
 
