@@ -18,7 +18,7 @@
 - `libraries/` - Library helpers to assist with the cookbook. May contain multiple files depending on complexity of the cookbook.
 - `templates/` - ERB templates that may be used in the cookbook
 - `files/` - files that may be used in the cookbook
-- `metadata.rb`, `Berksfile` - Cookbook metadata and dependencies
+- `metadata.rb`, `Policyfile.rb` - Cookbook metadata and dependencies
 
 ## Build and Test System
 
@@ -27,7 +27,7 @@
 
 ### Essential Commands (strict order)
 ```bash
-berks install                   # Install dependencies (always first)
+chef install Policyfile.rb     # Install dependencies (always first)
 cookstyle                       # Ruby/Chef linting
 yamllint .                      # YAML linting
 markdownlint-cli2 '**/*.md'     # Markdown linting
@@ -42,7 +42,7 @@ chef exec rspec                 # Unit tests (ChefSpec)
 - **Full CI Runtime:** 30+ minutes for complete matrix
 
 ### Common Issues and Solutions
-- **Always run `berks install` first** - most failures are dependency-related
+- **Always run `chef install Policyfile.rb` first** - most failures are dependency-related
 - **Docker must be running** for kitchen tests
 - **Chef Workstation required** - no workarounds, no alternatives
 - **Test data bags needed** (optional for some cookbooks) in `test/integration/data_bags/` for convergence

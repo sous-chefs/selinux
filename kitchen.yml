@@ -3,7 +3,7 @@ driver:
   name: vagrant
 
 provisioner:
-  name: chef_infra
+  name: policyfile_zero
   product_name: <%= ENV['CHEF_PRODUCT_NAME'] || 'chef' %>
   chef_license: accept-no-persist
   multiple_converge: 2
@@ -11,6 +11,7 @@ provisioner:
   deprecations_as_errors: true
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
+  policyfile: Policyfile.rb
   # Allow reboots
   max_retries: 60
   wait_for_retry: 180
@@ -46,35 +47,48 @@ suites:
       - recipe[selinux_test::module_remove]
       - recipe[selinux_test::boolean]
     provisioner:
+      named_run_list: enforcing
       # not idempotent on debian/ubuntu due to debian_enforcing_prepare & module_create/remove
       multiple_converge: 1
       enforce_idempotency: false
   - name: permissive
+    provisioner:
+      named_run_list: permissive
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
       - recipe[selinux_test::module_create]
       - recipe[selinux_test::boolean]
   - name: disabled
+    provisioner:
+      named_run_list: disabled
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::disabled]
   - name: port
+    provisioner:
+      named_run_list: port
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
       - recipe[selinux_test::port]
   - name: fcontext
+    provisioner:
+      named_run_list: fcontext
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
       - recipe[selinux_test::fcontext]
   - name: permissive_resource
+    provisioner:
+      named_run_list: permissive_resource
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
       - recipe[selinux_test::permissive_resource]
   - name: user_login_mapping
+    provisioner:
+      named_run_list: user_login_mapping
     run_list:
       - recipe[selinux_test::install]
       - recipe[selinux::permissive]
