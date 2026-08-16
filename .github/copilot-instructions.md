@@ -23,7 +23,7 @@
 ## Build and Test System
 
 ### Environment Setup
-**MANDATORY:** Install Chef Workstation first - provides chef, berks, cookstyle, kitchen tools.
+**MANDATORY:** Install Chef Workstation first - provides Chef CLI, cookstyle, and Kitchen tools.
 
 ### Essential Commands (strict order)
 ```bash
@@ -88,7 +88,7 @@ These instructions are validated for Sous Chefs cookbooks. **Do not search for b
 
 **Error Resolution Checklist:**
 1. Verify Chef Workstation installation
-2. Confirm `berks install` completed successfully
+2. Confirm `chef install Policyfile.rb` completed successfully
 3. Ensure Docker is running for integration tests
 4. Check for missing test data dependencies
 
