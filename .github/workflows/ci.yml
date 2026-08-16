@@ -60,16 +60,16 @@ jobs:
         run: |
           set -euo pipefail
           for module in kvm_intel kvm_amd; do
-            if lsmod | awk '{print $1}' | grep -qx "$module"; then
+            if [[ -d "/sys/module/$module" ]]; then
               sudo modprobe -r "$module"
             fi
           done
-          if lsmod | awk '{print $1}' | grep -qx kvm; then
+          if [[ -d /sys/module/kvm ]]; then
             sudo modprobe -r kvm
           fi
-          if lsmod | awk '{print $1}' | grep -Eq '^(kvm_intel|kvm_amd|kvm)$'; then
+          if [[ -d /sys/module/kvm_intel || -d /sys/module/kvm_amd || -d /sys/module/kvm ]]; then
             echo 'KVM modules remain loaded; refusing to start VirtualBox' >&2
-            lsmod | grep -E '^(kvm_intel|kvm_amd|kvm)'
+            find /sys/module -maxdepth 1 -type d \( -name kvm_intel -o -name kvm_amd -o -name kvm \) -print
             exit 1
           fi
       - name: Check out code
