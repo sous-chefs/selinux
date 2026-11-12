@@ -4,7 +4,8 @@ control 'install' do
   pkgs = if os.debian?
            %w(make policycoreutils selinux-basics selinux-policy-default selinux-policy-dev auditd setools)
          elsif os.name == 'amazon'
-           %w(make policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+           python_package = os.release.to_i >= 2023 ? 'policycoreutils-python-utils' : 'policycoreutils-python'
+           %W(make policycoreutils #{python_package} selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
          elsif os.redhat?
            case os.release.to_i
            when 6
