@@ -12,6 +12,23 @@ This file is used to list changes made in each version of the selinux cookbook.
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
+## [7.0.0](https://github.com/sous-chefs/selinux/compare/v6.2.5...v7.0.0) (2026-11-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* deprecate selinux cookbook ([#145](https://github.com/sous-chefs/selinux/issues/145))
+
+### Features
+
+* deprecate selinux cookbook ([#145](https://github.com/sous-chefs/selinux/issues/145)) ([6921a71](https://github.com/sous-chefs/selinux/commit/6921a71b68f0eaa2d7ec41c4307b06588dd324a7))
+
+
+### Bug Fixes
+
+* **ci:** Update workflows to use release pipeline ([#139](https://github.com/sous-chefs/selinux/issues/139)) ([1167da1](https://github.com/sous-chefs/selinux/commit/1167da1dd9aa62a5b6c1a5413460a4d3a42c71c3))
+* install SELinux on Amazon Linux 2023 ([#158](https://github.com/sous-chefs/selinux/issues/158)) ([27bae13](https://github.com/sous-chefs/selinux/commit/27bae1385c7dccd99f87cb21bc1e78d0b9f0eeea))
+
 ## [6.2.5](https://github.com/sous-chefs/selinux/compare/6.2.4...v6.2.5) (2025-10-16)
 
 
