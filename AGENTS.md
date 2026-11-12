@@ -43,3 +43,9 @@ The legacy integration matrix contains 75 VirtualBox jobs. Required branch
 checks currently cover metadata, Cookstyle, RSpec, Markdown and YAML. The VM
 matrix remains part of the evidence to assess; do not quietly disable or narrow
 it merely to merge the release.
+
+The CI Workstation provides the Cinc installer. Set `CHEF_PRODUCT_NAME=cinc` in
+the VM test step, using kitchen.yml's existing override. Otherwise the VMs boot
+successfully but convergence stops with `Unknown product name chef` before any
+resource runs. Preserve all platform and suite combinations when fixing this
+setup error.
