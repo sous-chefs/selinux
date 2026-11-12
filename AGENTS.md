@@ -3,8 +3,9 @@
 ## Confirmed scope
 
 The owner authorised retirement on 12 November 2026. Preserve the existing
-resource implementations, recipes, tags, releases, issues and published
-packages. Do not port this cookbook into a new custom-resource implementation.
+compatibility API, recipes, tags, releases, issues and published packages. Narrow
+demonstrated package-default repairs are allowed; do not port this cookbook into
+a new custom-resource implementation.
 The replacement is Chef Infra Client's built-in SELinux resource API.
 
 The compatibility cookbook still supports Chef 15.3 and later. The complete
@@ -49,3 +50,18 @@ the VM test step, using kitchen.yml's existing override. Otherwise the VMs boot
 successfully but convergence stops with `Unknown product name chef` before any
 resource runs. Preserve all platform and suite combinations when fixing this
 setup error.
+
+Amazon Linux 2023 requires `policycoreutils-python-utils`, while Amazon Linux 2
+keeps `policycoreutils-python`. Unit coverage checks both defaults; this is a
+narrow compatibility fix and does not change the public `packages` property.
+AWS lists the replacement package in its AL2023 package comparison:
+<https://docs.aws.amazon.com/linux/al2023/ug/image-comparison.html>.
+
+The retained Debian 11 VM fixture uses Debian's official main and security
+archives after Bullseye's LTS end. Both archive Release endpoints returned HTTP
+200 with the expected codenames and no `Valid-Until` field on 12 November 2026.
+Keep APT signature verification enabled. A source-file change notifies the cache
+refresh immediately; repeated converges do not force another update.
+
+* <https://archive.debian.org/debian/dists/bullseye/Release>
+* <https://archive.debian.org/debian-security/dists/bullseye-security/Release>

@@ -28,6 +28,27 @@ describe 'selinux_install' do
     end
   end
 
+  context 'on Amazon Linux 2' do
+    platform 'amazon', '2'
+
+    it do
+      is_expected.to install_package('selinux').with(
+        package_name: %w(make policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+      )
+    end
+  end
+
+  context 'on Amazon Linux 2023' do
+    platform 'amazon', '2'
+    automatic_attributes['platform_version'] = '2023'
+
+    it do
+      is_expected.to install_package('selinux').with(
+        package_name: %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+      )
+    end
+  end
+
   context 'on debian' do
     platform 'debian'
 
