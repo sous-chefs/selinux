@@ -13,7 +13,8 @@ module SELinux
             %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
           end
         when 'amazon'
-          %w(make policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
+          python_package = node['platform_version'].to_i >= 2023 ? 'policycoreutils-python-utils' : 'policycoreutils-python'
+          %W(make policycoreutils #{python_package} selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
         when 'fedora'
           %w(make policycoreutils policycoreutils-python-utils selinux-policy selinux-policy-targeted selinux-policy-devel libselinux-utils setools-console)
         when 'debian'

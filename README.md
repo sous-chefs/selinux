@@ -1,11 +1,12 @@
 # SELinux Cookbook
 
 > [!IMPORTANT]
-> This cookbook is deprecated. Chef Infra Client 18.0 and later include built-in
+> This cookbook is deprecated. Chef Infra Client 18.1 and later include all built-in
 > `selinux_boolean`, `selinux_fcontext`, `selinux_install`, `selinux_login`,
 > `selinux_module`, `selinux_permissive`, `selinux_port`, `selinux_state`, and
 > `selinux_user` resources. New work should use those built-in Chef Infra Client
 > resources directly.
+> See the [migration guide](migration.md) for the resource mapping and recipe replacements.
 >
 > Open functional reports against this cookbook, including fcontext built-in
 > override behavior, module reinstall behavior, module compilation behavior, and
@@ -24,7 +25,7 @@
 
 The SELinux (Security Enhanced Linux) cookbook provided recipes and custom resources for manipulating SELinux policy enforcement state.
 
-This cookbook is retained only for existing Chef Infra Client 15-17 users that cannot yet move to Chef Infra Client 18 or later. It should not be added to new cookbooks.
+This cookbook is retained only for existing users that cannot yet move to the built-in resources. It should not be added to new cookbooks. The final 7.0.0 deprecation release will preserve the compatibility code; repository retirement will preserve its history and existing releases.
 
 SELinux can have one of three settings:
 
@@ -47,7 +48,7 @@ Disable SELinux only if you plan to not use it. Use `Permissive` mode if you jus
 
 - Chef 15.3 or higher
 
-Chef Infra Client 18.0 and later provide the SELinux resources directly. Prefer the built-in resources on those releases.
+Most built-in SELinux resources arrived in Chef Infra Client 18.0. `selinux_login` and `selinux_user` arrived in 18.1, so use 18.1 or later for the complete replacement API. The compatibility cookbook's Chef 15.3 minimum is unchanged.
 
 ## Platform
 
